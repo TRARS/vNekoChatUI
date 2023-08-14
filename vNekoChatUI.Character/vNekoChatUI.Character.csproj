@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common.WPF\Common.WPF.csproj" />
+    <ProjectReference Include="..\vNekoChatUI.Character.HttpUtils\vNekoChatUI.Character.HttpUtils.csproj" />
+    <ProjectReference Include="..\vNekoChatUI.Character.BingUtils\vNekoChatUI.Character.BingUtils.csproj" />
+    <ProjectReference Include="..\vNekoChatUI.Character.SocketUtils\vNekoChatUI.Character.SocketUtils.csproj" />
+  </ItemGroup>
+  
+</Project>

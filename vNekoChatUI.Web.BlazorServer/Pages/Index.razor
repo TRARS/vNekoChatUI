@@ -1,0 +1,26 @@
+﻿@page "/"
+@using System.Diagnostics;
+@inherits LayoutComponentBase
+
+<div>
+    <!--分界线-->
+    <hr />
+    <!--到底了-->
+</div>
+
+@code{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            //主页直接跳转到chatroom
+            NavManager.NavigateTo("/chatroom", true);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"error: {ex.Message}");
+        }
+
+        await Task.Yield();
+    }
+}

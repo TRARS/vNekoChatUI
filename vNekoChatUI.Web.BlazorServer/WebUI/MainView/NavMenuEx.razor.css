@@ -1,0 +1,101 @@
+﻿.nav-box {
+    width: 100%;
+    display: flex;
+    justify-content: stretch;
+    /*隔离环境中root中声明变量无效，所以套个娃在最外层容器塞变量*/
+    --menu-width: 100px;
+    --menu-border: none;
+}
+
+.nav {
+    flex: 1;
+    max-width: 56.5rem;
+    width: 100%;
+    flex-direction: row;
+    margin: 0 auto; /* 水平居中 */
+    justify-content: flex-start; /* 水平居中 */
+    font-size: 0;
+/*    background-color: #525F5D;*/
+    border-radius: 8px;
+}
+    .nav a {
+        min-width: var(--menu-width);
+        padding-left: 20px;
+        padding-right: 20px;
+        line-height: 50px;
+        height: 100%;
+        font-size: 15px;
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        text-decoration: none;
+        text-transform: uppercase;
+        text-align: center;
+        color: #FFFFFF;
+        border-radius: 10px;
+        cursor: pointer;
+        /*调整*/
+        border: var(--menu-border);
+    }
+    .nav .animation {
+        position: absolute;
+        height: 0px;
+        z-index: 0;
+        transition: all .4s ease 0s;
+        border-radius: 9px;
+        /*调整*/
+        border: var(--menu-border);
+    }
+
+    .nav a:nth-child(1):hover ~ .animation {
+        width: var(--menu-width);
+        height: 50px;
+        background-color: #1abc9c;
+    }
+    .nav a:nth-child(2):hover ~ .animation {
+        width: calc(var(--menu-width) + 28px);
+        height: 50px;
+        margin-left: calc(var(--menu-width) * 1);
+        background-color: #e74c3c;
+    }
+
+/*    .nav a:nth-child(3):hover ~ .animation {
+        width: var(--menu-width);
+        margin-left: calc(var(--menu-width) * 2 + 28px);
+        background-color: #3498db;
+    }
+    .nav a:nth-child(4):hover ~ .animation {
+        width: var(--menu-width);
+        margin-left: calc(var(--menu-width) * 3 + 28px);
+        background-color: #9b59b6;
+    }
+    .nav a:nth-child(5):hover ~ .animation {
+        width: var(--menu-width);
+        margin-left: calc(var(--menu-width) * 4);
+        background-color: #e67e22;
+    }*/
+
+
+/* 居中内容的样式 */
+.centered-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    /*    background-image: linear-gradient(to right, transparent, black, transparent);*/
+    padding: 0px 66px 0px 66px;
+    user-select: none;
+}
+    .centered-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: linear-gradient(to right, transparent, Black, transparent);
+        opacity: 0.35;
+        filter: blur(5px); /* 添加高斯模糊效果 */
+        z-index: -1; /* 将伪元素置于底层，使其位于 .centered-content 下方 */
+    }

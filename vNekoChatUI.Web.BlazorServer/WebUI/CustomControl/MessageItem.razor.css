@@ -1,0 +1,304 @@
+﻿hr {
+    border: none; /* 移除水平线的边框 */
+    border-top: 2px solid #9A9A9A; /* 设置黑色直线 */
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: -20px;
+}
+
+
+
+div[contenteditable] {
+    padding: 4px 6px 4px 6px;
+    border: 5px solid transparent;
+    border-radius: 4px;
+    font-size: 14px;
+    caret-color: orangered;
+}
+div[contenteditable="plaintext-only"]:focus { 
+    outline-color: red; /* 将焦点描边框的颜色设置为红色 */
+    outline-style: solid; /* 设置描边样式为实线 */
+    outline-width: 1px; /* 设置描边宽度为1像素 */
+    outline-offset: -1px; /* 设置描边偏移量为-1像素 */
+    border-radius: 9px 9px 9px 9px; /* 设置圆角半径为5像素 */
+}
+
+
+/*content_text 正文*/
+.div-editable-base[contenteditable] {
+    caret-color: transparent;
+}
+    .div-editable-base[contenteditable]:focus {
+        outline-color: none;
+    }
+
+/*comment_text 注释*/
+.div-comment[contenteditable] {
+    font-size: 12px; /*似乎是最小字号了*/
+    color: #B5B5B5;
+}
+    .div-comment[contenteditable].dark {
+        color: #7F7F7F;
+    }
+
+/*聊天气泡基础*/
+.message-item {
+    display: inline-block;
+    background-color: #959595;
+    border-radius: 10px;
+    padding: 0px;
+    margin-bottom: 10px;
+    color: white;
+    font-weight: normal;
+    white-space: pre-line;
+    max-width: 100%;
+    word-break: break-all;
+    font-size: 12px;
+    position: relative;
+}
+    /*占位用零高度横幅，用一个小BUG抵消一个大BUG。*/
+    .message-item .filled {
+        position: absolute; /* 设置填充元素为绝对定位 */
+        width: 100%; /* 宽度占满父容器的宽度 */
+        height: none;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    /*内容被叉掉时的样式*/
+    .message-item.hidden {
+        opacity: 0.35;
+        filter: grayscale(100%); /* 应用灰度滤镜 */
+    }
+        .message-item.hidden::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /*background-color: rgba(0, 0, 0, 0.5);*/ /* 半透明黑色遮罩 */
+            background: repeating-linear-gradient(
+                -45deg, 
+                transparent, 
+                transparent 1px, 
+                rgba(0, 0, 0, 0.5) 1px, 
+                rgba(0, 0, 0, 0.5) 2px 
+            );
+            border: 1px solid black;
+            border-radius: 10px;
+            pointer-events: none; /* 遮罩不会阻止用户与下面的内容交互 */
+        }
+        .message-item.hidden .button {
+            opacity: 1;
+        }
+        .message-item.hidden [contenteditable] {
+            pointer-events: none;
+        }
+
+
+    /*右上角按钮基础*/
+    .message-item .button {
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+        border: none;
+        border-radius: 21px;
+        width: 21px;
+        height: 21px;
+        display: flex; /* 使用 flex 布局 */
+        align-items: center; /* 垂直居中 */
+        justify-content: center;
+        padding: 1px;
+    }
+    .message-item:hover .button {
+        opacity: 1; 
+    }
+    .message-item:focus-within .button {
+        opacity: 1; /* 将透明度设置为较低的值 */
+    }
+    /*右上角按钮1*/
+    .message-item .button.first {
+        padding: 1px;
+    }
+    /*右上角按钮2*/
+    .message-item .button.second {
+        padding: 2px;
+        transform: translateX(-100%);
+    }
+    /*右上角按钮3*/
+    .message-item .button.third {
+        padding: 2px;
+        transform: translateX(-200%);
+    }
+
+    /*靠左气泡样式*/
+    .message-item.left {
+        min-width: 160px; /*文本宽度+10*/
+        margin-right: 48px;
+        text-align: left;
+        color: black;
+        background: linear-gradient(to right, #fbfbfb, white);
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+        float: left;
+        clear: both;
+    }
+        .message-item.left::before {
+            display: inline-block;
+            content: "[assistant](#message)"; /* 添加要显示的文本 */
+            color: #F4F4F4;
+            /*background-color: #9A9A9A;*/ /* 背景颜色 */
+            background-image: linear-gradient(to right, #9A9A9A 65%, rgba(0, 0, 0, 0));
+            padding: 3px 48px 3px 5px; /* 文本内边距 */
+            border-radius: 10px 0px 10px 0px; /* 文本背景的圆角 */
+        }
+        .message-item.left .button:hover {
+            background-color: #4B4B4B;
+        }
+        .message-item.left .button:active {
+            background-color: #211E1E;
+        }
+        /*内容被叉掉时*/
+        .message-item.left.hidden .button.first { 
+        }
+            .message-item.left.hidden .button.first:hover {
+                background-color: White;
+                filter: invert(100);
+            }
+
+        /* 暗色 */
+        .message-item.left.dark {
+            color: #d2d0ce;
+            background: linear-gradient(to right, #242322, #242322);
+ /*           box-shadow: 0 0 0 1px #41403f;*/
+        }
+            .message-item.left.dark::before {
+                color: #AAAAAA;
+                background-image: linear-gradient(to right, #565656 65%, rgba(0, 0, 0, 0));
+            }
+            .message-item.left.dark .button:hover {
+                background-color: #E6E6E6;
+            }
+            .message-item.left.dark.hidden::after {
+                background: repeating-linear-gradient( 
+                    -45deg, 
+                    transparent,
+                    transparent 1px,
+                    rgba(255, 255, 255, 0.5) 1px,
+                    rgba(255, 255, 255, 0.5) 2px );
+            }
+            .message-item.left.dark.hidden .button.first {
+                filter: invert(100);
+            }
+                .message-item.left.dark.hidden .button.first:hover {
+                    background-color: white;
+                    filter: invert(0);
+                }
+
+    /*靠右气泡样式*/
+    .message-item.right {
+        min-width: 166px; /*文本宽度+10+30*/
+        margin-left: 48px;
+        text-align: left;
+        color: white;
+        background: linear-gradient(to right, #914887, #8b257d);
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.35);
+        float: right;
+        clear: both;
+    }
+        .message-item.right::before {
+            display: inline-block;
+            content: "[user](#message)"; /* 添加要显示的文本 */
+            /*transform: translateX(-50%);*/ /* 将文本水平居中 */
+            color: #AAAAAA;
+            /*background-color: #6D1262;*/ /* 背景颜色 */
+            background-image: linear-gradient(to right, #6D1262 65%, rgba(0, 0, 0, 0));
+            padding: 3px 48px 3px 5px; /* 文本内边距 */
+            border-radius: 10px 0px 10px 0px; /* 文本背景的圆角 */
+        }
+        .message-item.right .button:hover {
+            background-color: #E6E6E6;
+        }
+        .message-item.right .button:active {
+            background-color: #C9C4C4;
+        }
+        /*内容被叉掉时*/
+        .message-item.right.hidden .button.first {
+            filter: invert(100);
+        }
+            .message-item.right.hidden .button.first:hover {
+                filter: invert(0);
+            }
+        /* 暗色 */
+        .message-item.right.dark.hidden::after {
+            background: repeating-linear-gradient(
+                -45deg, 
+                transparent,
+                transparent 1px,
+                rgba(255, 255, 255, 0.5) 1px, 
+                rgba(255, 255, 255, 0.5) 2px 
+                );
+        }
+    /*人设样式*/
+    .message-item.instructions {
+        max-width: 100%;
+        text-align: left;
+        color: white;
+        background: linear-gradient(to right, #083C3C, #256B75);
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.35);
+        float: left;
+        clear: both;
+    }
+        .message-item.instructions::before {
+            display: inline-block;
+            content: "[system](#additional_instructions)"; /* 添加要显示的文本 */
+            /*transform: translateX(-50%);*/ /* 将文本水平居中 */
+            color: #AAAAAA;
+            /*background-color: #256B75;*/ /* 背景颜色 */
+            background-image: linear-gradient(to right, #256B75 65%, rgba(37, 107, 117, 0));
+            padding: 3px 48px 3px 5px; /* 文本内边距 */
+            border-radius: 10px 0px 10px 0px; /* 文本背景的圆角 */
+        }
+
+    /*独白样式*/
+    .message-item.monologue {
+        max-width: 100%;
+        text-align: left;
+        color: white;
+        background: linear-gradient(to right, #083C3C, #256B75);
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.35);
+        float: left;
+        clear: both;
+    }
+        .message-item.monologue::before {
+            display: inline-block;
+            content: "[assistant](#inner_monologue)"; /* 添加要显示的文本 */
+            /*transform: translateX(-50%);*/ /* 将文本水平居中 */
+            color: #AAAAAA;
+            /*background-color: #256B75;*/ /* 背景颜色 */
+            background-image: linear-gradient(to right, #256B75 65%, rgba(37, 107, 117, 0));
+            padding: 3px 48px 3px 5px; /* 文本内边距 */
+            border-radius: 10px 0px 10px 0px; /* 文本背景的圆角 */
+        }
+
+
+
+
+
+
+
+
+/*窄屏*/
+@media (max-width: 640.98px) {
+/*    .message-item .button {
+        opacity: 0.2;
+    }*/
+}
+
+/*宽屏*/
+@media (min-width: 641px) {
+
+}

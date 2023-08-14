@@ -1,0 +1,38 @@
+﻿@using System.Diagnostics;
+
+<div class="nav-box">
+    <nav class="nav">
+        <a href="/" @onclick="NavOn">Home</a>
+@*        <a href="/" @onclick="NavOff">ChatRoom</a>*@
+        <div class="animation start-home"></div>
+    </nav>
+
+    @if (ChatRoomModelInstance.ChatHistory.Count() > 0)
+    {
+        <div class="centered-content" contenteditable="false">
+            <span>(@ChatRoomModelInstance.ChatHistory.Count())</span>
+        </div>
+    }
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        MessageServiceInstance.OnNavMenuUpdated += async () =>
+        {
+            await InvokeAsync(StateHasChanged); // 刷新组件
+        };
+
+        await base.OnInitializedAsync();
+    }
+
+    private void NavOn()
+    {
+        NavManager.NavigateTo("/chatroom?NavigationOff=false", forceLoad: true);
+    }
+
+    private void NavOff()
+    {
+        NavManager.NavigateTo("/chatroom?NavigationOff=true", forceLoad: true);
+    }
+}

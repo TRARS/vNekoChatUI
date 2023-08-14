@@ -1,0 +1,525 @@
+﻿@inherits LayoutComponentBase
+@using System.Diagnostics;
+@using System.Text.RegularExpressions;
+@using Microsoft.AspNetCore.SignalR.Client
+@using Microsoft.JSInterop
+@using PuppeteerSharp;
+@using vNekoChatUI.Web.BlazorServer.WebUI.CustomControl
+
+@inject IJSRuntime JS
+
+@implements IAsyncDisposable
+
+<PageTitle>MainView</PageTitle>
+
+<div class="chat-box">
+    <div class="chat-input">
+        <!--清除客户端历史记录按钮.宽屏时显示-->
+        <div class="clearbutton-hide portrait">
+            <CircleButton OnClick="ClearClient" />
+        </div>
+
+        <!--进度条+输入框-->
+        <div class="div-inputbox">
+            <ProgressBar IsDarkMode="@IsDarkMode"  
+                          CurrentProgress="@currentStep" />
+            <InputBox IsDarkMode="@IsDarkMode"
+                       Text="@messageInput" 
+                       TextChanged="UpdateMessageInput" 
+                       OnKeyDown="HandleKeyDown" 
+                       OnKeyUp="HandleKeyUp" />
+        </div>
+       
+      
+        <!--按钮-->
+        <div class="div-btnbox">
+            <!--清除客户端历史记录按钮.窄屏时显示-->
+            <div class="clearbutton-hide landscape">
+                <CircleButton OnClick="ClearClient"  />
+            </div>
+
+            @*Text="Send(Normal)"*@
+            <SquareButton OnClick="async () => { await SendToClient(SendToClientOption.Normal); }" 
+                          ExColor="red"
+                          PathData="M478.4128 491.7248l-202.1376-30.1056a81.92 81.92 0 0 1-64.67584-52.38784L125.52192 178.4832c-7.8848-21.17632 2.49856-44.8512 23.22432-52.92032a39.38304 39.38304 0 0 1 31.90784 1.47456L878.592 475.15648c19.90656 9.9328 28.18048 34.48832 18.432 54.82496-3.8912 8.21248-10.40384 14.848-18.432 18.8416L180.6336 896.96256a39.77216 39.77216 0 0 1-53.6576-18.8416 41.7792 41.7792 0 0 1-1.45408-32.58368l86.07744-230.74816a81.92 81.92 0 0 1 64.67584-52.38784l202.1376-30.1056a20.48 20.48 0 0 0 0-40.5504z"
+                          ToolTip="Send" />
+            @*Text="Send(BingBypassDetection)"*@
+            <SquareButton OnClick="async () => { await SendToClient(SendToClientOption.BingBypassDetection); }"  
+                          ExColor="green"
+                          PathData="M478.4128 491.7248l-202.1376-30.1056a81.92 81.92 0 0 1-64.67584-52.38784L125.52192 178.4832c-7.8848-21.17632 2.49856-44.8512 23.22432-52.92032a39.38304 39.38304 0 0 1 31.90784 1.47456L878.592 475.15648c19.90656 9.9328 28.18048 34.48832 18.432 54.82496-3.8912 8.21248-10.40384 14.848-18.432 18.8416L180.6336 896.96256a39.77216 39.77216 0 0 1-53.6576-18.8416 41.7792 41.7792 0 0 1-1.45408-32.58368l86.07744-230.74816a81.92 81.92 0 0 1 64.67584-52.38784l202.1376-30.1056a20.48 20.48 0 0 0 0-40.5504z"
+                          ToolTip="Send_BingBypassDetection" />
+            @*Text="Stop"*@
+            <SquareButton OnClick="SendStopToClient"  
+                          ExColor="purple"
+                          PathData="M57.164721 515.766482c0-252.834765 205.705996-458.591761 458.591761-458.591761s458.590761 205.756995 458.59076 458.591761-205.705996 458.540761-458.59076 458.540761S57.164721 768.601247 57.164721 515.766482z m85.454583 0c0 205.756995 167.328183 373.137178 373.136178 373.137178 205.756995 0 373.187178-167.379183 373.187177-373.137178S721.513477 142.574304 515.756482 142.574304c-205.808995 0-373.137178 167.435182-373.137178 373.192178z m419.597951 141.078311l-0.199999-4.24698V400.991042a42.629792 42.629792 0 0 1 42.420793-42.98379h0.357998a42.417793 42.417793 0 0 1 42.365793 38.582812l0.199999 4.144979 0.051 251.708771a42.715791 42.715791 0 0 1-85.199584 4.399979z m-181.860112 0l-0.199999-4.19998-0.1-251.657771a42.630792 42.630792 0 0 1 42.420793-42.98379h0.357998a42.466793 42.466793 0 0 1 42.420793 38.582812l0.199999 4.144979v251.708771a42.661792 42.661792 0 0 1-85.099584 4.399979z"
+                          ToolTip="Stop" />
+            @*Text="GetChatHistory" *@
+            <SquareButton OnClick="GetChatHistory"
+                          ExColor="cyan"
+                          PathData="M768 74.666667c40.533333 0 72.533333 32 74.666667 70.4v294.4c-40.533333-21.333333-89.6-34.133333-138.666667-34.133334-164.266667 0-298.666667 134.4-298.666667 298.666667 0 102.4 51.2 192 128 245.333333H192c-40.533333 0-72.533333-32-74.666667-70.4V149.333333c0-40.533333 32-72.533333 70.4-74.666666H768z m-405.333333 362.666666h-108.8c-17.066667 2.133333-29.866667 14.933333-29.866667 32s12.8 29.866667 29.866667 32H364.8c17.066667-2.133333 29.866667-14.933333 29.866667-32s-14.933333-32-32-32z m320-170.666666H253.866667c-17.066667 2.133333-29.866667 14.933333-29.866667 32s12.8 29.866667 29.866667 32H684.8c17.066667-2.133333 29.866667-14.933333 29.866667-32s-14.933333-32-32-32z
+                                     M714.666667 469.333333C851.2 469.333333 960 578.133333 960 714.666667S851.2 960 714.666667 960 469.333333 851.2 469.333333 714.666667 578.133333 469.333333 714.666667 469.333333z m0 106.666667c-17.066667 0-32 14.933333-32 32v113.066667c2.133333 10.666667 8.533333 21.333333 19.2 25.6l85.333333 38.4 2.133333 2.133333c14.933333 4.266667 32-2.133333 38.4-17.066667l2.133334-2.133333c4.266667-14.933333-2.133333-32-17.066667-38.4L746.666667 699.733333V605.866667c-2.133333-17.066667-14.933333-29.866667-32-29.866667z"
+                          ToolTip="GetChatHistory" />
+        </div>
+    </div>
+</div>
+
+
+<!--初始化-->
+@code
+{
+    [Parameter]
+    public bool IsDarkMode { get; set; } = false;
+
+    private enum SendToClientOption
+    {
+        Normal,
+        BingBypassDetection
+    }
+    private enum PlatformOption
+    {
+        Windows,//截图到桌面
+        SmartPhone,//截图让浏览器下载
+    }
+
+    private HubConnection? hubConnection;
+    //private bool isConnected => hubConnection?.State == HubConnectionState.Connected;
+    private string? messageInput;
+
+    private bool isScrolling;
+    private int scrollCount = 0;
+
+    private int currentStep = 0;
+
+    //初始化，注册一些方法供客户端间接调用
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavManager.ToAbsoluteUri("/chathub"))//★
+            .WithAutomaticReconnect()
+            .Build();
+
+        //每个方法末端都需要 await MessageServiceInstance.NotifyChatRoomUpdated(); 
+        //来通知ChatRoom刷新
+        hubConnection.On<byte[]?>("ExecuteServerCommandWithName", async method_content =>
+        {
+            var jsonStr = TextCompressor.Instance.DecompressData(method_content!);//解压一下
+            var jsonObj = JsonServiceInstance.Deserialize<MethodContent>(jsonStr);
+
+            if (jsonObj is null) { return; }
+
+            switch ($"Client{jsonObj.MethodName}")
+            {
+                //获取聊天记录
+                case "ClientPushChatHistory":
+                    {
+                        var para = jsonObj.MethodPara;
+                        if (string.IsNullOrWhiteSpace(para)) { return; }
+
+                        var data = JsonServiceInstance.Deserialize<InputData>(para);
+                        {
+                            ChatRoomModelInstance.AiName = data?.Ai_Name ?? "";
+                            ChatRoomModelInstance.AiProfile = data?.Ai_Profile ?? "";
+                            ChatRoomModelInstance.ChatHistory = data?.Ai_Content ?? new();
+                            ChatRoomModelInstance.AiInnerMonologue = data?.Ai_InnerMonologue ?? "";
+                        }
+
+                        TryRefreshPageNow();
+
+                        await MessageServiceInstance.NotifyChatRoomUpdated();
+                        await scrollToBottom();
+
+                        break;
+                    }
+
+                //获取流式传输文本
+                case "ClientStartStreaming":
+                    {
+                        var para = jsonObj.MethodPara;
+                        if (string.IsNullOrWhiteSpace(para)) { return; }
+
+                        if ((ChatRoomModelInstance.ChatHistory?.LastOrDefault()) is not null)
+                        {
+                            var lastItem = ChatRoomModelInstance.ChatHistory[^1]; // 获取最后一项
+                            if (lastItem.Content != para)
+                            {
+                                lastItem.Content = para;
+                                await MessageServiceInstance.NotifyChatRoomUpdated();
+                            }
+                        }
+
+                        break;
+                    }
+
+                //获取当前进度
+                case "ClientPushStep":
+                    {
+                        var para = jsonObj.MethodPara;
+                        if (string.IsNullOrWhiteSpace(para)) { return; }
+
+                        Debug.WriteLine($"step = {para}");
+                        if (int.TryParse(para, out int cs))
+                        {
+                            currentStep = (cs * 100 / 6);
+                        } else
+                        {
+                            currentStep = 0;
+                        }
+                        await InvokeAsync(StateHasChanged);
+                        break;             
+                    }
+                //
+                default:
+                    {
+                        Debug.WriteLine($"unknown method: {jsonObj.MethodName}");
+                        break;
+                    }
+            }
+        });
+
+        //启动
+        await hubConnection.StartAsync();
+    }
+
+    //（与JS交互的方法在MainView.js中）
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(200);
+
+            //注册当前页面持有的hubConnection为服务端
+            await hubConnection!.SendAsync("RegistersServerId", hubConnection?.ConnectionId);
+
+            //修改textarea的回车行为
+            await registerKeyPressHandler();
+
+            //往ChatRoomModelInstance注册几个方法给ChatRoom用
+            ChatRoomModelInstance.ReSend = async (x) => { await ChatRoomReSend(x); };
+            ChatRoomModelInstance.RefreshProfile = async (x) => { await ChatRoomRefreshProfile(x); };
+            ChatRoomModelInstance.Screenshot_Windows = async (x,y) => { await TakeScreenshot(x,y, PlatformOption.Windows); };
+            ChatRoomModelInstance.Screenshot_SmartPhone = async (x,y) => { await TakeScreenshot(x,y, PlatformOption.SmartPhone); };
+        }
+    }
+
+    //实现IAsyncDisposable，销毁该页面的HubConnection
+    public async ValueTask DisposeAsync()
+    { 
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+}
+
+<!--输入框基础事件-->
+@code {
+    private bool enter_locker = false;
+
+    private void UpdateMessageInput(string newText)
+    {
+        messageInput = newText;
+    }
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey)
+        {
+            if (enter_locker is false)
+            {
+                //Debug.WriteLine($"enter_locker = {enter_locker}");
+                enter_locker = true;
+            }
+        }
+
+        await Task.Yield();
+    }
+    private async Task HandleKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey)
+        {
+            //Debug.WriteLine($"enter_locker = {enter_locker}");
+            enter_locker = false;
+
+            await resetFocusToTextarea();
+            await SendToClient(SendToClientOption.Normal);
+        }
+
+        await resizeTextarea();
+    }
+}
+
+<!--和JS互动的方法-->
+ @code{
+    private async Task resetFocusToTextarea()
+    {
+        //重置textarea焦点使其能正常获得本地变量message的值
+        await JS.InvokeVoidAsync("resetFocusToTextarea", "textarea.textbox");
+    }
+    private async Task registerKeyPressHandler()
+    {
+        //修改textarea的回车行为
+        await JS.InvokeVoidAsync("registerKeyPressHandler", "textarea.textbox");
+    }
+    private async Task resizeTextarea()
+    {
+        await Task.Delay(100);//给点反应时间，再调高度
+        await JS.InvokeVoidAsync("resizeTextarea", "textarea.textbox");
+    }
+    private async Task scrollToBottom(int count = 0, int delay = 0)
+    {
+        try
+        {
+            if (isScrolling is false)
+            {
+                isScrolling = true;
+                {
+                    await Task.Delay(delay);//给点反应时间，再滚动
+                    await JS.InvokeVoidAsync("scrollToBottom");
+                }
+                isScrolling = false;
+
+                if (scrollCount > 0)
+                {
+                    if (scrollCount > 5) { scrollCount = 5; }
+                    scrollCount--;
+                    await scrollToBottom(scrollCount, 100);//二次滚动
+                }
+            }
+            else
+            {
+                scrollCount++;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"scrollToBottom error: {ex.Message}");
+        }
+    }
+    private async Task takeScreenshot(bool navigation_off, bool inputbox_off, PlatformOption platformOpt)
+    {
+        try
+        {
+            using (var browserFetcher = new BrowserFetcher())
+            {
+                Debug.WriteLine($"Screenshot start");
+
+                await browserFetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+                var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+                    {
+                        Headless = true,
+                        DefaultViewport = null,
+                        ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+                    });
+
+                using (var page = await browser.NewPageAsync())
+                {
+                    string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                    int currentWidth = await JS.InvokeAsync<int>("getClientWidth", null);
+                    int currentScrollheight = await JS.InvokeAsync<int>("getScrollHeight", null);
+
+                    // await JS.InvokeAsync<double>("getSystemScaleFactor"); //比率还是写死比较好
+                    double ratio = 2;
+
+                    // 允许运行js
+                    await page.SetJavaScriptEnabledAsync(true);
+                    //初始化时指定窗口大小
+                    await page.SetViewportAsync(new ViewPortOptions
+                        {
+                            Width = currentWidth,
+                            Height = 0,
+                            DeviceScaleFactor = ratio
+                        });
+                    //打开网页
+                    await page.GoToAsync($"http://127.0.0.1:14285/chatroom?NavigationOff={navigation_off}&&InputBoxOff={inputbox_off}");
+                    {
+                        await Task.Delay(1000);
+                        //设置截图选项
+                        ScreenshotOptions screenshotOptions = new ScreenshotOptions();
+                        screenshotOptions.FullPage = true; //是否截取整个页面
+                        screenshotOptions.OmitBackground = true;//是否使用透明背景，而不是默认白色背景
+                        screenshotOptions.Type = ScreenshotType.Png; //截图格式
+
+                        switch (platformOpt)
+                        {
+                            case PlatformOption.Windows:
+                                {
+                                    await page.ScreenshotAsync(Path.Combine(desktopPath, "_screenshot.png"), screenshotOptions);
+                                    break;
+                                }
+                            case PlatformOption.SmartPhone:
+                                {
+                                    var base64data = await page.ScreenshotBase64Async(screenshotOptions);
+                                    await JS.InvokeVoidAsync("downloadbase64img", "_screenshot_base64data.png", $"data:image/png;base64,{base64data}");
+                                 
+                                    break;
+                                }
+                        }
+                        Debug.WriteLine($"Screenshot OK");
+                    }
+                }
+
+                browser.Dispose();
+
+                TryRefreshPageNow(true);
+            }
+
+            //html2canvas不用了
+            //_ = await JS.InvokeAsync<string>("takeScreenshot", "ChatRoom_cMMJvDTzWxUeXNYa");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"takeScreenshot error: {ex.Message}");
+        }
+    }
+}
+
+<!--当前页面上的控件调用的方法-->
+ @code     
+ {
+    //发普通消息给客户端
+    private async Task SendToClient(SendToClientOption? bypass = null)
+    {
+        //更新设定
+        await SetWebPageContext(bypass);
+
+        //正常发消息
+        await ExecuteClientCommandWithName("ServerSendMessage", $"{messageInput}");
+
+        this.UpdateMessageInput(string.Empty);// 清空输入框
+
+        await InvokeAsync(StateHasChanged);
+        await scrollToBottom();
+    }
+    //发停止消息给客户端
+    private async Task SendStopToClient()
+    {
+        if (hubConnection is null) { return; }
+        //正常发消息
+        await ExecuteClientCommandWithName("ServerSendStop");
+
+        this.UpdateMessageInput(string.Empty);// 清空输入框
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+
+    //清空客户端聊天记录
+    private async Task ClearClient()
+    {
+        if (hubConnection is null) { return; }
+        ChatRoomModelInstance.ChatHistory.Clear();
+
+        await ExecuteClientCommandWithName("ServerClearChatHistory");
+
+        await InvokeAsync(StateHasChanged);
+        await MessageServiceInstance.NotifyChatRoomUpdated();
+    }
+    //获取客户端聊天记录
+    private async Task GetChatHistory()
+    {
+        if (hubConnection is null) { return; }
+
+        //刷新一下，省得卡BUG后台更新了页面不更新
+        TryRefreshPageNow(true);
+
+        await ExecuteClientCommandWithName("ServerGetChatHistory");
+
+        //复位
+        ChatRoomModelInstance.HistoryChanged = false;
+
+        //await scrollToBottom();//这里不知为何线程会炸，无法滚动
+    }
+    //修改WebPageContext
+    private async Task SetWebPageContext(SendToClientOption? bypass = null)
+    {
+        if (hubConnection is null) { return; }
+
+        //按InputData格式Json一下传过去就好了
+        var data_content = new
+        {
+            ai_name = "",//不使用
+            ai_profile = ChatRoomModelInstance.AiProfile.Trim(),
+            ai_content = ChatRoomModelInstance.ChatHistory,
+            ai_innermonologue = ChatRoomModelInstance.AiInnerMonologue.Trim(),
+            history_changed = ChatRoomModelInstance.HistoryChanged,//正好用来表达服务端修改了聊天记录
+            bypass_detection = bypass switch
+            {
+                SendToClientOption.Normal => false,
+                SendToClientOption.BingBypassDetection => true,
+                _ => ChatRoomModelInstance.BingBypassDetection
+            },//正好用来表达服务端发的消息是否需要过越狱检测
+        };
+        await ExecuteClientCommandWithName("ServerSetWebPageContext", GetMethodContentJsonStr(data_content));
+
+
+        //复位
+        ChatRoomModelInstance.HistoryChanged = false;
+
+        //刷新
+        TryRefreshPageNow();
+
+        await Task.Delay(100);//都异步的玩意，最好等那边更新一下
+    }
+
+
+
+
+    //包装一下
+    private string GetMethodContentJsonStr(dynamic content)
+    {
+        //让客户端解一下json
+        var json = JsonServiceInstance.Serialize(content);
+
+        return json;
+    }
+    //刷新一下
+    private void TryRefreshPageNow(bool flag = false)
+    {
+        //刷新一下页面，若有必要则发消息前刷新一下，手动获取历史记录时可以刷一下
+        if (ChatRoomModelInstance.NeedRefreshPage || flag)
+        {
+            var currentUrl = NavManager.Uri;
+            NavManager.NavigateTo(currentUrl, forceLoad: true);
+
+            ChatRoomModelInstance.NeedRefreshPage = false;// //复位
+        }
+    }
+
+    //
+    private async Task ExecuteClientCommandWithName(string method_name, string method_para = "")
+    {
+        if (hubConnection is null || hubConnection.State is not HubConnectionState.Connected) { return; }
+
+        var method_content = new
+        {
+            connectionId = hubConnection.ConnectionId,
+            methodname = method_name,
+            methodpara = method_para,
+        };
+        var jsonStr = GetMethodContentJsonStr(method_content);
+        var data = TextCompressor.Instance.CompressText(jsonStr);//压缩一下
+
+        await hubConnection.SendAsync("ExecuteClientCommandWithName", data);
+        //Debug.WriteLine($"{method_name} ok");
+    }
+}
+
+ <!--供ChatRoom直接调用的方法-->
+ @code {
+    private async Task ChatRoomReSend(string text)
+    {
+        this.UpdateMessageInput(text);
+        await SendToClient();
+    }
+
+    private async Task ChatRoomRefreshProfile(string text)
+    {
+        if (hubConnection is null) { return; }
+
+        await ExecuteClientCommandWithName("ServerRefreshProfile");
+    }
+
+    private async Task TakeScreenshot(bool navigation_off, bool inputbox_off, PlatformOption platformOpt)
+    {
+        await takeScreenshot(navigation_off, inputbox_off, platformOpt);
+    }
+ }

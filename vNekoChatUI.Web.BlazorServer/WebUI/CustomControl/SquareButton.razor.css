@@ -1,0 +1,191 @@
+﻿.button-square {
+    min-width: 32px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4C8FAF;
+    color: white;
+    padding: 0px 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+ /*   margin-right: 10px;*/
+    border-bottom: 1px solid #166082;
+    
+    /*复用颜色变量*/
+    --color-hex: #AF4C4C; /*HSL -> 0 39 49*/
+    --h: 0;
+    --s: 39%;
+    --l: 49%;
+}
+    .button-square:hover {
+        background-color: #166082;
+    }
+    .button-square:active {
+        background-color: #104C7D;
+    }
+
+    /*红*/
+    .button-square.red {
+        background-color: hsl(var(--h) var(--s) var(--l));
+        border-bottom: 1px solid hsl(calc(var(--h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+    }
+        .button-square.red:hover {
+            background-color: hsl(calc(var(--h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+        }
+        .button-square.red:active {
+            border-bottom: 1px solid hsl(calc(var(--h) - 21) calc(var(--s) + 23%) calc(var(--l) - 24%));
+            background-color: hsl(calc(var(--h) - 21) calc(var(--s) + 23%) calc(var(--l) - 24%));
+        }
+
+    /*橙*/
+    .button-square.orange {
+        --orange-h: calc(var(--h) + 30);
+        background-color: hsl(var(--orange-h) var(--s) var(--l));
+        border-bottom: 1px solid hsl(calc(var(--orange-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+    }
+        .button-square.orange:hover {
+            background-color: hsl(calc(var(--orange-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+        }
+        .button-square.orange:active {
+            border-bottom: 1px solid hsl(calc(var(--orange-h) - 21) calc(var(--s) + 23%) calc(var(--l) - 24%));
+            background-color: hsl(calc(var(--orange-h) - 21) calc(var(--s) + 23%) calc(var(--l) - 24%));
+        }
+
+    /*黄*/
+    .button-square.yellow {
+        --yellow-h: calc(var(--h) + 50);
+        background-color: hsl(var(--yellow-h) var(--s) var(--l));
+        border-bottom: 1px solid hsl(calc(var(--yellow-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+    }
+        .button-square.yellow:hover {
+            background-color: hsl(calc(var(--yellow-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+        }
+        .button-square.yellow:active {
+            border-bottom: 1px solid hsl(calc(var(--yellow-h)) calc(var(--s) + 23%) calc(var(--l) - 24%));
+            background-color: hsl(calc(var(--yellow-h)) calc(var(--s) + 23%) calc(var(--l) - 24%));
+        }
+
+    /*绿*/
+    .button-square.green {
+        /*background-color: #4CAF7C;*/
+        --green-h: calc(var(--h) + 149);
+        background-color: hsl(var(--green-h) var(--s) var(--l));
+        border-bottom: 1px solid hsl(calc(var(--green-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+    }
+        .button-square.green:hover {
+            background-color: hsl(calc(var(--green-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+        }
+        .button-square.green:active {
+            border-bottom: 1px solid hsl(calc(var(--green-h)) calc(var(--s) + 23%) calc(var(--l) - 24%));
+            background-color: hsl(calc(var(--green-h)) calc(var(--s) + 23%) calc(var(--l) - 24%));
+        }
+
+    /*青*/
+    .button-square.cyan {
+        --cyan-h: calc(var(--h) + 190);
+        background-color: hsl(var(--cyan-h) var(--s) var(--l));
+        border-bottom: 1px solid hsl(calc(var(--cyan-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+    }
+        .button-square.cyan:hover {
+            background-color: hsl(calc(var(--cyan-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+        }
+        .button-square.cyan:active {
+            border-bottom: 1px solid hsl(calc(var(--cyan-h)) calc(var(--s) + 23%) calc(var(--l) - 24%));
+            background-color: hsl(calc(var(--cyan-h)) calc(var(--s) + 23%) calc(var(--l) - 24%));
+        }
+
+    /*蓝*/
+    .button-square.blue {
+        /*background-color: #4C83AF;*/
+        --blue-h: calc(var(--h) + 215);
+        background-color: hsl(var(--blue-h) var(--s) var(--l));
+        border-bottom: 1px solid hsl(calc(var(--blue-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+    }
+        .button-square.blue:hover {
+            background-color: hsl(calc(var(--blue-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+        }
+        .button-square.blue:active {
+            border-bottom: 1px solid hsl(calc(var(--blue-h)) calc(var(--s) + 23%) calc(var(--l) - 24%));
+            background-color: hsl(calc(var(--blue-h)) calc(var(--s) + 23%) calc(var(--l) - 24%));
+        }
+
+    /*紫*/
+    .button-square.purple {
+        --purple-h: calc(var(--h) + 250);
+        background-color: hsl(var(--purple-h) var(--s) var(--l));
+        border-bottom: 1px solid hsl(calc(var(--purple-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+    }
+        .button-square.purple:hover {
+            background-color: hsl(calc(var(--purple-h)) calc(var(--s) + 19%) calc(var(--l) - 18%));
+        }
+        .button-square.purple:active {
+            border-bottom: 1px solid hsl(calc(var(--purple-h)) calc(var(--s) + 23%) calc(var(--l) - 24%));
+            background-color: hsl(calc(var(--purple-h)) calc(var(--s) + 23%) calc(var(--l) - 24%));
+        }
+
+
+
+.button-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+}
+    .button-content:hover .description1 {
+        display: inline-block;
+        top: -250%;
+
+    }
+
+.description1 {
+    display: none;
+    position: absolute;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.6em;
+    color: #fff;
+    border-radius: 5px;
+    background: #000;
+    width: auto;
+    min-width: 80px;
+}
+    .description1:before {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        border: 15px solid transparent;
+        border-top: 15px solid #000;
+        margin-left: -15px;
+    }
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 640.98px) {
+/*    .button-square {
+        margin-top: unset;
+    }*/
+}
+
+@media (min-width: 641px) {
+/*    .button-square {
+        margin-top: -50px;
+    }*/
+}
+
+
+
+

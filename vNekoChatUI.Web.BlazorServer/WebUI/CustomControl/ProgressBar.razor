@@ -1,0 +1,20 @@
+﻿<div class="progress-bar-container @(IsDarkMode?"dark":"")">
+    <div class="progress-bar @(IsDarkMode?"dark":"")" style="width: 200px">
+        @*@CurrentProgress*@
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public bool IsDarkMode { get; set; } = true;
+
+    [Parameter]
+    public int CurrentProgress { get; set; } = 50;
+
+    // 计算进度条宽度
+    private int CalculateProgressBarWidth()
+    {
+        // 假设进度范围为0到100，你可以根据需求自定义范围和计算逻辑
+        return CurrentProgress;
+    }
+}

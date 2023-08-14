@@ -1,0 +1,78 @@
+﻿@using vNekoChatUI.Web.BlazorServer.WebUI.MainView
+
+@inherits LayoutComponentBase
+
+<PageTitle>MainPage</PageTitle>
+
+
+
+<div class="page">
+    @if (HideNavMenu is false)
+    {
+        <div class="sidebar px-2">
+            <NavMenuEx />
+        </div>
+    }
+
+    <main>
+        <article class="content @(HideNavMenu is false?"":"navmenu-off") @(HideInputBox is false?"":"inputbox-off")">
+            @Body
+        </article>
+
+        @if (HideInputBox is false)
+        {
+            <div class="bottom-row @(ChatRoomModelInstance.IsDarkMode?"dark":"") px-2">
+                <InputArea IsDarkMode="@ChatRoomModelInstance.IsDarkMode" />
+            </div>
+        }
+    </main>
+</div>
+
+<div class="div-background @(ChatRoomModelInstance.IsDarkMode?"dark":"")" />
+
+
+@code{
+    private bool HideNavMenu;
+    private bool HideInputBox;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //手动显示/隐藏导航栏
+        ChatRoomModelInstance.HideNavMenu = async (act) =>
+        {
+            HideNavMenu = !HideNavMenu;
+            act?.Invoke(HideNavMenu);
+            await InvokeAsync(StateHasChanged);
+        };
+        //手动显示/隐藏输入框
+        ChatRoomModelInstance.HideInputBox = async (act) =>
+        {
+            HideInputBox = !HideInputBox;
+            act?.Invoke(HideInputBox);
+            await InvokeAsync(StateHasChanged);
+        };
+        //手动切换颜色
+        ChatRoomModelInstance.ColorChange = async () =>
+        {
+            ChatRoomModelInstance.IsDarkMode = !ChatRoomModelInstance.IsDarkMode;
+            await InvokeAsync(StateHasChanged);
+        };
+
+
+        //供无头chrome截图时隐藏导航栏
+        MessageServiceInstance.HideNavigationBar += async () =>
+        {
+            HideNavMenu = true;
+            await InvokeAsync(StateHasChanged); // 刷新组件
+        };
+
+        //供无头chrome截图时隐藏输入框
+        MessageServiceInstance.HideInputBox += async () =>
+        {
+            HideInputBox = true;
+            await InvokeAsync(StateHasChanged); // 刷新组件
+        };
+
+        await Task.Yield();
+    }
+}

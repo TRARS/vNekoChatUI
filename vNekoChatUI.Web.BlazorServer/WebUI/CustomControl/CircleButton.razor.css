@@ -1,0 +1,37 @@
+﻿.button-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #FFF;
+    padding: 6px;
+    background-color: #8b257d;
+    border: none;
+    /*    border: 1px solid #641046;*/
+    /*    box-shadow: 0px 0px 2px rgb(124, 0, 51);*/
+    outline: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    /*  margin-right: 5px;*/
+}
+/*    .button-circle .icon {
+        width: 100%;
+        height: 100%;
+        margin-left: -1px;
+        margin-top: -3px;
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg%20t%3D%221688897557261%22%20class%3D%22icon%22%20viewBox%3D%220%200%201024%201024%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20p-id%3D%222560%22%20width%3D%22200%22%20height%3D%22200%22%3E%3Cpath%20d%3D%22M824.4%20438.8c0-37.6-30-67.6-67.6-67.6l-135.2%200L621.6%20104.8c0-37.6-30-67.6-67.6-67.6-37.6%200-67.6%2030-67.6%2067.6l0%20266.4L358.8%20371.2c-37.6%200-67.6%2030-67.6%2067.6l0%2067.6L828%20506.4l0-67.6L824.4%20438.8%20824.4%20438.8zM824.4%20574c-11.2%200-536.8%200-536.8%200S250%20972%2088.4%20972L280%20972c75.2%200%20108.8-217.6%20108.8-217.6s33.6%20195.2%203.6%20217.6l105.2%200c-3.6%200%200%200%2011.2%200%2052.4-7.6%2060-247.6%2060-247.6s52.4%20244%2045.2%20244c-26.4%200-78.8%200-105.2%200l0%200%20154%200c-7.6%200%200%200%2011.2%200%2048.8-11.2%2052.4-187.6%2052.4-187.6s22.4%20187.6%2015.2%20187.6c-18.8%200-48.8%200-67.6%200l-3.6%200%2090%200C895.6%20972%20903.2%20784.4%20824.4%20574L824.4%20574z%22%20fill%3D%22%23ffffff%22%20p-id%3D%222561%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E"); 
+        background-size: cover;
+        background-position: center;
+    }*/
+
+    .button-circle:hover {
+        background-color: #620E64;
+    }
+    .button-circle:active {
+        background-color: #4C0744;
+    }
+
+    .button-circle:disabled {
+        opacity: 0.5; /* 修改透明度示例 */
+        cursor: not-allowed; /* 修改鼠标指针示例 */
+        box-shadow:none;
+    }

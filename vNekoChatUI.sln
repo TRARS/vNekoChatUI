@@ -1,0 +1,87 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vNekoChatUI", "vNekoChatUI\vNekoChatUI.csproj", "{06DD9EC6-D9C4-4D11-B763-E2C1B9F50C8D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{621FD66E-77EF-43FC-BE46-E4F7EDAD5BCE} = {621FD66E-77EF-43FC-BE46-E4F7EDAD5BCE}
+		{6E52D97B-76A2-410A-9664-AF5F67C1C598} = {6E52D97B-76A2-410A-9664-AF5F67C1C598}
+		{CA69577D-B319-4676-AD7D-7FB53077F4D1} = {CA69577D-B319-4676-AD7D-7FB53077F4D1}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vNekoChatUI.Base", "vNekoChatUI.Base\vNekoChatUI.Base.csproj", "{CA69577D-B319-4676-AD7D-7FB53077F4D1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vNekoChatUI.Character", "vNekoChatUI.Character\vNekoChatUI.Character.csproj", "{621FD66E-77EF-43FC-BE46-E4F7EDAD5BCE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B2F75AE6-54AE-48D7-8E15-D76C3234A7B9} = {B2F75AE6-54AE-48D7-8E15-D76C3234A7B9}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vNekoChatUI.Character.SocketUtils", "vNekoChatUI.Character.SocketUtils\vNekoChatUI.Character.SocketUtils.csproj", "{B2F75AE6-54AE-48D7-8E15-D76C3234A7B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vNekoChatUI.Character.HttpUtils", "vNekoChatUI.Character.HttpUtils\vNekoChatUI.Character.HttpUtils.csproj", "{1E671D92-0A07-4C83-A73A-D5565DD4AF4B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vNekoChatUI.Character.BingUtils", "vNekoChatUI.Character.BingUtils\vNekoChatUI.Character.BingUtils.csproj", "{B6D17764-E8C5-451D-A170-2291EE1B5593}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.WPF", "Common.WPF\Common.WPF.csproj", "{6E52D97B-76A2-410A-9664-AF5F67C1C598}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AD0B382C-BE24-4BB3-9AA6-28FD373237E9} = {AD0B382C-BE24-4BB3-9AA6-28FD373237E9}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vNekoChatUI.Web.BlazorServer", "vNekoChatUI.Web.BlazorServer\vNekoChatUI.Web.BlazorServer.csproj", "{87806912-46A2-4273-9DA9-7ED4BA647C02}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AD0B382C-BE24-4BB3-9AA6-28FD373237E9} = {AD0B382C-BE24-4BB3-9AA6-28FD373237E9}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{AD0B382C-BE24-4BB3-9AA6-28FD373237E9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06DD9EC6-D9C4-4D11-B763-E2C1B9F50C8D}.Debug|x64.ActiveCfg = Debug|x64
+		{06DD9EC6-D9C4-4D11-B763-E2C1B9F50C8D}.Debug|x64.Build.0 = Debug|x64
+		{06DD9EC6-D9C4-4D11-B763-E2C1B9F50C8D}.Release|x64.ActiveCfg = Release|x64
+		{06DD9EC6-D9C4-4D11-B763-E2C1B9F50C8D}.Release|x64.Build.0 = Release|x64
+		{CA69577D-B319-4676-AD7D-7FB53077F4D1}.Debug|x64.ActiveCfg = Debug|x64
+		{CA69577D-B319-4676-AD7D-7FB53077F4D1}.Debug|x64.Build.0 = Debug|x64
+		{CA69577D-B319-4676-AD7D-7FB53077F4D1}.Release|x64.ActiveCfg = Release|x64
+		{CA69577D-B319-4676-AD7D-7FB53077F4D1}.Release|x64.Build.0 = Release|x64
+		{621FD66E-77EF-43FC-BE46-E4F7EDAD5BCE}.Debug|x64.ActiveCfg = Debug|x64
+		{621FD66E-77EF-43FC-BE46-E4F7EDAD5BCE}.Debug|x64.Build.0 = Debug|x64
+		{621FD66E-77EF-43FC-BE46-E4F7EDAD5BCE}.Release|x64.ActiveCfg = Release|x64
+		{621FD66E-77EF-43FC-BE46-E4F7EDAD5BCE}.Release|x64.Build.0 = Release|x64
+		{B2F75AE6-54AE-48D7-8E15-D76C3234A7B9}.Debug|x64.ActiveCfg = Debug|x64
+		{B2F75AE6-54AE-48D7-8E15-D76C3234A7B9}.Debug|x64.Build.0 = Debug|x64
+		{B2F75AE6-54AE-48D7-8E15-D76C3234A7B9}.Release|x64.ActiveCfg = Release|x64
+		{B2F75AE6-54AE-48D7-8E15-D76C3234A7B9}.Release|x64.Build.0 = Release|x64
+		{1E671D92-0A07-4C83-A73A-D5565DD4AF4B}.Debug|x64.ActiveCfg = Debug|x64
+		{1E671D92-0A07-4C83-A73A-D5565DD4AF4B}.Debug|x64.Build.0 = Debug|x64
+		{1E671D92-0A07-4C83-A73A-D5565DD4AF4B}.Release|x64.ActiveCfg = Release|x64
+		{1E671D92-0A07-4C83-A73A-D5565DD4AF4B}.Release|x64.Build.0 = Release|x64
+		{B6D17764-E8C5-451D-A170-2291EE1B5593}.Debug|x64.ActiveCfg = Debug|x64
+		{B6D17764-E8C5-451D-A170-2291EE1B5593}.Debug|x64.Build.0 = Debug|x64
+		{B6D17764-E8C5-451D-A170-2291EE1B5593}.Release|x64.ActiveCfg = Release|x64
+		{B6D17764-E8C5-451D-A170-2291EE1B5593}.Release|x64.Build.0 = Release|x64
+		{6E52D97B-76A2-410A-9664-AF5F67C1C598}.Debug|x64.ActiveCfg = Debug|x64
+		{6E52D97B-76A2-410A-9664-AF5F67C1C598}.Debug|x64.Build.0 = Debug|x64
+		{6E52D97B-76A2-410A-9664-AF5F67C1C598}.Release|x64.ActiveCfg = Release|x64
+		{6E52D97B-76A2-410A-9664-AF5F67C1C598}.Release|x64.Build.0 = Release|x64
+		{87806912-46A2-4273-9DA9-7ED4BA647C02}.Debug|x64.ActiveCfg = Debug|x64
+		{87806912-46A2-4273-9DA9-7ED4BA647C02}.Debug|x64.Build.0 = Debug|x64
+		{87806912-46A2-4273-9DA9-7ED4BA647C02}.Release|x64.ActiveCfg = Release|x64
+		{87806912-46A2-4273-9DA9-7ED4BA647C02}.Release|x64.Build.0 = Release|x64
+		{AD0B382C-BE24-4BB3-9AA6-28FD373237E9}.Debug|x64.ActiveCfg = Debug|x64
+		{AD0B382C-BE24-4BB3-9AA6-28FD373237E9}.Debug|x64.Build.0 = Debug|x64
+		{AD0B382C-BE24-4BB3-9AA6-28FD373237E9}.Release|x64.ActiveCfg = Release|x64
+		{AD0B382C-BE24-4BB3-9AA6-28FD373237E9}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B9102CF0-CD4A-4918-AB6D-F926DF78B16E}
+	EndGlobalSection
+EndGlobal

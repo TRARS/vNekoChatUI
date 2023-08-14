@@ -1,0 +1,86 @@
+.div-background {
+    background: linear-gradient(to right, #eeedf3, #dddffc);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    height: 100%;
+}
+    .div-background.dark {
+        background: none;
+        background-color: #11100f;
+    }
+
+.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+/*    background-color:cornflowerblue;*/
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    width: 100%;
+    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.25);
+    border-bottom: 1px solid #d6d5d5;
+}
+
+.content {
+    padding: 10px;
+    padding-top: 3.6rem;
+}
+    .content.navmenu-off {
+        padding-top: 10px;
+    }
+
+
+.bottom-row {
+    position: fixed;
+    bottom: 0;
+    background-color: #f7f7f7;
+    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.25);
+    border-top: 1px solid #d6d5d5;
+    justify-content: flex-end;
+    min-height: 3.5rem;
+    max-height: 17.5rem;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    /*    top: 0;*/
+    /*    height: 100%;*/
+}
+    .bottom-row.dark {
+        background-color: #161515;
+    }
+
+/*Õ­ÆÁ*/
+@media (max-width: 640.98px) {
+    .content {
+        padding-bottom: 143px;
+    }
+        .content.inputbox-off {
+            padding-bottom: 0px;
+        }
+}
+
+/*¿íÆÁ*/
+@media (min-width: 641px) {
+    .content {
+        padding-bottom: 90px;
+    }
+        .content.inputbox-off {
+            padding-bottom: 0px;
+        }
+}

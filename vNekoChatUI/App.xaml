@@ -1,0 +1,28 @@
+﻿<Application x:Class="vNekoChatUI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:vNekoChatUI"
+             >
+    <!--     StartupUri="MainView/MainWindow.xaml"
+             Startup="Application_Startup"
+             Exit="Application_Exit"-->
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CustomControlEx/ContextMenuEx/cContextMenu_style.xaml"/>
+                <ResourceDictionary Source="/CustomControlEx/ListViewChatHistoryEx/cListViewChatHistory_style.xaml"/>
+                <ResourceDictionary Source="/CustomControlEx/ListViewChatHistoryEx/cScrollViewer_style.xaml"/>
+                <ResourceDictionary Source="/CustomControlEx/ListViewContactsEx/cListViewContacts_style.xaml"/>
+                <ResourceDictionary Source="/CustomControlEx/RadioButtonEx/cRadioButton_style.xaml"/>
+                <ResourceDictionary Source="/CustomControlEx/StepProgressIndicatorEx/cStepProgressIndicator_style.xaml"/>
+                <ResourceDictionary Source="/CustomControlEx/SuggestionMenuItemEx/cSuggestionMenuItem_style.xaml"/>
+                <ResourceDictionary Source="/CustomControlEx/TextBoxEx/cTextBox_style.xaml"/>
+                <ResourceDictionary Source="/CustomControlEx/ToggleButtonEx/cToggleButton_style.xaml"/>
+                <ResourceDictionary Source="/CustomControlEx/EmptyButtonEx/cEmptyButton_style.xaml"/>
+                <ResourceDictionary Source="/CustomControlEx/ConfigButtonEx/cConfigButton_style.xaml"/>
+                <ResourceDictionary Source="/CustomControlEx/ConsoleListViewEx/cConsoleListView_style.xaml"/>
+                
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

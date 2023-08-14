@@ -1,0 +1,156 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:vNekoChatUI.CustomControlEx.EmptyButtonEx" 
+                    xmlns:contextmenuex="clr-namespace:vNekoChatUI.CustomControlEx.ContextMenuEx" 
+                    xmlns:textboxex="clr-namespace:vNekoChatUI.CustomControlEx.TextBoxEx">
+
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <local:cEmptyButton_converter_border_clip x:Key="cEmptyButton_converter_border_clip"/>
+    <local:cEmptyButton_converter_border_mask_margin x:Key="cEmptyButton_converter_border_mask_margin"/>
+    
+    <Style TargetType="{x:Type local:cEmptyButton}">
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:cEmptyButton}">
+                    <Border Clip="{DynamicResource border_clip_key}">
+                        <Border.Resources>
+                            <!--直降将RectangleGeometry赋给Clip，能用但会报错，故绕个弯-->
+                            <RectangleGeometry x:Key="border_clip_key" RadiusX="4.5" RadiusY="4.5">
+                                <RectangleGeometry.Rect>
+                                    <MultiBinding Converter="{StaticResource cEmptyButton_converter_border_clip}">
+                                        <Binding Path="ActualWidth" ElementName="border" />
+                                        <Binding Path="ActualHeight" ElementName="border"/>
+                                        <Binding Path="BorderThickness" ElementName="border"/>
+                                    </MultiBinding>
+                                </RectangleGeometry.Rect>
+                            </RectangleGeometry>
+                        </Border.Resources>
+
+                        <Grid x:Name="grid"
+                              ContextMenuService.IsEnabled="{Binding ContextMenuIsEnabled, RelativeSource={RelativeSource TemplatedParent}}"
+                              ContextMenuService.Placement="{Binding ContextMenuPlacementMode, RelativeSource={RelativeSource TemplatedParent}}"
+                              >
+
+                            <!--背景板0-->
+                            <Border Background="{Binding BorderBackgroundZeroColor,RelativeSource={RelativeSource TemplatedParent}}"
+                                    Opacity="1"
+                                    />
+                            
+                            <!--背景板1-->
+                            <Border x:Name="border" Background="{Binding BorderMouseOverColor,RelativeSource={RelativeSource TemplatedParent}}"
+                                    Opacity="0"
+                                    />
+                      
+                            <!--背景板2-->
+                            <Border Opacity="{Binding BorderBackgroundOpacity,RelativeSource={RelativeSource TemplatedParent}}">
+                                <Border x:Name="border_mask_color" 
+                                        Opacity="0.35" 
+                                        Background="Black" 
+                                        Margin="{Binding BorderThickness, 
+                                                         ElementName=border,
+                                                         Converter={StaticResource cEmptyButton_converter_border_mask_margin}}"/>
+                            </Border>
+                            <!--矢量图-->
+                            <Grid>
+                                <Path x:Name="border_path"
+                                      Data="{Binding BorderPathData,RelativeSource={RelativeSource TemplatedParent}}"
+                                      Fill="{Binding BorderPathColor,RelativeSource={RelativeSource TemplatedParent}}" 
+                                      IsHitTestVisible="False" 
+                                      Stretch="Uniform"
+                                      Margin="{Binding BorderPathMargin,RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <!--<ContentPresenter Content="{TemplateBinding Content}"
+                                              Margin="4"/>-->
+                                <TextBlock Text="{Binding ButtonText,RelativeSource={RelativeSource TemplatedParent}}" 
+                                           Foreground ="White"
+                                           FontFamily="Fonts/#Roboto Light"
+                                           FontSize ="12"
+                                           HorizontalAlignment="Left"
+                                           Margin="6,2,6,2"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                            <!--边框亮色-->
+                            <Border BorderBrush="LightGray"
+                                    BorderThickness="1.5"
+                                    CornerRadius ="4.5"
+                                    Visibility="{Binding LightOnOff,
+                                                         Converter={StaticResource BooleanToVisibilityConverter},
+                                                         RelativeSource={RelativeSource TemplatedParent}}"
+                                    />
+
+                            <Grid.ContextMenu>
+                                <contextmenuex:cContextMenu IsOpen="{Binding ContextMenuIsOpen, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <ContentControl Content="{Binding ContextMenuContent, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                </contextmenuex:cContextMenu>
+                            </Grid.ContextMenu>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsEnabled,RelativeSource={RelativeSource Self}}" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </DataTrigger>
+                        
+                        <!--经过-->
+                        <DataTrigger Binding="{Binding IsMouseOver,RelativeSource={RelativeSource Self}}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard Name="borderStoryboard_MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="border" 
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1"
+                                                         Duration="0:0:0.0"/>
+                                        <ColorAnimation Storyboard.TargetProperty="Fill.Color"
+                                                        Storyboard.TargetName="border_path"
+                                                        To="LightGray"
+                                                        Duration="0:0:0.0"/>
+                                        
+                                        
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="borderStoryboard_MouseOver" />
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+
+                        <!--按下-->
+                        <EventTrigger RoutedEvent="UIElement.PreviewMouseLeftButtonDown">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     Storyboard.TargetName="border_mask_color"
+                                                     To="0.45"
+                                                     Duration="0:0:0.0"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     Storyboard.TargetName="border_path"
+                                                     To="0.85"
+                                                     Duration="0:0:0.0"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <!--弹起-->
+                        <EventTrigger RoutedEvent="UIElement.PreviewMouseLeftButtonUp">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     Storyboard.TargetName="border_mask_color"
+                                                     To="0.35"
+                                                     Duration="0:0:0.0"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                     Storyboard.TargetName="border_path"
+                                                     To="1.0"
+                                                     Duration="0:0:0.0"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        
+    </Style>
+</ResourceDictionary>

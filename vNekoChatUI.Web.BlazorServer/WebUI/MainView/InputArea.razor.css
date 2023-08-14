@@ -1,0 +1,94 @@
+﻿.chat-box {
+    width: 100%;
+    display: flex;
+    justify-content: stretch;
+    background-color: transparent;
+}
+
+.chat-input {
+    flex: 1;
+    max-width: 60.5rem;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto; /* 水平居中 */
+    justify-content: center; /* 水平居中 */
+}
+
+/*输入框容器*/
+.div-inputbox {
+    flex: 1;
+}
+
+/*右边按钮容器*/
+.div-btnbox {
+    margin: 10px;
+    margin-top: auto;
+    margin-bottom: 13px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+/*圆形按钮辅助*/
+.clearbutton-hide{
+
+}
+    .clearbutton-hide.portrait {
+        margin: 10px;
+        margin-top: auto;
+        margin-bottom: 18px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+    .clearbutton-hide.landscape {
+        display: none;
+    }
+
+
+
+
+
+
+/*窄屏*/
+@media (max-width: 640.98px) {
+    .chat-input {
+        flex-direction: column;
+        height: auto;
+    }
+    .textbox {
+        flex: none;
+    }
+
+    .clearbutton-hide.portrait {
+        display: none;
+    }
+
+    .clearbutton-hide.landscape {
+        display: flex;
+        margin-top: auto;
+        margin-right: auto;
+        margin-bottom: auto;
+        align-items: center;
+    }
+
+    .div-btnbox {
+        display: flex;
+        justify-content: flex-end;
+/*        flex-direction: row-reverse;*/
+    }
+}
+
+/*宽屏*/
+@media (min-width: 641px) {
+    .chat-input {
+        flex-direction: row;
+    }
+
+    /*按钮容器位置调一下*/
+    .div-btnbox {
+        margin-bottom: 20px;
+    }
+}

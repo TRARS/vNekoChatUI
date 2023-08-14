@@ -1,0 +1,26 @@
+﻿.progress-bar-container {
+    position: relative; /* 添加相对定位 */
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(to right, #eeedf3, #dddffc);
+    border-radius: 2px;
+    margin-top: 2px;
+    margin-bottom: -8px;
+}
+    .progress-bar-container.dark {
+        background: linear-gradient(to right, #cedcda, #bdcffd);
+    }
+
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(to right, #256B75, #914887);
+    border-radius: 2px;
+    text-align: center;
+    color: #ffffff;
+    filter: hue-rotate(0deg) brightness(1.5);
+    transition: width 0.3s ease-in-out; /* 添加过渡效果，使进度条变化更平滑 */
+}
+    .progress-bar.dark {
+        filter: hue-rotate(90deg) brightness(2.0);
+    }

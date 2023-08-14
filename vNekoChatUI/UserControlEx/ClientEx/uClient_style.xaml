@@ -1,0 +1,343 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:vNekoChatUI.UserControlEx.ClientEx" 
+                    xmlns:effect="clr-namespace:vNekoChatUI.Resources.EffectEx.BitwiseEffect" 
+                    xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors" 
+                    xmlns:emptybuttonex="clr-namespace:vNekoChatUI.CustomControlEx.EmptyButtonEx" 
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    
+    <ResourceDictionary.MergedDictionaries>
+        
+    </ResourceDictionary.MergedDictionaries>
+
+    <local:uClient_converter_contextmenu_show_if_empty x:Key="uClient_converter_contextmenu_show_if_empty"/>
+    
+    <system:String x:Key="Cut">Cut</system:String>
+    <system:String x:Key="Copy">Copy</system:String>
+    <system:String x:Key="Paste">Paste</system:String>
+    
+    <!--发送消息按钮_不再使用_改用另外的自定义控件-->
+    <!--<Style TargetType="Button" x:Key="EmptyButton" >
+        <Style.Resources>
+            <SolidColorBrush x:Key="MouseOverColor" Color="#202123" />
+            <Color x:Key="MouseOverColorARGB" A="#FF" R="#20" G="#21" B="#23"/>
+            <CornerRadius x:Key="BorderCornerRadius" TopLeft="4.5" TopRight="4.5" BottomRight="4.5" BottomLeft="4.5"/>
+        </Style.Resources>
+        
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            CornerRadius="{DynamicResource BorderCornerRadius}"
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Margin="4"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource MouseOverColor}" TargetName="border" />
+                        </Trigger>
+
+                        <EventTrigger RoutedEvent="UIElement.PreviewMouseLeftButtonDown">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="Background.Color"
+                                                                  Storyboard.TargetName="border"
+                                                                  AutoReverse="False" 
+                                                                  RepeatBehavior="Forever">
+                                        <SplineColorKeyFrame KeyTime="00:00:00.0" Value="#101113"/>
+                                    </ColorAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="UIElement.PreviewMouseLeftButtonUp">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    Storyboard.TargetName="border"
+                                                    AutoReverse="False" 
+                                                    RepeatBehavior="Forever"
+                                                    To="{StaticResource MouseOverColorARGB}"
+                                                    Duration="0:0:0.0"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>-->
+    
+    <!--基于上述按钮改造成右键按钮-->
+    <Style TargetType="Button" x:Key="RightClickButton">
+        <Style.Resources>
+            <!--<SolidColorBrush x:Key="LeftBtnDownColor0" Color="#101113" />-->
+            <Color x:Key="LeftBtnDownColor" A="#FF" R="#10" G="#11" B="#13"/>
+            <SolidColorBrush x:Key="MouseOverColor" Color="#303133" />
+            <Color x:Key="LeftBtnUpColor" A="#FF" R="#30" G="#31" B="#33"/>
+            <CornerRadius x:Key="BorderCornerRadius" TopLeft="2.5" TopRight="2.5" BottomRight="2.5" BottomLeft="2.5"/>
+        </Style.Resources>
+
+        <Setter Property="Background" Value="#202123"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            CornerRadius="{DynamicResource BorderCornerRadius}"
+                            BorderBrush="{TemplateBinding Background}"
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="1">
+                        <ContentPresenter x:Name="content_layer"
+                                          Opacity="1"
+                                          Content="{TemplateBinding Content}"
+                                          Margin="4"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource MouseOverColor}" TargetName="border" />
+                            <Setter Property="BorderBrush" Value="white" TargetName="border" />
+                        </Trigger>
+
+                        <EventTrigger RoutedEvent="UIElement.PreviewMouseLeftButtonDown">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    Storyboard.TargetName="border"
+                                                    AutoReverse="False" 
+                                                    RepeatBehavior="Forever"
+                                                    To="{StaticResource LeftBtnDownColor}"
+                                                    Duration="0:0:0.0"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(ContentPresenter.Opacity)"
+                                                     Storyboard.TargetName="content_layer"
+                                                     AutoReverse="False" 
+                                                     RepeatBehavior="Forever"
+                                                     To="0.5"
+                                                     Duration="0:0:0.0"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="UIElement.PreviewMouseLeftButtonUp">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    Storyboard.TargetName="border"
+                                                    AutoReverse="False" 
+                                                    RepeatBehavior="Forever"
+                                                    To="{StaticResource LeftBtnUpColor}"
+                                                    Duration="0:0:0.0"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(ContentPresenter.Opacity)"
+                                                     Storyboard.TargetName="content_layer"
+                                                     AutoReverse="False" 
+                                                     RepeatBehavior="Forever"
+                                                     To="1"
+                                                     Duration="0:0:0.0"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    
+    <!--联系人-->
+
+    <!--聊天气泡直接在Model中生成-->
+    
+    <!--输入框-->
+    <Style TargetType="TextBox" x:Key="InputTextBox">
+        <Setter Property="Foreground" Value="Gray"/>
+        <Setter Property="Background" Value="DarkRed"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="MaxHeight" Value="128"/>
+        <Setter Property="Margin" Value="1"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!--输入框本体-->
+                        <Border CornerRadius="8"
+                                Background="#40414F"
+                                BorderBrush="#343540"
+                                BorderThickness="2"
+                                Grid.Column="0">
+
+                            <Grid>
+                                <TextBox VerticalAlignment="Stretch"
+                                         VerticalContentAlignment="Center"
+                                         HorizontalAlignment="Stretch"
+                                         x:Name="textbox"
+                                         Background="Transparent"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         BorderThickness="0"
+                                         Foreground="White"
+                                         CaretBrush="OrangeRed"
+                                         Margin="3,2,3,2"
+                                         DataContext="{Binding}"
+                                         Text="{Binding UserMessage,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Command="{Binding SendCommand}" Key="Return"/>
+                                    </TextBox.InputBindings>
+                                    <TextBox.ContextMenu>
+                                        <ContextMenu>
+                                            <!--方便鼠标操作的右括号-->
+                                            <MenuItem Header="（）"
+                                                      Command="{Binding PlacementTarget.DataContext.PasteParenthesesCommand,
+                                                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                      CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                      Visibility="{Binding PlacementTarget.SelectedText,
+                                                                   RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                   Converter={StaticResource uClient_converter_contextmenu_show_if_empty}}">
+                                            </MenuItem>
+                                            <MenuItem Header="「」"
+                                                      Command="{Binding PlacementTarget.DataContext.PasteParenthesesCommand,
+                                                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                      CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                      Visibility="{Binding PlacementTarget.SelectedText,
+                                                                   RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                   Converter={StaticResource uClient_converter_contextmenu_show_if_empty}}">
+                                            </MenuItem>
+                                            <MenuItem Header="【】"
+                                                      Command="{Binding PlacementTarget.DataContext.PasteParenthesesCommand,
+                                                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                      CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                      Visibility="{Binding PlacementTarget.SelectedText,
+                                                                           RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                           Converter={StaticResource uClient_converter_contextmenu_show_if_empty}}">
+                                            </MenuItem>
+                                            <!--分割线-->
+                                            <Separator Visibility="{Binding PlacementTarget.SelectedText,
+                                                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                            Converter={StaticResource uClient_converter_contextmenu_show_if_empty}}"/>
+                                           　<!--继续-->
+                                            <MenuItem Header="（続けてください）"
+                                                      Command="{Binding PlacementTarget.DataContext.PasteParenthesesCommand,
+                                                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                      CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                      Visibility="{Binding PlacementTarget.SelectedText,
+                                                                           RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                           Converter={StaticResource uClient_converter_contextmenu_show_if_empty}}">
+                                            </MenuItem>
+                                            <MenuItem Header="（このシーンの後半教えてください）"
+                                                      Command="{Binding PlacementTarget.DataContext.PasteParenthesesCommand,
+                                                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                      CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                      Visibility="{Binding PlacementTarget.SelectedText,
+                                                                           RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                           Converter={StaticResource uClient_converter_contextmenu_show_if_empty}}">
+                                            </MenuItem>
+                                            <MenuItem Header="（中途半端になった話の後半教えてください）"
+                                                      Command="{Binding PlacementTarget.DataContext.PasteParenthesesCommand,
+                                                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                      CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                      Visibility="{Binding PlacementTarget.SelectedText,
+                                                                           RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                           Converter={StaticResource uClient_converter_contextmenu_show_if_empty}}">
+                                            </MenuItem>
+                                            <MenuItem Header="（ナレータさんよ！『』を基に、あなたならではのスタイルで物語の始まりをシンプルにお願いします）"
+                                                      Command="{Binding PlacementTarget.DataContext.PasteParenthesesCommand,
+                                                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                      CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                      Visibility="{Binding PlacementTarget.SelectedText,
+                                                                           RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                           Converter={StaticResource uClient_converter_contextmenu_show_if_empty}}">
+                                            </MenuItem>
+                                            <MenuItem Header="（一言でエンディング付けてください）"
+                                                      Command="{Binding PlacementTarget.DataContext.PasteParenthesesCommand,
+                                                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                      CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                      Visibility="{Binding PlacementTarget.SelectedText,
+                                                                           RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                           Converter={StaticResource uClient_converter_contextmenu_show_if_empty}}">
+                                            </MenuItem>
+                                            <!--分割线-->
+                                            <Separator Visibility="{Binding PlacementTarget.SelectedText,
+                                                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                            Converter={StaticResource uClient_converter_contextmenu_show_if_empty}}"/>
+                                            <!--默认三项-->
+                                            <MenuItem Header="{StaticResource Cut}" Command="ApplicationCommands.Cut"/>
+                                            <MenuItem Header="{StaticResource Copy}" Command="ApplicationCommands.Copy"/>
+                                            <MenuItem Header="{StaticResource Paste}" Command="ApplicationCommands.Paste"/>
+                                        </ContextMenu>
+                                    </TextBox.ContextMenu>
+                                </TextBox>
+
+                                <TextBlock IsHitTestVisible="False"
+                                           Text="@UserMessage"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Margin="10,0,0,0"
+                                           Foreground="#8E8EA0">
+
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Text,ElementName=textbox}" Value="">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+
+                        <!--发送消息按钮-->
+                        <Border Background="Transparent"
+                                VerticalAlignment="Bottom"
+                                Grid.Column="1"
+                                Margin="1,0,2,4"
+                                >
+                            <StackPanel Orientation="Horizontal">
+                                <emptybuttonex:cEmptyButton Command="{Binding StopReceivingMessagesCommand}"
+                                                            Width="28" Height="28"
+                                                            BorderMouseOverColor="#5F606F"
+                                                            BorderThickness="2"
+                                                            BorderPathColor="#5f606f"
+                                                            BorderBackgroundOpacity="0.5"
+                                                            BorderPathData="M57.164721 515.766482c0-252.834765 205.705996-458.591761 458.591761-458.591761s458.590761 205.756995 458.59076 458.591761-205.705996 458.540761-458.59076 458.540761S57.164721 768.601247 57.164721 515.766482z m85.454583 0c0 205.756995 167.328183 373.137178 373.136178 373.137178 205.756995 0 373.187178-167.379183 373.187177-373.137178S721.513477 142.574304 515.756482 142.574304c-205.808995 0-373.137178 167.435182-373.137178 373.192178z m419.597951 141.078311l-0.199999-4.24698V400.991042a42.629792 42.629792 0 0 1 42.420793-42.98379h0.357998a42.417793 42.417793 0 0 1 42.365793 38.582812l0.199999 4.144979 0.051 251.708771a42.715791 42.715791 0 0 1-85.199584 4.399979z m-181.860112 0l-0.199999-4.19998-0.1-251.657771a42.630792 42.630792 0 0 1 42.420793-42.98379h0.357998a42.466793 42.466793 0 0 1 42.420793 38.582812l0.199999 4.144979v251.708771a42.661792 42.661792 0 0 1-85.099584 4.399979z"
+                                                            Margin="0,0,0,0">
+                                </emptybuttonex:cEmptyButton>
+                                <emptybuttonex:cEmptyButton Command="{Binding SendCommand}"
+                                                            Width="28" Height="28"
+                                                            BorderMouseOverColor="#5F606F"
+                                                            BorderThickness="2"
+                                                            BorderPathColor="#5f606f"
+                                                            BorderBackgroundOpacity="0.5"
+                                                            BorderPathData="M978.7 67.5c0-0.1-0.1-0.1-0.1-0.2-2.1-4.1-5.1-7.8-8.8-10.8-3.6-3-7.7-5.2-12-6.6-0.1 0-0.2-0.1-0.3-0.1-1.7-0.6-3.5-0.9-5.3-1.2-0.5-0.1-1-0.3-1.6-0.3-1.7-0.2-3.3-0.2-5-0.1-0.7 0-1.3-0.1-2 0-4.8 0.3-9.6 1.7-14 3.9L61.5 482.6c-8.5 4.1-15 11.5-18 20.5-0.9 2.5-1.3 5.2-1.6 7.8-0.9 5.3-0.7 10.8 1 16 2.8 9.1 9.1 16.6 17.6 20.9l220.3 115.8c5.3 2.8 11.1 4.2 17.1 4.2 13.3 0.1 25.5-7.1 32-18.7 9.5-17.3 2.8-38.8-14.8-48.1l-161-84.6 647.5-321.2-394.9 453.5c-0.3 0.3-0.4 0.7-0.7 1-9.8 6.4-16.2 17.2-16.2 29.6v261.1c0.1 9.5 4 18.6 10.8 25.3 6.8 6.7 16 10.3 25.5 10.2v0.1c20 0 36.2-15.9 36.2-35.5V694.3L893.4 199l-89.6 653.3-227.3-109.2c-17.9-8.6-39.4-1.4-48.5 16.2-4.2 8.5-4.8 18.3-1.7 27.3 3.1 9 9.7 16.3 18.3 20.3l270.1 129.9c5 2.4 10.4 3.6 16 3.6 0.2 0 0.4-0.1 0.6-0.1 0.6 0 1.3 0.2 1.9 0.2 18 0.1 33.3-13 35.9-30.8l112-816.1c2.5-8.4 2-17.7-2.4-26.1z"
+                                                            Margin="2,0,0,0">
+                                </emptybuttonex:cEmptyButton>
+                                <!--<emptybuttonex:cEmptyButton Command="{Binding AmbidextrousCombatSendCommand}"
+                                                            Width="28" Height="28"
+                                                            BorderMouseOverColor="#5F606F"
+                                                            BorderThickness="2"
+                                                            BorderPathColor="#5f606f"
+                                                            BorderBackgroundOpacity="0.5"
+                                                            BorderPathData="M832 576a32 32 0 0 0-32 32l0.256 192L224 800.256 223.744 224H416a32 32 0 0 0 0-64H223.744A63.84 63.84 0 0 0 160 223.744v576.512C160 835.392 188.608 864 223.744 864h576.512A63.84 63.84 0 0 0 864 800.256V608a32 32 0 0 0-32-32
+                                                                            M800.544 160H640a32 32 0 0 0 0 64l114.944-0.192-265.6 265.568a32 32 0 0 0 45.28 45.248l265.664-265.632v115.264a32 32 0 1 0 64 0V223.744A63.84 63.84 0 0 0 800.544 160"
+                                                            Margin="2,0,0,0">
+                                </emptybuttonex:cEmptyButton>-->
+                            </StackPanel>
+
+                        </Border>
+                    </Grid>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

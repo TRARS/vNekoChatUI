@@ -1,0 +1,43 @@
+﻿<button class="button-square @(($"{ExColor}".ToLower()) switch
+{
+    ("red") => "red",
+    ("orange") => "orange",
+    ("yellow") => "yellow",
+    ("green") => "green",
+    ("cyan") => "cyan",
+    ("blue") => "blue",
+    ("purple") => "purple",
+    _ => ""
+})" @onclick="OnClick">
+
+    <div class="button-content">
+        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
+            <path fill="White" d="@PathData"></path>
+        </svg>
+        @if (string.IsNullOrWhiteSpace(Text) is false)
+        {
+            @Text
+        }
+        @if (string.IsNullOrWhiteSpace(ToolTip) is false)
+        {
+            <div class="description1">@ToolTip</div>
+        }
+    </div>
+</button>
+
+@code {
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public string? Text { get; set; }
+
+    [Parameter]
+    public string? PathData { get; set; }
+
+    [Parameter]
+    public string? ToolTip { get; set; } 
+
+    [Parameter]
+    public string? ExColor { get; set; }
+}

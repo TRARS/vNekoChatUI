@@ -1,0 +1,298 @@
+﻿@using System.Text.RegularExpressions;
+@using System.Diagnostics;
+@using Common.Extensions;
+@inject IJSRuntime JS
+
+
+<div class="message-item @((IsInstructions, IsMonologue, IsUser) switch
+    {
+        (true, _, _) => "instructions",
+        (_, true, _) => "monologue",
+        (_, _, true) => "right",
+        _ => "left"
+    }) @(IsHidden?"hidden":"") @(IsDarkMode?"dark":"")">
+
+    
+    @*正文*@
+    <div class="filled"/>
+    <div style="display: flex;">
+        <div contenteditable="plaintext-only" class="div-editable-base"
+             @ref="_originDiv" 
+             @onfocus="HandleFocus" 
+             style="outline-color: transparent;">
+             @processedContent1
+        </div>
+
+        @if (isEditingText)
+        {
+            @*true -> plaintext-only 有效解决获取innerText时换行次数对不上的问题*@
+            <div contenteditable="plaintext-only" 
+            @ref="_destinationDiv"
+                 @onblur="HandleBlur"
+                 style="color: white;
+                        background-color: rgba(64, 64, 128, 0.85);
+                        border-radius: 9px;
+                        position: absolute; 
+                        width:100%;
+                        top: 0; left: 0;
+                        margin-top:24px;
+                        opacity:0;
+                        transition: opacity 0.25s ease-in-out;
+                        z-index:1;">
+            </div>
+        }
+    </div>
+
+
+    @*注释*@
+    @if (IsUser is false && commentIsEmpty is false)
+    {
+        @*分界线*@
+        <hr>
+        <div contenteditable="false" class="div-comment @(IsDarkMode?"dark":"")">
+            @processedContent2
+        </div>
+    }
+
+    @*右上角按钮*@
+    @if (IsInstructions is false && IsMonologue is false)
+    {
+        @*删除*@
+        <div class="button first" @onclick="HideButtonClick">
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
+                <path fill="@(IsUser?"#EC004B":"#EC004B")"
+                      d="M597.795527 511.488347 813.564755 295.718095c23.833825-23.833825 23.833825-62.47489 0.001023-86.307691-23.832801-23.832801-62.47489-23.833825-86.307691 0L511.487835 425.180656 295.717583 209.410404c-23.833825-23.833825-62.475913-23.833825-86.307691 0-23.832801 23.832801-23.833825 62.47489 0 86.308715l215.769228 215.769228L209.410915 727.258599c-23.833825 23.833825-23.833825 62.47489 0 86.307691 23.832801 23.833825 62.473867 23.833825 86.307691 0l215.768205-215.768205 215.769228 215.769228c23.834848 23.833825 62.475913 23.832801 86.308715 0 23.833825-23.833825 23.833825-62.47489 0-86.307691L597.795527 511.488347z" />
+            </svg>
+        </div>
+   
+        @if (IsHidden is false && IsUser)
+        {
+            @*重新发送_过越狱监测*@
+            <div class="button second" @onclick="ReSendExButtonClick" disabled="@(IsHidden)">
+                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
+                    <path fill="#47B87D"
+                          d="M884.412509 181.527273L285.837964 0l100.538181 223.418182C-89.3184 606.021818 269.0816 1024 269.0816 1024a417.978182 417.978182 0 0 1 259.723636-482.210909l100.538182 223.418182z" />
+                </svg>
+            </div>
+
+            @*重新发送*@
+            <div class="button third" @onclick="ReSendButtonClick" disabled="@(IsHidden)">
+                <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
+                    <path fill="#D44848"
+                          d="M884.412509 181.527273L285.837964 0l100.538181 223.418182C-89.3184 606.021818 269.0816 1024 269.0816 1024a417.978182 417.978182 0 0 1 259.723636-482.210909l100.538182 223.418182z" />
+                </svg>
+            </div>
+        }
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public bool IsDarkMode { get; set; } = true;
+
+    [Parameter]
+    public bool IsHidden { get; set; } = true;
+
+    [Parameter]
+    public bool IsInstructions { get; set; } = false;
+
+    [Parameter]
+    public bool IsMonologue { get; set; } = false;
+
+    [Parameter]
+    public bool IsUser { get; set; } = false;
+
+    [Parameter]
+    public string Content {
+        get => _content;
+        set
+        {
+            if (_content != value)
+            {
+                _content = value;
+                ContentSet(value);
+            }
+        }
+    }
+    private string _content;
+
+    [Parameter]
+    public string? TimerKey { get; set; }
+
+    [Parameter]
+    public Action<string>? TextChanged { get; set; }
+
+    [Parameter]
+    public Action? OnHiddenButtonClick { get; set; }
+    [Parameter]
+    public Action? OnReSendButtonClick { get; set; }
+    [Parameter]
+    public Action? OnReSendExButtonClick { get; set; }
+
+    private ElementReference _originDiv;
+    private ElementReference _destinationDiv;
+    private RenderFragment processedContent1 { get; set; }
+    private RenderFragment processedContent2 { get; set; }
+    private bool commentIsEmpty = false;
+    private bool isListening = false;
+    private bool isEditingText = false;
+
+    private string content_text;
+    private string comment_text;
+
+    //ContentSet
+    private void ContentSet(string newValue)
+    {
+        var content = RemoveComments(newValue).InsertSpaceBetweenConsecutiveNewlines();
+        var comment = GetComments(newValue).Replace("→(\n", "").Replace("\n)←", "");
+        commentIsEmpty = string.IsNullOrWhiteSpace(comment);
+
+        processedContent1 = builder =>
+        {
+            builder.OpenElement(0, "span");
+            builder.AddContent(1, content);
+            builder.CloseElement();
+        };
+
+        processedContent2 = builder =>
+        {
+            builder.OpenElement(0, "span");
+            builder.AddContent(1, comment);
+            //builder.AddAttribute(1, "style", "color: #B5B5B5;");//#B5B5B5;
+            //builder.AddContent(2, comment);
+            builder.CloseElement();
+        };
+
+        content_text = content;
+        comment_text = comment;
+    }
+
+    //删除注释
+    private string RemoveComments(string input)
+    {
+        string pattern = @"→(.+)←";
+        string result = input;
+        Match match = Regex.Match(input, pattern, RegexOptions.Singleline);
+
+        while (match.Success)
+        {
+            result = result.Replace(match.Value, ""); // 删除匹配的子串
+            match = match.NextMatch();
+        }
+
+        return result;
+    }
+
+    //获取注释
+    private string GetComments(string input)
+    {
+        string pattern = @"(→.+←)";
+        string result = "";
+        MatchCollection matches = Regex.Matches(input, pattern, RegexOptions.Singleline);
+
+        foreach (Match match in matches)
+        {
+            result += match.Groups[1].Value; // 提取捕获组中的子串
+        }
+
+        return result;
+    }
+
+    //删除按钮
+    private void HideButtonClick()
+    {
+        OnHiddenButtonClick?.Invoke();
+    }
+    //重发按钮
+    private void ReSendButtonClick()
+    {
+        OnReSendButtonClick?.Invoke();
+    }
+    private void ReSendExButtonClick()
+    {
+        OnReSendExButtonClick?.Invoke();
+    }
+}
+
+
+@code {
+    private class CursorPosition
+    {
+        public int LineIndex { get; set; }
+        public int ColumnIndex { get; set; }
+        public int EmptyLineCount { get; set; }
+    }
+
+    //给获焦方法和失焦方法多上个锁。抵消焦点乱飞bug造成的影响。
+    private bool locker = false;
+
+    //获得焦点时
+    private async Task HandleFocus(FocusEventArgs e)
+    {
+        if (IsHidden)
+        {
+            await JS.InvokeVoidAsync("setBlur", _originDiv);//被标记remove，故主动失个焦
+            return;
+        }
+
+        if (locker is false && isEditingText is false)
+        {
+            locker = isEditingText = true;
+            {
+                await Task.Delay(50);
+
+                var target_pos = await JS.InvokeAsync<CursorPosition>("getCursorPositionEx", _originDiv);
+                await JS.InvokeVoidAsync("setOpacity", _originDiv, 0.5);//降低原div不透明度
+
+                await JS.InvokeVoidAsync("setInnerText", _destinationDiv, content_text);
+                await JS.InvokeVoidAsync("setFocus", _destinationDiv);
+                await JS.InvokeVoidAsync("setOpacity", _destinationDiv, 1.0);
+                await Task.Delay(100);
+                await JS.InvokeVoidAsync("setCursorPositionEx",
+                                             _destinationDiv,
+                                             target_pos.LineIndex,
+                                             target_pos.ColumnIndex);
+
+                var textNodesLen = await JS.InvokeAsync<int>("getTextNodesLength", _destinationDiv);
+                Debug.WriteLine($"targetpos = ({target_pos.LineIndex},{target_pos.ColumnIndex})  textNodesLen = {textNodesLen}");
+            }
+            locker = false;
+        }
+    }
+    //失去焦点时
+    private async Task HandleBlur(FocusEventArgs e)
+    {
+        if (locker is false && isEditingText)
+        {
+            locker = true;
+            {
+                var preText = $"{await JS.InvokeAsync<string>("getInnerText", _destinationDiv)}";
+                var editedText = preText.RemoveCarriageReturns().Trim();
+                var hasCommentText = string.IsNullOrWhiteSpace(comment_text);
+                //Debug.WriteLine($"preText = \n{preText}");
+                //locker = false; return; //测试用
+                var fullText = (hasCommentText ? editedText : $"{editedText}\n→(\n{comment_text}\n)←");
+                {
+                    //修改内部属性
+                    this.Content = fullText;
+
+                    //但是主动刷新页面，控件上的焦点就无了。改成写入Flag然后在适当时机刷新。
+                    if (string.IsNullOrWhiteSpace(editedText) && ChatRoomModelInstance.NeedRefreshPage is false)
+                    {
+                        ChatRoomModelInstance.NeedRefreshPage = true;
+                    }
+                    Debug.WriteLine($"RefreshPage_WhenEmptyText_BeforeNextInteraction = {ChatRoomModelInstance.NeedRefreshPage}");
+
+                    //修改外部属性
+                    TextChanged?.Invoke(fullText);
+                }
+                await Task.Delay(50);
+                await JS.InvokeVoidAsync("setOpacity", _originDiv, 1.0);
+                await JS.InvokeVoidAsync("setBlur", _originDiv);
+            }
+            locker = isEditingText = false;
+        }
+    }
+}
+            

@@ -1,0 +1,283 @@
+﻿@page "/chatroom"
+@using Microsoft.AspNetCore.SignalR.Client
+@using System.Diagnostics;
+@using System.Text.RegularExpressions;
+@using vNekoChatUI.Web.BlazorServer.WebUI.CustomControl
+
+@inject IJSRuntime JS
+
+
+@*主体*@
+<div class="div-root" id="ChatRoom_cMMJvDTzWxUeXNYa">
+    <!--提示词开头-->
+    <div class="div-box">
+        <div class="wrap">
+            <ul class="ul-none">
+                <!--人设-->
+                <MessageItem IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
+                              IsHidden=false
+                              IsInstructions=true
+                              Content="@ChatRoomModelInstance.AiProfile"
+                              TextChanged="UpdateAiProfile"
+                              TimerKey="qhZld_1c%w7Pt_g5" />
+            </ul>
+        </div>
+    </div>
+
+    <!--分界线-->
+    @if (ChatRoomModelInstance.ChatHistory.Count > 0)
+    {
+        <div style="margin:10px;" />
+    }
+
+    <!--聊天记录-->
+    <div class="div-box @(ChatRoomModelInstance.ChatHistory.Count == 0 ? "hide" : "")">
+        <div class="wrap">
+            <ul class="ul-none">
+                @foreach (var (item, index) in ChatRoomModelInstance.ChatHistory.Select((value, i) => (value, i)))
+               @* @foreach (var (item, index) in GetMessageItems())*@
+                {
+                    var timerKey = $"VtK#SvIPvEL3o#DZ_{index}";
+                    <li>
+                        <MessageItem IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
+                                      IsHidden="@item.Remove"
+                                      IsUser='item.Roles == "User"'
+                                      Content="@item.Content"
+                                      TextChanged="(newText) => UpdateChatHistoryItem(item, newText, index)"
+                                      TimerKey="@timerKey"
+                                      OnHiddenButtonClick="() => DeleteMessageItem(index)"
+                                      OnReSendButtonClick="async () => await ReSendMessage(index, false)"
+                                      OnReSendExButtonClick="async () => await ReSendMessage(index, true)" />
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <!--分界线-->
+    @if (ChatRoomModelInstance.ChatHistory.Count > 0)
+    {
+        <div style="margin:10px;" />
+    }
+
+    <!--提示词收尾-->
+    <div class="div-box" style="margin-bottom:-10px;">
+        <div class="wrap">
+            <ul class="ul-none">
+                <!--Bing内心独白-->
+                <MessageItem IsDarkMode="@ChatRoomModelInstance.IsDarkMode" 
+                              IsHidden=false
+                              IsMonologue=true
+                              Content="@ChatRoomModelInstance.AiInnerMonologue"
+                              TextChanged="UpdateAiInnerMonologue"
+                              TimerKey="y98hy9vz$s7EXjfw" />
+            </ul>
+        </div>
+    </div>
+</div>
+
+@*一排按钮*@
+@*<div class="div-root button-box">
+    <SquareButton OnClick="PreviousPage" ExColor="cyan"
+    PathData="M895.989333 469.322667H230.997333l225.834667-225.834667a42.677333 42.677333 0 0 0-60.341333-60.341333l-298.666667 298.666666a42.666667 42.666667 0 0 0-0.010667 60.330667l298.666667 298.666667a42.56 42.56 0 0 0 30.176 12.501333 42.645333 42.645333 0 0 0 30.176-72.832L230.986667 554.656h665.002666a42.666667 42.666667 0 0 0 0-85.333333z"
+    ToolTip="PreviousPage" />
+    <SquareButton OnClick="NextPage" ExColor="cyan"
+    PathData="M128 554.666667h665.002667L567.168 780.501333a42.666667 42.666667 0 1 0 60.341333 60.330667l298.666667-298.666667a42.666667 42.666667 0 0 0 0-60.330666l-298.666667-298.666667a42.666667 42.666667 0 1 0-60.341333 60.330667L793.002667 469.333333H128a42.666667 42.666667 0 0 0 0 85.333334z"
+    ToolTip="NextPage" />
+</div>*@
+<div class="div-root button-box">
+    <SquareButton OnClick="TakeScreenshot_Windows" ExColor="blue"
+    PathData="M883.657136 89.152483 139.917168 89.152483c-41.195238 0-74.529437 33.358759-74.529437 74.529437l0 523.257391c0 41.169655 33.334199 74.529437 74.529437 74.529437l272.498254 0 0 92.385107C296.690748 865.596294 213.669916 897.111055 213.669916 934.267303l0 0.048095 596.234473 0 0-0.048095c0-37.156248-83.020832-68.669986-198.745507-80.412424l0-92.385107 272.498254 0c41.146119 0 74.529437-33.359782 74.529437-74.529437l0-523.257391C958.186574 122.511241 924.803255 89.152483 883.657136 89.152483zM883.657136 635.772978c0 13.731746-11.111059 24.842805-24.842805 24.842805L164.759973 660.615782c-13.731746 0-24.842805-11.111059-24.842805-24.842805L139.917168 187.045023c0-13.731746 11.111059-24.842805 24.842805-24.842805l694.054359 0c13.731746 0 24.842805 11.111059 24.842805 24.842805L883.657136 635.772978z
+                            M212.966904 237.72631l173.901679 0 0 49.685609-173.901679 0 0-49.685609Z
+                            M212.966904 337.631694l273.27392 0 0 49.686632-273.27392 0 0-49.686632Z
+                            M212.966904 436.931281l223.588311 0 0 49.686632-223.588311 0 0-49.686632Z
+                            M212.966904 536.837688l322.960553 0 0 49.686632-322.960553 0 0-49.686632Z"
+    ToolTip="TakeScreenshot_Windows" />
+    <SquareButton OnClick="TakeScreenshot_SmartPhone" ExColor="blue"
+                   PathData="M724.992 20.48H299.008C225.28 20.48 159.744 81.92 159.744 159.744v704.512c0 77.824 61.44 139.264 139.264 139.264h421.888c73.728 0 139.264-61.44 139.264-139.264V159.744C864.256 81.92 798.72 20.48 724.992 20.48z m-163.84 892.928h-98.304c-20.48 0-40.96-20.48-40.96-40.96s20.48-40.96 40.96-40.96h98.304c20.48 0 40.96 20.48 40.96 40.96s-20.48 40.96-40.96 40.96z m221.184-176.128H241.664V159.744c0-32.768 24.576-57.344 57.344-57.344h40.96l24.576 69.632c4.096 12.288 16.384 24.576 32.768 24.576h233.472c16.384 0 28.672-8.192 32.768-24.576l24.576-69.632h40.96c32.768 0 57.344 24.576 57.344 57.344V737.28z"
+                   ToolTip="TakeScreenshot_SmartPhone" />
+    <SquareButton OnClick="RefreshProfile" ExColor="blue"
+                   PathData="M455.879111 796.757333h-46.734222c-134.912-22.072889-238.193778-139.548444-238.193778-280.689777 0-47.303111 12.145778-91.534222 32.654222-130.759112l34.872889 48.355556c25.400889 35.185778 80.156444 25.372444 91.818667-16.440889l66.104889-237.767111A51.768889 51.768889 0 0 0 346.481778 113.777778l-237.454222 0.369778c-42.183111 0.056889-66.56 47.843556-41.870223 82.090666l64.199111 88.945778a396.117333 396.117333 0 0 0-74.097777 230.883556c0 199.082667 146.005333 364.060444 336.696889 393.500444 5.205333 0.796444 10.268444 0.568889 15.189333-0.056889v0.682667h46.734222c31.004444 0 56.120889-25.116444 56.120889-56.149334v-1.137777c0-31.004444-25.116444-56.149333-56.120889-56.149334zM956.871111 827.790222l-64.227555-88.945778a395.918222 395.918222 0 0 0 74.097777-230.883555c0-199.082667-145.976889-364.060444-336.668444-393.528889a53.219556 53.219556 0 0 0-15.189333 0.085333v-0.711111h-46.762667a56.120889 56.120889 0 0 0-56.092445 56.149334v1.137777c0 31.032889 25.116444 56.177778 56.092445 56.177778h46.762667c134.912 22.072889 238.165333 139.548444 238.165333 280.689778a281.400889 281.400889 0 0 1-32.625778 130.759111l-34.901333-48.355556c-25.372444-35.185778-80.184889-25.372444-91.790222 16.412445l-66.133334 237.767111A51.768889 51.768889 0 0 0 677.546667 910.222222l237.454222-0.341333c42.183111-0.056889 66.56-47.872 41.870222-82.090667z"
+                   ToolTip="RefreshProfile" />
+    <SquareButton OnClick="HideNavMenu" ExColor="cyan"
+                   PathData="M512 96a32 32 0 0 1 31.701333 27.648L544 128v53.333333h299.648c9.514667 0 18.474667 4.266667 24.490667 11.434667l2.773333 3.84 52.352 85.333333a32 32 0 0 1 0 33.450667l-52.352 85.333333a32 32 0 0 1-27.306667 15.274667H544v490.666667H682.666667a32 32 0 0 1 4.352 63.701333L682.666667 970.666667H341.333333a32 32 0 0 1-4.352-63.701334L341.333333 906.666667h138.666667v-192H180.352a32 32 0 0 1-27.264-15.274667l-52.352-85.333333a32 32 0 0 1 0-33.450667l52.352-85.333333a32 32 0 0 1 27.306667-15.274667h299.605333V128a32 32 0 0 1 32-32z m-32 448H198.272L165.589333 597.333333l32.725334 53.333334h281.685333v-106.666667z m345.728-298.666667H544v106.666667h281.685333l32.725334-53.376-32.682667-53.290667z"
+                   ToolTip="HideNavMenu" />
+    <SquareButton OnClick="HideInputBox" ExColor="cyan"
+                   PathData="M128 42.66752h768c47.1296 0 85.33248 38.20544 85.33248 85.33248v768c0 47.1296-38.20544 85.33248-85.33248 85.33248H128c-47.1296 0-85.33248-38.20544-85.33248-85.33248V128c0-47.1296 38.20544-85.33248 85.33248-85.33248z m421.88288 203.8528h175.4496v-75.8528H302.96832v75.8528h170.11456v530.96192h-174.41536v75.8528h426.66496v-75.8528h-175.4496V246.51776z"
+                   ToolTip="HideInputBox" />
+    <SquareButton OnClick="ColorChange" ExColor="cyan"
+                   PathData="M744.533333 87.082667a42.666667 42.666667 0 0 1 6.058667 22.613333l-2.688 172.117333 129.706667 113.194667a42.666667 42.666667 0 0 1-15.488 72.96l-164.565334 50.602667-67.541333 158.378666a42.666667 42.666667 0 0 1-74.154667 7.808L486.4 585.984l-215.253333 372.906667a42.666667 42.666667 0 1 1-73.898667-42.666667l217.173333-376.192-129.109333-11.477333a42.666667 42.666667 0 0 1-30.336-68.096L358.4 322.773333 320 154.88a42.666667 42.666667 0 0 1 55.381333-49.92l162.901334 55.808 147.754666-88.448a42.666667 42.666667 0 0 1 58.496 14.72z"
+                  ToolTip="ColorChange" />
+</div>
+
+<!--底部撑距离-->
+@*<div class="div-bottom" />*@
+
+
+
+@code{
+    private bool NavigationOff { get; set; }
+    private bool InputBoxOff { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        MessageServiceInstance.OnChatRoomUpdated += async () =>
+        {
+            await InvokeAsync(StateHasChanged); // 刷新组件
+
+            await MessageServiceInstance.NotifyNavMenuUpdated();
+        };
+
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // 获取查询字符串参数的值并保存到属性中
+            var uri = new Uri(NavManager.Uri);
+            var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query);
+
+            // 通过url参数隐藏Navigation
+            if (bool.TryParse(queryParams["NavigationOff"], out bool navigationOffValue))
+            {
+                NavigationOff = navigationOffValue;
+            }
+            if (NavigationOff)
+            {
+                await MessageServiceInstance.NotifyHideNavigationBar();
+            }
+
+            // 通过url参数隐藏InputBox
+            if (bool.TryParse(queryParams["InputBoxOff"], out bool inputBoxOffValue))
+            {
+                InputBoxOff = inputBoxOffValue;
+            }
+            if (InputBoxOff)
+            {
+                await MessageServiceInstance.NotifyHideInputBox();
+            }
+        }
+
+        await Task.Yield();
+    }
+
+    //
+    private void UpdateAiProfile(string newText)
+    {
+        ChatRoomModelInstance.AiProfile = newText;
+    }
+    private void UpdateAiInnerMonologue(string newText)
+    {
+        ChatRoomModelInstance.AiInnerMonologue = newText;
+    }
+    private void UpdateChatHistoryItem(Ai_Content item, string newText, int index)
+    {
+        item.Content = newText;
+
+        ChatRoomModelInstance.HistoryChanged = true;
+        Debug.WriteLine($"UpdateChatHistoryItem = {ChatRoomModelInstance.HistoryChanged} (from item[{index}])");
+    }
+
+    //气泡右上角按钮事件
+    private void DeleteMessageItem(int index)
+    {
+        ChatRoomModelInstance.HistoryChanged = true;
+        Debug.WriteLine($"DeleteMessageItem = {ChatRoomModelInstance.HistoryChanged} (from item[{index}])");
+
+        ChatRoomModelInstance.ChatHistory[index].Remove = !ChatRoomModelInstance.ChatHistory[index].Remove;
+        InvokeAsync(StateHasChanged);
+    }
+    private async Task ReSendMessage(int index, bool bypass)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", bypass ? "ReSend(BingBypassDetection)？" : "ReSend(Normal)？"))
+        {
+            ChatRoomModelInstance.HistoryChanged = true;
+            Debug.WriteLine($"ReSendMessage{(bypass ? "(BingBypassDetection)" : "(Normal)")} = {ChatRoomModelInstance.HistoryChanged} (from item[{index}])");
+
+            //1.将包括自身在内，往后的item全部标记删除，
+            for (int i = index; i < ChatRoomModelInstance.ChatHistory.Count; i++)
+            {
+                var item = ChatRoomModelInstance.ChatHistory[i];
+                item.Remove = true;
+            }
+
+            //2.是否过越狱检测
+            ChatRoomModelInstance.BingBypassDetection = bypass;
+
+            //3.将自身文本作为消息发过去
+            ChatRoomModelInstance.ReSend?.Invoke(ChatRoomModelInstance.ChatHistory[index].Content);
+        }
+    }
+
+    //底部一排按事件
+    private void TakeScreenshot_Windows()
+    {
+        ChatRoomModelInstance.Screenshot_Windows?.Invoke(NavigationOff, InputBoxOff);
+    }
+    private void TakeScreenshot_SmartPhone()
+    {
+        ChatRoomModelInstance.Screenshot_SmartPhone?.Invoke(NavigationOff, InputBoxOff);
+    }
+    private void RefreshProfile()
+    {
+        ChatRoomModelInstance.RefreshProfile?.Invoke("");
+    }
+    private void HideNavMenu()
+    {
+        ChatRoomModelInstance.HideNavMenu?.Invoke((x) => { NavigationOff = x; });
+    }
+    private void HideInputBox()
+    {
+        ChatRoomModelInstance.HideInputBox?.Invoke((x) => { InputBoxOff = x; });
+    }
+    private void ColorChange()
+    {
+        ChatRoomModelInstance.ColorChange?.Invoke();
+    }
+
+    //分页显示（能用，但翻页按钮占位置，弃用）
+    private int currentPage = 1;
+    private int pageSize = 20; // 每页显示的数量
+    private bool IsFirstPage => currentPage == 1;
+    private bool IsLastPage => currentPage == TotalPages;
+    private int TotalPages => (int)Math.Ceiling((double)ChatRoomModelInstance.ChatHistory.Count / pageSize);
+    private IEnumerable<(Ai_Content item, int index)> GetMessageItems()
+    {
+        int startIndex = (currentPage - 1) * pageSize;
+        int endIndex = Math.Min(startIndex + pageSize, ChatRoomModelInstance.ChatHistory.Count);
+
+        var list = ChatRoomModelInstance.ChatHistory
+                      .Select((item, index) => (item, index))
+                      .Skip(startIndex)
+                      .Take(endIndex - startIndex);
+
+        foreach (var item in list)
+        {
+            yield return item;
+        }
+    }
+    private void PreviousPage()
+    {
+        if (!IsFirstPage)
+        {
+            currentPage--;
+        }
+    }
+    private void NextPage()
+    {
+        if (!IsLastPage)
+        {
+            currentPage++;
+        }
+    }
+}
+
+
+
+
+
+
+
+

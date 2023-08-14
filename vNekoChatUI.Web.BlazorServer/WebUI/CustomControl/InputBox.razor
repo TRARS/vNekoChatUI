@@ -1,0 +1,32 @@
+﻿<div class="textbox-container @(IsDarkMode?"dark":"")">
+    <textarea class="textbox @(IsDarkMode?"dark":"")"
+              type="text"
+              placeholder="Enter your message"
+              @bind="Text"
+              @oninput="@(e => inputValueChanged($"{e.Value}") )"
+              @onkeydown="OnKeyDown"
+              @onkeyup="OnKeyUp"
+              />
+</div> 
+
+@code{
+    [Parameter]
+    public bool IsDarkMode { get; set; } = true;
+
+    [Parameter]
+    public string Text { get; set; }
+
+    [Parameter]
+    public EventCallback<string> TextChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<KeyboardEventArgs> OnKeyDown { get; set; }
+
+    [Parameter]
+    public EventCallback<KeyboardEventArgs> OnKeyUp { get; set; }
+
+    //
+    void inputValueChanged(string newValue) {
+        TextChanged.InvokeAsync(newValue);
+    }
+}

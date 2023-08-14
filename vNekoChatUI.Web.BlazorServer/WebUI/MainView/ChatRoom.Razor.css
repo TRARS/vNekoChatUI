@@ -1,0 +1,80 @@
+﻿/*主体样式*/
+.div-root {
+    position: center;
+    margin: 0 auto;
+    max-width: 55.5rem;
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #b4b5c3;
+    /*background-color: #00ffff;*/
+}
+    /*按钮盒子*/
+    .div-root.button-box {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap; /* 新增的属性，使按钮在宽度不足时自动换行 */
+        padding: 5px;
+        gap: 5px;
+    }
+
+/*提示词最外层，三个段落都用*/
+.div-box {
+    max-height: 100%;
+    margin-bottom: 25px;
+    margin: 0 auto;
+    border-radius: 10px;
+/*    background-color: #808080;*/
+}
+    .div-box.chatitem.hide {
+        display: none;
+    }
+
+/*啥来着*/
+.wrap:after {
+    padding: 0px;
+    display: block;
+    clear: both;
+    content: "";
+}
+
+/*去除小黑点*/
+.ul-none {
+    list-style-type: none;
+    display: contents;
+    clear: both;
+    content: "";
+}
+
+
+/*页面底部留白*/
+/*.div-bottom {
+    margin-bottom: 100px;
+}*/
+
+
+
+
+
+
+
+/*窄屏*/
+@media (max-width: 640.98px) {
+    /*不要边框*/
+    .div-root {
+        padding: 0px;
+        border: none;
+    }
+
+    /*按钮盒子边框不隐藏*/
+    .div-root.button-box {
+        border: 1px solid #b4b5c3;
+    }
+}
+
+/*宽屏*/
+@media (min-width: 641px) {
+
+}

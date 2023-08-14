@@ -1,0 +1,697 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                    xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors" 
+                    xmlns:local="clr-namespace:vNekoChatUI.CustomControlEx.ListViewChatHistoryEx"
+                    xmlns:gridex="clr-namespace:vNekoChatUI.CustomControlEx.GridEx"
+                    xmlns:textboxex="clr-namespace:vNekoChatUI.CustomControlEx.TextBoxEx" 
+                    xmlns:contextmenuex="clr-namespace:vNekoChatUI.CustomControlEx.ContextMenuEx" 
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    
+    <local:cListViewChatHistory_converter_textblock_maxwidth x:Key="cListViewChatHistory_converter_textblock_maxwidth"/>
+    <local:cListViewChatHistory_converter_contactcard_time_token x:Key="cListViewChatHistory_converter_contactcard_time_token"/>
+    <local:cListViewChatHistory_converter_borderbrush x:Key="cListViewChatHistory_converter_borderbrush"/>
+    <local:cListViewChatHistory_converter_imagesource x:Key="cListViewChatHistory_converter_imagesource"/>
+    <local:cListViewChatHistory_converter_contextmenu_hide_if_empty x:Key="cListViewChatHistory_converter_contextmenu_hide_if_empty"/>
+    <local:cListViewChatHistory_converter_contextmenu_show_if_empty x:Key="cListViewChatHistory_converter_contextmenu_show_if_empty"/>
+    <local:cListViewChatHistory_converter_menuitem_commandparameter x:Key="cListViewChatHistory_converter_menuitem_commandparameter"/>
+    
+    <system:String x:Key="Cut">Cut</system:String>
+    <system:String x:Key="Copy">Copy</system:String>
+    <system:String x:Key="Paste">Paste</system:String>
+
+    <Style TargetType="Button" x:Key="RightClickButton">
+        <Style.Resources>
+            <!--<SolidColorBrush x:Key="LeftBtnDownColor0" Color="#101113" />-->
+            <Color x:Key="LeftBtnDownColor" A="#FF" R="#10" G="#11" B="#13"/>
+            <SolidColorBrush x:Key="MouseOverColor" Color="#303133" />
+            <Color x:Key="LeftBtnUpColor" A="#FF" R="#30" G="#31" B="#33"/>
+            <CornerRadius x:Key="BorderCornerRadius" TopLeft="2.5" TopRight="2.5" BottomRight="2.5" BottomLeft="2.5"/>
+        </Style.Resources>
+
+        <Setter Property="Background" Value="#202123"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border"
+                            CornerRadius="{DynamicResource BorderCornerRadius}"
+                            BorderBrush="{TemplateBinding Background}"
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="1">
+                        <ContentPresenter x:Name="content_layer"
+                                          Opacity="1"
+                                          Content="{TemplateBinding Content}"
+                                          Margin="4"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource MouseOverColor}" TargetName="border" />
+                            <Setter Property="BorderBrush" Value="white" TargetName="border" />
+                        </Trigger>
+
+                        <EventTrigger RoutedEvent="UIElement.PreviewMouseLeftButtonDown">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    Storyboard.TargetName="border"
+                                                    AutoReverse="False" 
+                                                    RepeatBehavior="Forever"
+                                                    To="{StaticResource LeftBtnDownColor}"
+                                                    Duration="0:0:0.0"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(ContentPresenter.Opacity)"
+                                                     Storyboard.TargetName="content_layer"
+                                                     AutoReverse="False" 
+                                                     RepeatBehavior="Forever"
+                                                     To="0.5"
+                                                     Duration="0:0:0.0"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="UIElement.PreviewMouseLeftButtonUp">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                    Storyboard.TargetName="border"
+                                                    AutoReverse="False" 
+                                                    RepeatBehavior="Forever"
+                                                    To="{StaticResource LeftBtnUpColor}"
+                                                    Duration="0:0:0.0"/>
+                                    <DoubleAnimation Storyboard.TargetProperty="(ContentPresenter.Opacity)"
+                                                     Storyboard.TargetName="content_layer"
+                                                     AutoReverse="False" 
+                                                     RepeatBehavior="Forever"
+                                                     To="1"
+                                                     Duration="0:0:0.0"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--聊天气泡-->
+    <Style TargetType="ListViewItem" x:Key="ChatHistory">
+        <Style.Resources>
+            <!--BOT发言-->
+            <ControlTemplate x:Key="CustomRow_Left">
+                <Grid Background="#0005FFFF"
+                      HorizontalAlignment="Stretch"
+                      Margin="5,0,5,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <!--BOT头像-->
+                    <Border Grid.Column="0"
+                            VerticalAlignment="Top"
+                            CornerRadius="16"
+                            Width="32" Height="32"
+                            BorderThickness="1"
+                            BorderBrush="{Binding UserborderColor}"
+                            Margin="5,5,5,0">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding ImageSource,
+                                                              Converter={StaticResource cListViewChatHistory_converter_imagesource}}"/>
+                        </Border.Background>
+                    </Border>
+
+                    <StackPanel Grid.Column="1"
+                                Margin="0,13,0,5">
+                        <!--BOT用户名-->
+                        <Border HorizontalAlignment="Left" 
+                                VerticalAlignment="Top"
+                                Margin="0,0,0,2">
+                            <TextBlock Text="{Binding DisplayName}"
+                                   Foreground="{Binding UsernameColor}"
+                                   FontWeight="Normal"
+                                   FontFamily="Calibri">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect ShadowDepth="0" 
+                                                  BlurRadius="5"
+                                                  Opacity="1"
+                                                  Color="{Binding UserborderColor}"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Border>
+
+                        <!--BOT消息主体-->
+                        <gridex:cGrid Margin="0,0,0,0"
+                                      MaxWidth="{Binding ActualWidth, 
+                                                         RelativeSource={RelativeSource AncestorType={x:Type ListView}},
+                                                         Converter={StaticResource cListViewChatHistory_converter_textblock_maxwidth}}"
+                                      HorizontalAlignment="Left" 
+                                      VerticalAlignment="Top"
+                                      Background="Transparent"
+                                      ParentModel="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=ListView}}"
+                                      ItemModel="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=ListViewItem}}"
+                                      Inner_cTextBox="{Binding DataContext, ElementName=msg_textbox}">
+
+                            <Border x:Name="msg_background"
+                                    CornerRadius="0,12,4,12"
+                                    Background="{Binding UserborderColor,
+                                                         FallbackValue=#000000}"
+                                    IsHitTestVisible="True">
+
+                                <Behaviors:Interaction.Triggers>
+                                    <Behaviors:EventTrigger EventName="MouseLeftButtonUp">
+                                        <Behaviors:InvokeCommandAction Command="{Binding ParentModel.RightClickEditCommand, 
+                                                                                         RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type gridex:cGrid}}}"/>
+                                        <Behaviors:ChangePropertyAction TargetObject="{Binding Inner_cTextBox, 
+                                                                                               RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type gridex:cGrid}}}"
+                                                                        PropertyName="IsHitTestVisible"
+                                                                        Value="True"/>
+                                    </Behaviors:EventTrigger>
+                                </Behaviors:Interaction.Triggers>
+                            </Border>
+
+                            <!--这里有点阴间-->
+                            <textboxex:cTextBox x:Name="msg_textbox"
+                                                Text="{Binding DataContext.Message, RelativeSource={RelativeSource FindAncestor, AncestorType=ListViewItem}}"
+                                                FontSize="12" 
+                                                FontFamily="Calibri"
+                                                CaretBrush="OrangeRed"
+                                                AcceptsReturn="True"
+                                                BorderBackground="#00000000"
+                                                BorderCornerRadius="{Binding CornerRadius, ElementName=msg_background}"
+                                                BorderContentMargin ="6,5,6,5" 
+                                                IsHitTestVisible="False"
+                                                IsHitTestVisibleCallBack="{Binding IsHitTestVisible, RelativeSource={RelativeSource Self}}"
+                                                DataContext="{Binding RelativeSource={RelativeSource Self}}"
+                                                ParentModel="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=ListView}}"
+                                                ItemModel="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=ListViewItem}}">
+                                <TextBox.ContextMenu>
+                                    <ContextMenu>
+                                        <!--继续（常规）-->
+                                        <MenuItem Header="{Binding PlacementTarget.SelectedText,
+                                                                   RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  Command="{Binding PlacementTarget.ParentModel.ContinueWithSelectedTextCommand.Command,
+                                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  Visibility="{Binding PlacementTarget.SelectedText,
+                                                                       RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                       Converter={StaticResource cListViewChatHistory_converter_contextmenu_hide_if_empty}}"
+                                                  HeaderStringFormat="{Binding PlacementTarget.ParentModel.ContinueWithSelectedTextCommand.HeaderStringFormat,
+                                                                               RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}">
+                                            <MenuItem.CommandParameter>
+                                                <!--太特么阴间了-->
+                                                <MultiBinding Converter="{StaticResource cListViewChatHistory_converter_menuitem_commandparameter}">
+                                                    <Binding Path="PlacementTarget.ItemModel"
+                                                             RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}"/>
+                                                    <Binding Path="PlacementTarget.SelectedText"
+                                                             RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}"/>
+                                                </MultiBinding>
+                                            </MenuItem.CommandParameter>
+                                        </MenuItem>
+                                        <!--继续（过越狱检测）-->
+                                        <MenuItem Header="{Binding PlacementTarget.SelectedText,
+                                                                   RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  Command="{Binding PlacementTarget.ParentModel.ContinueWithSelectedTextExCommand.Command,
+                                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  DataContext="{Binding}"
+                                                  Visibility="{Binding PlacementTarget.SelectedText,
+                                                                       RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                       Converter={StaticResource cListViewChatHistory_converter_contextmenu_hide_if_empty}}"
+                                                  HeaderStringFormat="{Binding PlacementTarget.ParentModel.ContinueWithSelectedTextExCommand.HeaderStringFormat,
+                                                                               RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}">
+                                            <MenuItem.CommandParameter>
+                                                <!--太特么阴间了-->
+                                                <MultiBinding Converter="{StaticResource cListViewChatHistory_converter_menuitem_commandparameter}">
+                                                    <Binding Path="PlacementTarget.ItemModel"
+                                                             RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}"/>
+                                                    <Binding Path="PlacementTarget.SelectedText"
+                                                             RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}"/>
+                                                </MultiBinding>
+                                            </MenuItem.CommandParameter>
+                                        </MenuItem>
+                                        <!--索要后续（常规）-->
+                                        <MenuItem Header="{Binding PlacementTarget.SelectedText,
+                                                                   RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  Command="{Binding PlacementTarget.ParentModel.GetRemainderTextWithSelectedTextCommand.Command,
+                                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  DataContext="{Binding}"
+                                                  Visibility="{Binding PlacementTarget.SelectedText,
+                                                                       RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                       Converter={StaticResource cListViewChatHistory_converter_contextmenu_hide_if_empty}}"
+                                                  HeaderStringFormat="{Binding PlacementTarget.ParentModel.GetRemainderTextWithSelectedTextCommand.HeaderStringFormat,
+                                                                               RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}">
+                                            <MenuItem.CommandParameter>
+                                                <!--太特么阴间了-->
+                                                <MultiBinding Converter="{StaticResource cListViewChatHistory_converter_menuitem_commandparameter}">
+                                                    <Binding Path="PlacementTarget.ItemModel"
+                                                             RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}"/>
+                                                    <Binding Path="PlacementTarget.SelectedText"
+                                                             RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}"/>
+                                                </MultiBinding>
+                                            </MenuItem.CommandParameter>
+                                        </MenuItem>
+
+                                        <!--方便鼠标操作的右括号-->
+                                        <MenuItem Header="）"
+                                                  Command="{Binding PlacementTarget.ParentModel.PasteParenthesesCommand,
+                                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                  Visibility="{Binding PlacementTarget.SelectedText,
+                                                                       RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                       Converter={StaticResource cListViewChatHistory_converter_contextmenu_show_if_empty}}">
+                                        </MenuItem>
+                                        <MenuItem Header="」"
+                                                  Command="{Binding PlacementTarget.ParentModel.PasteParenthesesCommand,
+                                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                  Visibility="{Binding PlacementTarget.SelectedText,
+                                                                       RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                       Converter={StaticResource cListViewChatHistory_converter_contextmenu_show_if_empty}}">
+                                        </MenuItem>
+                                        <MenuItem Header="】"
+                                                  Command="{Binding PlacementTarget.ParentModel.PasteParenthesesCommand,
+                                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                  Visibility="{Binding PlacementTarget.SelectedText,
+                                                                       RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                       Converter={StaticResource cListViewChatHistory_converter_contextmenu_show_if_empty}}">
+                                        </MenuItem>
+                                        <!--分割线-->
+                                        <Separator/>
+                                        <!--默认三项-->
+                                        <MenuItem Header="{StaticResource Cut}" Command="ApplicationCommands.Cut"/>
+                                        <MenuItem Header="{StaticResource Copy}" Command="ApplicationCommands.Copy"/>
+                                        <MenuItem Header="{StaticResource Paste}" Command="ApplicationCommands.Paste"/>
+                                    </ContextMenu>
+                                </TextBox.ContextMenu>
+
+                                <Behaviors:Interaction.Triggers>
+                                    <Behaviors:EventTrigger EventName="LostFocus">
+                                        <Behaviors:ChangePropertyAction TargetObject="{Binding}"
+                                                                        PropertyName="IsHitTestVisible"
+                                                                        Value="False"/>
+                                    </Behaviors:EventTrigger>
+                                </Behaviors:Interaction.Triggers>
+                            </textboxex:cTextBox>
+                            <Grid.ContextMenu>
+                                <contextmenuex:cContextMenu>
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <StackPanel.Effect>
+                                            <DropShadowEffect ShadowDepth="0.5" BlurRadius="1.5" RenderingBias="Quality" Color="DarkRed" />
+                                        </StackPanel.Effect>
+
+                                        <!--复制-->
+                                        <!--ContextMenu无法访问外层的视觉树，但PlacementTarget指向宿主Grid，宿主Grid可以正常访问视觉树，这绑定路径，就通了-->
+                                        <Button Width="44" Height="22" Style="{StaticResource RightClickButton}"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,0,0,0">
+                                            <Behaviors:Interaction.Triggers>
+                                                <Behaviors:EventTrigger EventName="Click" >
+                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickCopyCommand, 
+                                                                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
+                                                                                   CommandParameter="{Binding PlacementTarget.ItemModel.Message, 
+                                                                                                              RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                                </Behaviors:EventTrigger>
+                                            </Behaviors:Interaction.Triggers>
+
+                                            <TextBlock Text="复制" 
+                                                       FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                        <!--撤销单条消息-->
+                                        <Button Width="44" Height="22" Style="{StaticResource RightClickButton}"
+                                                HorizontalAlignment="Left"
+                                                Margin="15,1,0,0">
+                                            <Behaviors:Interaction.Triggers>
+                                                <Behaviors:EventTrigger EventName="Click" >
+                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickRevokeCommand, 
+                                                                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
+                                                                                   CommandParameter="{Binding PlacementTarget.ItemModel, 
+                                                                                                              RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                                </Behaviors:EventTrigger>
+                                            </Behaviors:Interaction.Triggers>
+
+                                            <TextBlock Text="撤回" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                        <!--撤销以下所有消息-->
+                                        <Button MinWidth="44" Height="22" Style="{StaticResource RightClickButton}"
+                                                HorizontalAlignment="Left"
+                                                Margin="30,1,0,0">
+                                            <Behaviors:Interaction.Triggers>
+                                                <Behaviors:EventTrigger EventName="Click" >
+                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickRevokeAllCommand, 
+                                                                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
+                                                                                   CommandParameter="{Binding PlacementTarget.ItemModel, 
+                                                                                                              RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                                </Behaviors:EventTrigger>
+                                            </Behaviors:Interaction.Triggers>
+
+                                            <TextBlock Text="撤回以下" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                        <!--编辑-->
+                                        <Button Width="44" Height="22" Style="{StaticResource RightClickButton}" 
+                                                HorizontalAlignment="Left"
+                                                Margin="0,1,0,0">
+                                            <Behaviors:Interaction.Triggers>
+                                                <Behaviors:EventTrigger EventName="Click">
+                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickEditCommand, 
+                                                                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                                        <Behaviors:ChangePropertyAction TargetObject="{Binding PlacementTarget.Inner_cTextBox, 
+                                                                                                           RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                                                        PropertyName="IsHitTestVisible"
+                                                                                        Value="True"/>
+                                                </Behaviors:EventTrigger>
+                                            </Behaviors:Interaction.Triggers>
+
+                                            <TextBlock Text="编辑" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                    </StackPanel>
+
+                                    <ContextMenu.Triggers>
+                                        <EventTrigger RoutedEvent="Button.Click">
+                                            <EventTrigger.Actions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsOpen">
+                                                            <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="False"/>
+                                                        </BooleanAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger.Actions>
+                                        </EventTrigger>
+                                    </ContextMenu.Triggers>
+                                </contextmenuex:cContextMenu>
+                            </Grid.ContextMenu>
+                        </gridex:cGrid>
+
+                        <!--BOT时间戳-->
+                        <Border HorizontalAlignment="Left"
+                                VerticalAlignment="Top">
+                            <TextBlock Foreground="Gray"
+                                       FontWeight="Normal">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{StaticResource cListViewChatHistory_converter_contactcard_time_token}">
+                                        <Binding Path="Time"/>
+                                        <Binding Path="TokenPrice"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </ControlTemplate>
+
+            <!--玩家发言-->
+            <ControlTemplate x:Key="CustomRow_Right">
+                <Grid Background="#00FF0505" 
+                      HorizontalAlignment="Stretch"
+                      Margin="5,0,5,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0"
+                                Margin="0,13,0,5">
+                        <!--玩家用户名-->
+                        <Border Grid.Column="0"                                       
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Right" 
+                                Margin="0,0,0,2">
+                            <TextBlock Text="{Binding DisplayName}"
+                                       Foreground="{Binding UsernameColor}"
+                                       FontWeight="Normal"
+                                       FontFamily="Calibri">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect ShadowDepth="0" 
+                                                      BlurRadius="5"
+                                                      Opacity="1"
+                                                      Color="{Binding UserborderColor}"/>
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Border>
+
+                        <!--玩家消息主体-->
+                        <gridex:cGrid Grid.Column="0" Grid.Row="1"
+                                      VerticalAlignment="Top"
+                                      HorizontalAlignment="Right" 
+                                      Margin="0,0,0,0"
+                                      MaxWidth="{Binding ActualWidth, 
+                                                         RelativeSource={RelativeSource AncestorType={x:Type ListView}},
+                                                         Converter={StaticResource cListViewChatHistory_converter_textblock_maxwidth}}"
+                                      ParentModel="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=ListView}}"
+                                      ItemModel="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=ListViewItem}}"
+                                      Inner_cTextBox="{Binding DataContext, ElementName=msg_textbox}">
+                            <Border x:Name="msg_background"
+                                    CornerRadius="12,0,12,4"
+                                    Background="{Binding UserborderColor}">
+                                <Behaviors:Interaction.Triggers>
+                                    <Behaviors:EventTrigger EventName="MouseLeftButtonUp">
+                                        <Behaviors:InvokeCommandAction Command="{Binding ParentModel.RightClickEditCommand, 
+                                                                                         RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type gridex:cGrid}}}"/>
+                                        <Behaviors:ChangePropertyAction TargetObject="{Binding Inner_cTextBox, 
+                                                                                               RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type gridex:cGrid}}}"
+                                                                        PropertyName="IsHitTestVisible"
+                                                                        Value="True"/>
+                                    </Behaviors:EventTrigger>
+                                </Behaviors:Interaction.Triggers>
+                            </Border>
+                            <!--这里有点阴间-->
+                            <textboxex:cTextBox x:Name="msg_textbox"
+                                                Text="{Binding DataContext.Message, RelativeSource={RelativeSource FindAncestor, AncestorType=ListViewItem}}"
+                                                FontSize="12" 
+                                                FontFamily="Calibri"
+                                                CaretBrush="OrangeRed"
+                                                AcceptsReturn="True"
+                                                BorderBackground="#00000000"
+                                                BorderCornerRadius="{Binding CornerRadius, ElementName=msg_background}"
+                                                BorderContentMargin ="6,5,6,5" 
+                                                IsHitTestVisible="False"
+                                                IsHitTestVisibleCallBack="{Binding IsHitTestVisible, RelativeSource={RelativeSource Self}}"
+                                                DataContext="{Binding RelativeSource={RelativeSource Self}}"
+                                                ParentModel="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=ListView}}"
+                                                ItemModel="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType=ListViewItem}}">
+                                <TextBox.ContextMenu>
+                                    <ContextMenu>
+                                        <!--方便鼠标操作的右括号-->
+                                        <MenuItem Header="（）"
+                                                  Command="{Binding PlacementTarget.ParentModel.PasteParenthesesCommand,
+                                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                  Visibility="{Binding PlacementTarget.SelectedText,
+                                                                       RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                       Converter={StaticResource cListViewChatHistory_converter_contextmenu_show_if_empty}}">
+                                        </MenuItem>
+                                        <MenuItem Header="「」"
+                                                  Command="{Binding PlacementTarget.ParentModel.PasteParenthesesCommand,
+                                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                  Visibility="{Binding PlacementTarget.SelectedText,
+                                                                       RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                       Converter={StaticResource cListViewChatHistory_converter_contextmenu_show_if_empty}}">
+                                        </MenuItem>
+                                        <MenuItem Header="【】"
+                                                  Command="{Binding PlacementTarget.ParentModel.PasteParenthesesCommand,
+                                                                    RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                  CommandParameter="{Binding Header,RelativeSource={RelativeSource Self}}"
+                                                  Visibility="{Binding PlacementTarget.SelectedText,
+                                                                       RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}},
+                                                                       Converter={StaticResource cListViewChatHistory_converter_contextmenu_show_if_empty}}">
+                                        </MenuItem>
+                                        <!--分割线-->
+                                        <Separator/>
+                                        <!--默认三项-->
+                                        <MenuItem Header="{StaticResource Cut}" Command="ApplicationCommands.Cut"/>
+                                        <MenuItem Header="{StaticResource Copy}" Command="ApplicationCommands.Copy"/>
+                                        <MenuItem Header="{StaticResource Paste}" Command="ApplicationCommands.Paste"/>
+                                    </ContextMenu>
+                                </TextBox.ContextMenu>
+
+                                <Behaviors:Interaction.Triggers>
+                                    <Behaviors:EventTrigger EventName="LostFocus">
+                                        <Behaviors:ChangePropertyAction TargetObject="{Binding}"
+                                                                        PropertyName="IsHitTestVisible"
+                                                                        Value="False"/>
+                                    </Behaviors:EventTrigger>
+                                </Behaviors:Interaction.Triggers>
+                            </textboxex:cTextBox>
+                            <Grid.ContextMenu>
+                                <contextmenuex:cContextMenu>
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <StackPanel.Effect>
+                                            <DropShadowEffect ShadowDepth="0.5" BlurRadius="1.5" RenderingBias="Quality" Color="DarkRed" />
+                                        </StackPanel.Effect>
+
+                                        <!--复制-->
+                                        <Button Width="44" Height="22" Style="{StaticResource RightClickButton}"
+                                                HorizontalAlignment="Left">
+                                            <Behaviors:Interaction.Triggers>
+                                                <Behaviors:EventTrigger EventName="Click" >
+                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickCopyCommand, 
+                                                                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
+                                                                                   CommandParameter="{Binding PlacementTarget.ItemModel.Message, 
+                                                                                                              RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                                </Behaviors:EventTrigger>
+                                            </Behaviors:Interaction.Triggers>
+
+                                            <TextBlock Text="复制" 
+                                                       FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                        <!--撤销-->
+                                        <Button Width="44" Height="22" Style="{StaticResource RightClickButton}"
+                                                HorizontalAlignment="Left"
+                                                Margin="15,1,0,0">
+                                            <Behaviors:Interaction.Triggers>
+                                                <Behaviors:EventTrigger EventName="Click" >
+                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickRevokeCommand, 
+                                                                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
+                                                                                   CommandParameter="{Binding PlacementTarget.ItemModel, 
+                                                                                                              RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                                </Behaviors:EventTrigger>
+                                            </Behaviors:Interaction.Triggers>
+
+                                            <TextBlock Text="撤回" 
+                                                               FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                        <!--重新发送-->
+                                        <Button MinWidth="44" Height="22" Style="{StaticResource RightClickButton}"
+                                                HorizontalAlignment="Left"
+                                                Margin="30,1,0,0">
+                                            <Behaviors:Interaction.Triggers>
+                                                <Behaviors:EventTrigger EventName="Click" >
+                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickReSendCommand, 
+                                                                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
+                                                                                   CommandParameter="{Binding PlacementTarget.ItemModel, 
+                                                                                                              RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                                </Behaviors:EventTrigger>
+                                            </Behaviors:Interaction.Triggers>
+
+                                            <TextBlock Text="重新发送" 
+                                                               FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                        <!--重新发送-->
+                                        <Button MinWidth="44" Height="22" Style="{StaticResource RightClickButton}"
+                                                HorizontalAlignment="Left"
+                                                Margin="30,1,0,0">
+                                            <Behaviors:Interaction.Triggers>
+                                                <Behaviors:EventTrigger EventName="Click" >
+                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickBingBypassDetectionCommand, 
+                                                                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
+                                                                                   CommandParameter="{Binding PlacementTarget.ItemModel, 
+                                                                                                              RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                                </Behaviors:EventTrigger>
+                                            </Behaviors:Interaction.Triggers>
+
+                                            <TextBlock Text="重新发送（过越狱检测）" 
+                                                               FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                        <!--编辑-->
+                                        <Button Width="44" Height="22" Style="{StaticResource RightClickButton}" 
+                                                HorizontalAlignment="Left"
+                                                Margin="0,1,0,0">
+                                            <Behaviors:Interaction.Triggers>
+                                                <Behaviors:EventTrigger EventName="Click">
+                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickEditCommand, 
+                                                                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                                    <Behaviors:ChangePropertyAction TargetObject="{Binding PlacementTarget.Inner_cTextBox, 
+                                                                                                           RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                                                    PropertyName="IsHitTestVisible"
+                                                                                    Value="True"/>
+                                                </Behaviors:EventTrigger>
+                                            </Behaviors:Interaction.Triggers>
+
+                                            <TextBlock Text="编辑" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Button>
+                                    </StackPanel>
+
+                                    <ContextMenu.Triggers>
+                                        <EventTrigger RoutedEvent="Button.Click">
+                                            <EventTrigger.Actions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="IsOpen">
+                                                            <DiscreteBooleanKeyFrame KeyTime="0:0:0" Value="False"/>
+                                                        </BooleanAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </EventTrigger.Actions>
+                                        </EventTrigger>
+                                    </ContextMenu.Triggers>
+                                </contextmenuex:cContextMenu>
+                            </Grid.ContextMenu>
+                        </gridex:cGrid>
+
+                        <!--玩家时间戳-->
+                        <Border Grid.Column="0" Grid.Row="2"                                      
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Right" >
+                            <TextBlock Text="{Binding Time, StringFormat='H:mm:ss tt', ConverterCulture=ja-JP}"
+                                       Foreground="Gray"
+                                       FontWeight="Normal"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Right">
+                                <!--<TextBlock.Effect>
+                                    <DropShadowEffect ShadowDepth="0" 
+                                                      BlurRadius="2"
+                                                      Opacity="1"
+                                                      Color="{Binding UserborderColor}"/>
+                                </TextBlock.Effect>-->
+                            </TextBlock>
+                        </Border>
+                    </StackPanel>
+                    
+                    <!--玩家头像-->
+                    <Border Grid.Column="1"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            CornerRadius="16"
+                            Width="32" Height="32"
+                            BorderThickness="1"
+                            BorderBrush="{Binding UserborderColor}"
+                            Margin="5,5,5,0">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding ImageSource,
+                                                              Converter={StaticResource cListViewChatHistory_converter_imagesource}}"/>
+                        </Border.Background>
+                    </Border>
+
+                </Grid>
+            </ControlTemplate>
+        </Style.Resources>
+
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsBot}" Value="true">
+                <Setter Property="Template" Value="{StaticResource CustomRow_Left}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsBot}" Value="false">
+                <Setter Property="Template" Value="{StaticResource CustomRow_Right}"/>
+            </DataTrigger>
+
+            <!--<EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation From="0" To="1" Duration="0:0:0.15" 
+                                         Storyboard.TargetProperty="Opacity" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>-->
+        </Style.Triggers>
+    </Style>
+    
+    <Style TargetType="{x:Type local:cListViewChatHistory}">
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="VirtualizingPanel.ScrollUnit" Value="Pixel"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:cListViewChatHistory}" >
+                    <local:cScrollViewer AllowScreenshot="True"
+                                         Focusable="false" 
+                                         Padding="{TemplateBinding Padding}">
+                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </local:cScrollViewer>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Setter Property="ItemContainerStyle" Value="{StaticResource ChatHistory}"/>
+    </Style>
+
+
+
+</ResourceDictionary>
