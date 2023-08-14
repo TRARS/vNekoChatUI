@@ -64,7 +64,7 @@ namespace Common.WPF
 
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                Console.WriteLine(message);
+                //Console.WriteLine(message);
             }
         }
     }
