@@ -21,15 +21,17 @@ namespace vNekoChatUI.Character.BingUtils.Services
     //拉一下服务
     public partial class BingChatClient
     {
-        IBingVisualSearchService _bingVisualSearch = ServiceHost.Instance.GetService<IBingVisualSearchService>();
+        IBingVisualSearchService _bingVisualSearchService = ServiceHost.Instance.GetService<IBingVisualSearchService>();
         IDefWebService _defWebService = ServiceHost.Instance.GetService<IDefWebService>();
         IFlagService _flagService = ServiceHost.Instance.GetService<IFlagService>();
         ISharpTokenService _sharpTokenService = ServiceHost.Instance.GetService<ISharpTokenService>();
         IStreamService _streamService = ServiceHost.Instance.GetService<IStreamService>();
     }
 
+    //主
     public partial class BingChatClient
     {
+        //接收外面选择的ChatStyle
         BingChatOption _option;
 
         //借用外边的HttpClient
@@ -54,7 +56,7 @@ namespace vNekoChatUI.Character.BingUtils.Services
                 //WebSocket
                 stepUp?.Invoke(3);//计步器
                 LogProxy.Instance.Print($"\n※ step 3: await CreateNewChatHub\n");
-                var ws = await CreateNewChatHub(cookie, cancellationToken);//这里可能会卡死
+                var ws = await CreateNewChatHub(cookie, message, cancellationToken);//这里可能会卡死
                 if (ws is null) { throw new Exception("CreateNewChatHub error"); }
 
 
@@ -79,7 +81,7 @@ namespace vNekoChatUI.Character.BingUtils.Services
                 };
 
                 //是否传递imageurl
-                var image_url = _flagService.TryUseBingVisualSearch ? _bingVisualSearch.ImageUrl : null;
+                var image_url = _flagService.TryUseBingVisualSearch ? _bingVisualSearchService.ImageUrl : null;
 
                 var bingRequest = new RequestNew.NetworkRequestRoot()
                 {
@@ -188,7 +190,7 @@ namespace vNekoChatUI.Character.BingUtils.Services
             await ReceiveOnce(ws, cancellationToken);
         }
 
-        private async Task<WebSocket?> CreateNewChatHub(string cookie, CancellationToken token)
+        private async Task<WebSocket?> CreateNewChatHub(string cookie, BingRequest message, CancellationToken token)
         {
             int retryCount = 0;
             // 死循环
@@ -229,7 +231,16 @@ namespace vNekoChatUI.Character.BingUtils.Services
                         ws.Options.SetRequestHeader("cookie", $"_U={cookie}");
                     }
 
-                    await ws.ConnectAsync(new Uri("wss://sydney.bing.com/sydney/ChatHub"), token);//这里有时候会卡半天
+                    if(message.Session.EncryptedSignature is not null &&
+                       string.IsNullOrEmpty(message.Session.EncryptedSignature) is false)
+                    {
+                        await ws.ConnectAsync(new Uri($"wss://sydney.bing.com/sydney/ChatHub?sec_access_token={message.Session.EncryptedSignature}"), token);
+                    }
+                    else
+                    {
+                        await ws.ConnectAsync(new Uri("wss://sydney.bing.com/sydney/ChatHub"), token);//这里有时候会卡半天
+                    }
+       
                     LogProxy.Instance.Print($"——CreateNewChatHub 成功返回: {ws}");
 
                     return ws;
@@ -562,9 +573,12 @@ namespace vNekoChatUI.Character.BingUtils.Services
         }
     }
 
-    //
+    //次
     public partial class BingChatClient
     {
+        /// <summary>
+        /// 更新网页上下文时候用的JSON结构
+        /// </summary>
         private class PreContent
         {
             public List<Message> messages { get; set; }
@@ -588,6 +602,9 @@ namespace vNekoChatUI.Character.BingUtils.Services
             }
         }
 
+        /// <summary>
+        /// 于同一会话中，更新网页上下文（不需要了，撤回太严重压根就没有必要维持在同一会话里）
+        /// </summary>
         private async Task<bool> UpdateWebPageContext(string webpage_context, BingRequest message, CancellationToken token)
         {
             //重试个两三次
@@ -661,6 +678,9 @@ namespace vNekoChatUI.Character.BingUtils.Services
             return true;
         }
 
+        /// <summary>
+        /// 不知道干啥用的随机生成字串
+        /// </summary>
         private string GetRandomHex(int length = 32)
         {
             Random random = new Random();
@@ -675,6 +695,9 @@ namespace vNekoChatUI.Character.BingUtils.Services
             return sb.ToString();
         }
 
+        /// <summary>
+        /// 构造网页上下文（纯文本）
+        /// </summary>
         private string CreateWebPageContext(BingRequest message, out int tokens)
         {
             var ai_name = message.InputData.Ai_Name;//上层用户初始名字

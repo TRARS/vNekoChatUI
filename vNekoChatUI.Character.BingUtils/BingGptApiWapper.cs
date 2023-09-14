@@ -115,7 +115,8 @@ namespace vNekoChatUI.Character.BingUtils
                         Session = new Models.ConversationSession(invocation_id,
                                                                  _bingConversation.ConversationId,
                                                                  _bingConversation.ClientId,
-                                                                 _bingConversation.ConversationSignature),
+                                                                 _bingConversation.ConversationSignature,
+                                                                 _bingConversation.Encryptedconversationsignature),
                         InputData = jsonObject//聊天记录直接塞进去
                     }, cancellationToken, _stepUp, currentCookie);
 

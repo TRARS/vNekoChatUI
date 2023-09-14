@@ -2,6 +2,7 @@
 using Common.WPF.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -147,6 +148,18 @@ namespace vNekoChatUI.Character.BingUtils.Services
 
                                 if (obj is not null)
                                 {
+                                    //?
+                                    if (response.Headers.TryGetValues("X-Sydney-Encryptedconversationsignature", out var values))
+                                    {
+                                        obj.Encryptedconversationsignature = values?.FirstOrDefault();
+                                        if(obj.Encryptedconversationsignature is not null)
+                                        {
+                                            obj.Encryptedconversationsignature = System.Web.HttpUtility.UrlEncode(obj.Encryptedconversationsignature);
+                                        }
+                                        //System.Windows.MessageBox.Show($"===\n{obj.ConversationId}\n{obj.Encryptedconversationsignature}\n===");
+                                        LogProxy.Instance.Print($"Encryptedconversationsignature: \n{obj.Encryptedconversationsignature}");
+                                    } 
+
                                     obj.Flag = true;
                                     return obj;
                                 }

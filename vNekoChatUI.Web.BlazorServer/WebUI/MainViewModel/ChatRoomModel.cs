@@ -27,6 +27,7 @@ namespace vNekoChatUI.Web.BlazorServer.WebUI.MainViewModel
         Action<Action<bool>?>? HideInputBox { get; set; }
         Action? ColorChange { get; set; }
     }
+
     public partial class ChatRoomModel : IChatRoomModel
     {
         //
@@ -45,8 +46,8 @@ namespace vNekoChatUI.Web.BlazorServer.WebUI.MainViewModel
         public string connectionId { get; set; } = "";
         //
         public Action<string>? ReSend { get; set; } = null;
-        public Action<bool, bool>? Screenshot_Windows { get; set; }
-        public Action<bool, bool>? Screenshot_SmartPhone { get; set; }
+        public Action<bool, bool>? Screenshot_Windows { get; set; } = null;
+        public Action<bool, bool>? Screenshot_SmartPhone { get; set; } = null;
         public Action<string>? RefreshProfile { get; set; } = null;
         public Action<Action<bool>?>? HideNavMenu { get; set; } = null;
         public Action<Action<bool>?>? HideInputBox { get; set; } = null;

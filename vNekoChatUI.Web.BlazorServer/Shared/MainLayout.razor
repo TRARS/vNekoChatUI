@@ -35,6 +35,8 @@
     private bool HideNavMenu;
     private bool HideInputBox;
 
+    private async Task ReRender() => await InvokeAsync(StateHasChanged);//重绘
+
     protected override async Task OnInitializedAsync()
     {
         //手动显示/隐藏导航栏
@@ -42,20 +44,20 @@
         {
             HideNavMenu = !HideNavMenu;
             act?.Invoke(HideNavMenu);
-            await InvokeAsync(StateHasChanged);
+            await ReRender();
         };
         //手动显示/隐藏输入框
         ChatRoomModelInstance.HideInputBox = async (act) =>
         {
             HideInputBox = !HideInputBox;
             act?.Invoke(HideInputBox);
-            await InvokeAsync(StateHasChanged);
+            await ReRender();
         };
         //手动切换颜色
         ChatRoomModelInstance.ColorChange = async () =>
         {
             ChatRoomModelInstance.IsDarkMode = !ChatRoomModelInstance.IsDarkMode;
-            await InvokeAsync(StateHasChanged);
+            await ReRender();
         };
 
 
@@ -63,14 +65,14 @@
         MessageServiceInstance.HideNavigationBar += async () =>
         {
             HideNavMenu = true;
-            await InvokeAsync(StateHasChanged); // 刷新组件
+            await ReRender(); // 刷新组件
         };
 
         //供无头chrome截图时隐藏输入框
         MessageServiceInstance.HideInputBox += async () =>
         {
             HideInputBox = true;
-            await InvokeAsync(StateHasChanged); // 刷新组件
+            await ReRender(); // 刷新组件
         };
 
         await Task.Yield();

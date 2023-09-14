@@ -272,7 +272,7 @@ namespace vNekoChatUI.UserControlEx.ClientEx
     //拉一下服务
     internal partial class ContactModel
     {
-        IBingVisualSearchService _bingVisualSearch = ServiceHost.Instance.GetService<IBingVisualSearchService>();
+        IBingVisualSearchService _bingVisualSearchService = ServiceHost.Instance.GetService<IBingVisualSearchService>();
         IFlagService _flagService = ServiceHost.Instance.GetService<IFlagService>();
         IStreamService _streamService = ServiceHost.Instance.GetService<IStreamService>();
         ISignalRClientService _signalRClientService = ServiceHost.Instance.GetService<ISignalRClientService>();
@@ -686,7 +686,7 @@ namespace vNekoChatUI.UserControlEx.ClientEx
     {
         public RelayCommand BingVisualSearchCommand { get; set; }
 
-        public string? BingVisualSearchImageUrl => _bingVisualSearch.ImageUrl;
+        public string? BingVisualSearchImageUrl => _bingVisualSearchService.ImageUrl;
 
         public bool UseBingVisualSearch
         {
@@ -713,7 +713,7 @@ namespace vNekoChatUI.UserControlEx.ClientEx
                     if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
                         string selectedFilePath = openFileDialog.FileName;
-                        var response = await _bingVisualSearch.UploadImageAsync(@$"{selectedFilePath}");
+                        var response = await _bingVisualSearchService.UploadImageAsync(@$"{selectedFilePath}");
                         var res_flag = response.Item1;
                         var res_text = response.Item2;
                         LogProxy.Instance.Print($"ImageUrl = {res_text}");

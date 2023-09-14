@@ -119,11 +119,13 @@
     private bool NavigationOff { get; set; }
     private bool InputBoxOff { get; set; }
 
+    private async Task ReRender() => await InvokeAsync(StateHasChanged);//重绘
+
     protected override async Task OnInitializedAsync()
     {
         MessageServiceInstance.OnChatRoomUpdated += async () =>
         {
-            await InvokeAsync(StateHasChanged); // 刷新组件
+            await ReRender(); // 刷新组件
 
             await MessageServiceInstance.NotifyNavMenuUpdated();
         };
@@ -187,7 +189,7 @@
         Debug.WriteLine($"DeleteMessageItem = {ChatRoomModelInstance.HistoryChanged} (from item[{index}])");
 
         ChatRoomModelInstance.ChatHistory[index].Remove = !ChatRoomModelInstance.ChatHistory[index].Remove;
-        InvokeAsync(StateHasChanged);
+        ReRender();
     }
     private async Task ReSendMessage(int index, bool bypass)
     {

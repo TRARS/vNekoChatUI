@@ -8,4 +8,4 @@ public record BingRequest(string user_say)
     public InputData InputData { get; set; }
 }
 
-public record ConversationSession(int InvocationId, string ConversationId, string ClientId, string Signature);
+public record ConversationSession(int InvocationId, string ConversationId, string ClientId, string Signature, string? EncryptedSignature);

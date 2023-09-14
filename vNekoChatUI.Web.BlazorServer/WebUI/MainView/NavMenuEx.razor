@@ -16,11 +16,13 @@
 </div>
 
 @code {
+    private async Task ReRender() => await InvokeAsync(StateHasChanged);//重绘
+
     protected override async Task OnInitializedAsync()
     {
         MessageServiceInstance.OnNavMenuUpdated += async () =>
         {
-            await InvokeAsync(StateHasChanged); // 刷新组件
+            await ReRender(); // 刷新组件
         };
 
         await base.OnInitializedAsync();

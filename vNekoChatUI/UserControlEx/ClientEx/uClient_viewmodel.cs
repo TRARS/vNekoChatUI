@@ -586,7 +586,7 @@ namespace vNekoChatUI.UserControlEx.ClientEx
                 for (int i = 0; i < Math.Min(preload_count, max_count); i++)
                 {
                     //预载入的所有聊天对象
-                    BotContacts.Add(new ContactModel(chatPlayground, $"{obj.name[i]}", true, () => { return (int)this.DebugMode; })//注入BOT专用客户端
+                    BotContacts.Add(new ContactModel(chatPlayground, $"{obj.name[i]}", true, () => { return (int)this.DebugMode; })
                     {
                         Username = $"{obj.name[i]}",
                         Usertone = $"{obj.tone[i]}",
@@ -631,7 +631,7 @@ namespace vNekoChatUI.UserControlEx.ClientEx
                     {
                         int i = preload_count;
                         //新增的聊天对象
-                        BotContacts.Add(new ContactModel(chatPlayground, $"{obj.name[i]}", true, () => { return (int)this.DebugMode; })//注入BOT专用客户端
+                        BotContacts.Add(new ContactModel(chatPlayground, $"{obj.name[i]}", true, () => { return (int)this.DebugMode; })
                         {
                             Username = $"{obj.name[i]}",
                             Usertone = $"{obj.tone[i]}",

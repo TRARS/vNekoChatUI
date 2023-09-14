@@ -90,6 +90,8 @@
 
     private int currentStep = 0;
 
+    private async Task ReRender() => await InvokeAsync(StateHasChanged);//重绘
+
     //初始化，注册一些方法供客户端间接调用
     protected override async Task OnInitializedAsync()
     {
@@ -164,7 +166,7 @@
                         {
                             currentStep = 0;
                         }
-                        await InvokeAsync(StateHasChanged);
+                        await ReRender();
                         break;             
                     }
                 //
@@ -215,9 +217,10 @@
 @code {
     private bool enter_locker = false;
 
-    private void UpdateMessageInput(string newText)
+    private async Task UpdateMessageInput(string newText)
     {
         messageInput = newText;
+        await Task.Yield();
     }
     private async Task HandleKeyDown(KeyboardEventArgs e)
     {
@@ -384,9 +387,9 @@
         //正常发消息
         await ExecuteClientCommandWithName("ServerSendMessage", $"{messageInput}");
 
-        this.UpdateMessageInput(string.Empty);// 清空输入框
+        await this.UpdateMessageInput(string.Empty);// 清空输入框
 
-        await InvokeAsync(StateHasChanged);
+        await ReRender();
         await scrollToBottom();
     }
     //发停止消息给客户端
@@ -396,9 +399,9 @@
         //正常发消息
         await ExecuteClientCommandWithName("ServerSendStop");
 
-        this.UpdateMessageInput(string.Empty);// 清空输入框
+        await this.UpdateMessageInput(string.Empty);// 清空输入框
 
-        await InvokeAsync(StateHasChanged);
+        await ReRender();
     }
 
 
@@ -410,7 +413,7 @@
 
         await ExecuteClientCommandWithName("ServerClearChatHistory");
 
-        await InvokeAsync(StateHasChanged);
+        await ReRender();
         await MessageServiceInstance.NotifyChatRoomUpdated();
     }
     //获取客户端聊天记录
@@ -507,7 +510,7 @@
  @code {
     private async Task ChatRoomReSend(string text)
     {
-        this.UpdateMessageInput(text);
+        await this.UpdateMessageInput(text);
         await SendToClient();
     }
 

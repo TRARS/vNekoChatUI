@@ -21,6 +21,9 @@ namespace vNekoChatUI.Character.BingUtils.Models
 
         [JsonPropertyName("result")]
         public Resule? Result { get; set; }
+
+        [JsonIgnore]
+        public string? Encryptedconversationsignature { get; set; }
     }
 
     public class Resule

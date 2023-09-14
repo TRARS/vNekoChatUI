@@ -25,9 +25,9 @@
 
         @if (isEditingText)
         {
-            @*true -> plaintext-only 有效解决获取innerText时换行次数对不上的问题*@
+            @*true -> plaintext-only 有效缓解获取innerText时换行次数对不上的问题*@
             <div contenteditable="plaintext-only" 
-            @ref="_destinationDiv"
+                 @ref="_destinationDiv"
                  @onblur="HandleBlur"
                  style="color: white;
                         background-color: rgba(64, 64, 128, 0.85);
@@ -146,8 +146,7 @@
     {
         var content = RemoveComments(newValue).InsertSpaceBetweenConsecutiveNewlines();
         var comment = GetComments(newValue).Replace("→(\n", "").Replace("\n)←", "");
-        commentIsEmpty = string.IsNullOrWhiteSpace(comment);
-
+        
         processedContent1 = builder =>
         {
             builder.OpenElement(0, "span");
@@ -166,6 +165,7 @@
 
         content_text = content;
         comment_text = comment;
+        commentIsEmpty = string.IsNullOrWhiteSpace(comment);
     }
 
     //删除注释
@@ -242,20 +242,20 @@
             {
                 await Task.Delay(50);
 
-                var target_pos = await JS.InvokeAsync<CursorPosition>("getCursorPositionEx", _originDiv);
-                await JS.InvokeVoidAsync("setOpacity", _originDiv, 0.5);//降低原div不透明度
+                var target_pos = await JS.InvokeAsync<CursorPosition>("getCursorPositionEx", _originDiv);//获取光标于下层div的坐标
+                await JS.InvokeVoidAsync("setOpacity", _originDiv, 0.5); //降低下层div不透明度
 
-                await JS.InvokeVoidAsync("setInnerText", _destinationDiv, content_text);
-                await JS.InvokeVoidAsync("setFocus", _destinationDiv);
-                await JS.InvokeVoidAsync("setOpacity", _destinationDiv, 1.0);
+                await JS.InvokeVoidAsync("setInnerText", _destinationDiv, content_text); //复制内容至上层div
+                await JS.InvokeVoidAsync("setFocus", _destinationDiv); //焦点转移至上层div
+                await JS.InvokeVoidAsync("setOpacity", _destinationDiv, 1.0); //设置上层div不透明度
                 await Task.Delay(100);
                 await JS.InvokeVoidAsync("setCursorPositionEx",
                                              _destinationDiv,
                                              target_pos.LineIndex,
-                                             target_pos.ColumnIndex);
+                                             target_pos.ColumnIndex);//还原光标位置
 
-                var textNodesLen = await JS.InvokeAsync<int>("getTextNodesLength", _destinationDiv);
-                Debug.WriteLine($"targetpos = ({target_pos.LineIndex},{target_pos.ColumnIndex})  textNodesLen = {textNodesLen}");
+                //var textNodesLen = await JS.InvokeAsync<int>("getTextNodesLength", _destinationDiv);
+                //Debug.WriteLine($"targetpos = ({target_pos.LineIndex},{target_pos.ColumnIndex})  textNodesLen = {textNodesLen}");
             }
             locker = false;
         }
@@ -267,11 +267,9 @@
         {
             locker = true;
             {
-                var preText = $"{await JS.InvokeAsync<string>("getInnerText", _destinationDiv)}";
-                var editedText = preText.RemoveCarriageReturns().Trim();
-                var hasCommentText = string.IsNullOrWhiteSpace(comment_text);
-                //Debug.WriteLine($"preText = \n{preText}");
-                //locker = false; return; //测试用
+                var preText = $"{await JS.InvokeAsync<string>("getInnerText", _destinationDiv)}";//获取编辑之后的文本
+                var editedText = preText.RemoveSpaceBetweenConsecutiveNewlines().Trim();//删除空白内容
+                var hasCommentText = string.IsNullOrWhiteSpace(comment_text);//查一下是否有注释
                 var fullText = (hasCommentText ? editedText : $"{editedText}\n→(\n{comment_text}\n)←");
                 {
                     //修改内部属性
