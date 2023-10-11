@@ -1,5 +1,6 @@
 #if DEBUG
 global using Console = System.Diagnostics.Debug;
+using System;
 #else
 global using Console = System.Diagnostics.Trace;
 #endif
@@ -28,22 +29,8 @@ namespace Common.WPF
     //데절
     public partial class LogProxy
     {
-        private static readonly object objlock = new object();
-        private static LogProxy? _instance;
-        public static LogProxy Instance
-        {
-            get
-            {
-                lock (objlock)
-                {
-                    if (_instance is null)
-                    {
-                        _instance = new LogProxy();
-                    }
-                }
-                return _instance;
-            }
-        }
+        private static readonly Lazy<LogProxy> lazyObject = new(() => new LogProxy());
+        public static LogProxy Instance => lazyObject.Value;
     }
 
     //무역

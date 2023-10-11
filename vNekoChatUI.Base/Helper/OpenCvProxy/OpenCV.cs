@@ -13,22 +13,8 @@ namespace vNekoChatUI.Base.Helper.OpenCvProxy
     /// </summary>
     public partial class OpenCV
     {
-        private static readonly object objlock = new object();
-        private static OpenCV? _instance;
-        public static OpenCV Instance
-        {
-            get
-            {
-                lock (objlock)
-                {
-                    if (_instance is null)
-                    {
-                        _instance = new OpenCV();
-                    }
-                }
-                return _instance;
-            }
-        }
+        private static readonly Lazy<OpenCV> lazyObject = new(() => new OpenCV());
+        public static OpenCV Instance => lazyObject.Value;
     }
 
     //对外公开方法

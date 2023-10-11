@@ -12,9 +12,11 @@ namespace Common.WPF.Extensions
         {
             // 注册服务
             services.TryAddSingleton<IBingVisualSearchService, BingVisualSearchService>();
+            services.TryAddSingleton<IBingChatHistoryManagerService, BingChatHistoryManagerService>();
             services.TryAddSingleton<IBmpService, BmpService>();
             services.TryAddSingleton<IDefWebService, DefWebService>();
             services.TryAddSingleton<IFlagService, FlagService>();
+            services.TryAddSingleton<IJsonConfigManagerService, JsonConfigManagerService>();
             services.TryAddSingleton<ISharpTokenService, SharpTokenService>();
             services.TryAddSingleton<ISignalRClientService, SignalRClientService>();
             services.TryAddSingleton<IStreamService, StreamService>();

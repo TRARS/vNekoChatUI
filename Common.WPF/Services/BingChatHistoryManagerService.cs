@@ -1,11 +1,13 @@
-﻿using Common.WPF;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
+using System.Linq;
+using System.Text;
 using System.Text.Json.Serialization;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.IO;
 
-namespace vNekoChatUI.Base.Helper.Generic
+namespace Common.WPF.Services
 {
     //模型
     public record BingChatHistoryModel([property: JsonPropertyName("username")] string Username,
@@ -14,33 +16,15 @@ namespace vNekoChatUI.Base.Helper.Generic
                                        [property: JsonPropertyName("message")] string Message,
                                        [property: JsonPropertyName("time")] DateTime Time,
                                        [property: JsonPropertyName("isbot")] bool IsBot);
-}
 
-namespace vNekoChatUI.Base.Helper.Generic
-{
-    //单例
-    public sealed partial class BingChatHistoryReaderWriter
+    public interface IBingChatHistoryManagerService
     {
-        private static readonly object objlock = new object();
-        private static BingChatHistoryReaderWriter? _instance;
-        public static BingChatHistoryReaderWriter Instance
-        {
-            get
-            {
-                lock (objlock)
-                {
-                    if (_instance is null)
-                    {
-                        _instance = new BingChatHistoryReaderWriter();
-                    }
-                }
-                return _instance;
-            }
-        }
+        public void SaveBingChatHistory(List<string> _list);
+        public IEnumerable<BingChatHistoryModel> LoadBingChatHistory(string _filepath);
     }
 
     //构造
-    public sealed partial class BingChatHistoryReaderWriter
+    public partial class BingChatHistoryManagerService: IBingChatHistoryManagerService
     {
         private readonly JsonSerializerOptions _options = new JsonSerializerOptions
         {
@@ -53,7 +37,7 @@ namespace vNekoChatUI.Base.Helper.Generic
     }
 
     //公开
-    public sealed partial class BingChatHistoryReaderWriter
+    public partial class BingChatHistoryManagerService
     {
         public void SaveBingChatHistory(List<string> _list)
         {
@@ -74,7 +58,6 @@ namespace vNekoChatUI.Base.Helper.Generic
             //LogProxy.Instance.Print(result);
             File.WriteAllText(filePath, result);
         }
-
 
         public IEnumerable<BingChatHistoryModel> LoadBingChatHistory(string _filepath)
         {

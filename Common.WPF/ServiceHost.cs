@@ -1,28 +1,15 @@
 ﻿
 using Common.WPF.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Common.WPF
 {
     //单例
     public partial class ServiceHost
     {
-        private static readonly object objlock = new object();
-        private static ServiceHost? _instance;
-        public static ServiceHost Instance
-        {
-            get
-            {
-                lock (objlock)
-                {
-                    if (_instance is null)
-                    {
-                        _instance = new ServiceHost();
-                    }
-                }
-                return _instance;
-            }
-        }
+        private static readonly Lazy<ServiceHost> lazyObject = new(() => new ServiceHost());
+        public static ServiceHost Instance => lazyObject.Value;
     }
 
     public partial class ServiceHost

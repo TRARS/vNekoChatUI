@@ -55,14 +55,14 @@ namespace vNekoChatUI.Character.BingUtils.Services
             {
                 //WebSocket
                 stepUp?.Invoke(3);//计步器
-                LogProxy.Instance.Print($"\n※ step 3: await CreateNewChatHub\n");
+                LogProxy.Instance.Print($"\n※ step 3: await CreateNewChatHub (cookie={cookie.Substring(0, 8)}~~~)\n");
                 var ws = await CreateNewChatHub(cookie, message, cancellationToken);//这里可能会卡死
                 if (ws is null) { throw new Exception("CreateNewChatHub error"); }
 
 
                 //握手
                 stepUp?.Invoke(4);//计步器
-                LogProxy.Instance.Print($"\n※ step 4: await Handshake\n");
+                LogProxy.Instance.Print($"\n※ step 4: await Handshake (cookie={cookie.Substring(0, 8)}~~~)\n");
                 await Handshake(ws, cancellationToken);
 
                 //构造请求
@@ -160,7 +160,7 @@ namespace vNekoChatUI.Character.BingUtils.Services
 
                 //发送请求
                 stepUp?.Invoke(5);//计步器
-                LogProxy.Instance.Print($"\n※ step 5: await SendMessageAsync\n");
+                LogProxy.Instance.Print($"\n※ step 5: await SendMessageAsync (cookie={cookie.Substring(0, 8)}~~~)\n");
                 await SendMessageAsync(ws, bingRequest, cancellationToken);
 
                 //取回结果

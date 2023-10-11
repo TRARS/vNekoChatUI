@@ -5,22 +5,8 @@ namespace Common.WebWpfCommon
 {
     public partial class TextCompressor
     {
-        private static readonly object objlock = new object();
-        private static TextCompressor? _instance;
-        public static TextCompressor Instance
-        {
-            get
-            {
-                lock (objlock)
-                {
-                    if (_instance is null)
-                    {
-                        _instance = new TextCompressor();
-                    }
-                }
-                return _instance;
-            }
-        }
+        private static readonly Lazy<TextCompressor> lazyObject = new(() => new TextCompressor());
+        public static TextCompressor Instance => lazyObject.Value;
     }
 
     public partial class TextCompressor

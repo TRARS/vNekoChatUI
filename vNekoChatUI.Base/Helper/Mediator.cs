@@ -32,22 +32,8 @@ namespace vNekoChatUI.Base.Helper
     //限制为单例
     public sealed partial class Mediator
     {
-        private static readonly object objlock = new object();
-        private static Mediator? _instance;
-        public static Mediator Instance
-        {
-            get
-            {
-                lock (objlock)
-                {
-                    if (_instance is null)
-                    {
-                        _instance = new Mediator();
-                    }
-                }
-                return _instance;
-            }
-        }
+        private static readonly Lazy<Mediator> lazyObject = new(() => new Mediator());
+        public static Mediator Instance => lazyObject.Value;
     }
 
     //使用内置消息类型

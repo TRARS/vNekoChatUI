@@ -3,9 +3,9 @@
                     xmlns:local="clr-namespace:vNekoChatUI.CustomControlEx.TextBoxEx">
 
 
-    <local:cTextBox_converter_bordercontentheader_visibility  
-        x:Key="cTextBox_converter_bordercontentheader_visibility"/>
-    
+    <local:cTextBox_converter_bordercontentheader_visibility x:Key="cTextBox_converter_bordercontentheader_visibility"/>
+    <local:cTextBox_converter_placeholder_visibility x:Key="cTextBox_converter_placeholder_visibility"/>
+
     <Style TargetType="{x:Type local:cTextBox}">
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
@@ -66,6 +66,19 @@
                                               VerticalAlignment="Center" 
                                               Margin="{Binding BorderContentMargin, RelativeSource={RelativeSource TemplatedParent}}" >
                                 </ScrollViewer>
+
+                                <TextBlock Text="{Binding Placeholder, RelativeSource={RelativeSource TemplatedParent}}" 
+                                           Foreground="{Binding PlaceholderColor, RelativeSource={RelativeSource TemplatedParent}}"
+                                           VerticalAlignment="Center"
+                                           IsHitTestVisible="False"
+                                           Margin="8,0,0,0">
+                                    <TextBlock.Visibility>
+                                        <MultiBinding Converter="{StaticResource cTextBox_converter_placeholder_visibility}">
+                                            <Binding Path="Text" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                            <Binding Path="PlaceholderOnOff" RelativeSource="{RelativeSource TemplatedParent}"/>
+                                        </MultiBinding>
+                                    </TextBlock.Visibility>
+                                </TextBlock>
                             </Grid>
                         </Grid>
 

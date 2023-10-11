@@ -10,7 +10,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using vNekoChatUI.Base.Helper.Generic;
+using vNekoChatUI.Base.Helper;
 using vNekoChatUI.Character.HttpUtils.Extensions;
 
 namespace vNekoChatUI.Character.HttpUtils
@@ -18,35 +18,22 @@ namespace vNekoChatUI.Character.HttpUtils
     //限制为单例
     public sealed partial class ChatGptApiClient
     {
-        private static readonly object objlock = new object();
-        private static ChatGptApiClient? _instance;
-        public static ChatGptApiClient Instance
-        {
-            get
-            {
-                lock (objlock)
-                {
-                    if (_instance is null)
-                    {
-                        _instance = new ChatGptApiClient();
-                    }
-                }
-                return _instance;
-            }
-        }
+        private static readonly Lazy<ChatGptApiClient> lazyObject = new(() => new ChatGptApiClient());
+        public static ChatGptApiClient Instance => lazyObject.Value;
     }
 
     //拉一下服务
     public sealed partial class ChatGptApiClient
     {
         IDefWebService _defWebService = ServiceHost.Instance.GetService<IDefWebService>();
+        IJsonConfigManagerService _jsonConfigManagerService = ServiceHost.Instance.GetService<IJsonConfigManagerService>();
     }
 
     //初始化
     public sealed partial class ChatGptApiClient
     {
         //static string api_key => IniConfigReaderWriter.Instance.GetValue("ChatGPT", "api_key");
-        string _api_key => JsonConfigReaderWriter.Instance.GetChatGptApiKey();
+        string _api_key => _jsonConfigManagerService.GetChatGptApiKey();
 
         HttpClient _client;
 

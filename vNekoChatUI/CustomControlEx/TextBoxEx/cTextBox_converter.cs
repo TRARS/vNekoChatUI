@@ -21,4 +21,27 @@ namespace vNekoChatUI.CustomControlEx.TextBoxEx
             throw new NotImplementedException();
         }
     }
+
+
+    public class cTextBox_converter_placeholder_visibility : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values[0] is string text && values[1] is bool onoff)
+            {
+                if (onoff)
+                {
+                    return string.IsNullOrEmpty(text) ? Visibility.Visible : Visibility.Collapsed;
+                }
+                return Visibility.Collapsed;
+        
+            }
+            return Visibility.Collapsed;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

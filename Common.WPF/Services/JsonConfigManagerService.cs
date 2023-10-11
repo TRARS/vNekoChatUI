@@ -1,66 +1,81 @@
-﻿using Common.WPF;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using static Common.WPF.Services.JsonConfigManagerService;
 
-namespace vNekoChatUI.Base.Helper.Generic
+namespace Common.WPF.Services
 {
-    //可观察
-    public class ObservableString : NotificationObject
+    public interface IJsonConfigManagerService
     {
-        private string _value = string.Empty;
-        public string Value
+        public string GetChatGptApiKey();
+        public string GetBingGptCookie(bool random_cookie = false);
+        public void AddChatGptApiKey(string key);
+        public void AddBingGptCookie(string cookie);
+        public dynamic GetCurrentChatGptApiKeys();
+        public dynamic GetCurrentBingGptCookies();
+        public void Clear();
+        public void SaveToDesktop();
+    }
+
+    //内部类
+    public partial class JsonConfigManagerService: IJsonConfigManagerService
+    {
+        public class NotificationObject : INotifyPropertyChanged
         {
-            get { return _value; }
-            set
+            public event PropertyChangedEventHandler? PropertyChanged;
+            public void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
             {
-                _value = value.Trim();
-                NotifyPropertyChanged();
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-    }
 
-    //模型
-    public class JsonConfigStruct
-    {
-        [JsonPropertyName("ChatGptApiKey")]
-        public ObservableCollection<ObservableString> ChatGptApiKeys { get; init; } = new();
-
-        [JsonPropertyName("BingGptCookie")]
-        public ObservableCollection<ObservableString> BingGptCookies { get; init; } = new();
-    }
-}
-
-namespace vNekoChatUI.Base.Helper.Generic
-{
-    //单例
-    public sealed partial class JsonConfigReaderWriter
-    {
-        private static readonly object objlock = new object();
-        private static JsonConfigReaderWriter? _instance;
-        public static JsonConfigReaderWriter Instance
+        //可观察
+        public class ObservableString : NotificationObject
         {
-            get
+            private string _value = string.Empty;
+            public string Value
             {
-                lock (objlock)
+                get { return _value; }
+                set
                 {
-                    if (_instance is null)
-                    {
-                        _instance = new JsonConfigReaderWriter();
-                    }
+                    _value = value.Trim();
+                    NotifyPropertyChanged();
                 }
-                return _instance;
             }
+
+            private bool _isChecked = true;
+            public bool IsChecked
+            {
+                get { return _isChecked; }
+                set
+                {
+                    _isChecked = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        //模型
+        public class JsonConfigStruct
+        {
+            [JsonPropertyName("ChatGptApiKey")]
+            public ObservableCollection<ObservableString> ChatGptApiKeys { get; init; } = new();
+
+            [JsonPropertyName("BingGptCookie")]
+            public ObservableCollection<ObservableString> BingGptCookies { get; init; } = new();
         }
     }
 
     //构造
-    public sealed partial class JsonConfigReaderWriter
+    public partial class JsonConfigManagerService
     {
         private readonly JsonSerializerOptions _options = new JsonSerializerOptions
         {
@@ -76,7 +91,7 @@ namespace vNekoChatUI.Base.Helper.Generic
         private int currentChatGptApiKeyIndex = 0;
         private int currentBingGptCookieIndex = 0;
 
-        public JsonConfigReaderWriter()
+        public JsonConfigManagerService()
         {
             try
             {
@@ -99,7 +114,7 @@ namespace vNekoChatUI.Base.Helper.Generic
                             new() { Value = "Enter Your Bing Cookie" }
                         },
                     };
-                    this.SaveToDesktop();
+                    this.SaveConfigToDesktop();
                 }
             }
             catch (Exception ex)
@@ -111,7 +126,7 @@ namespace vNekoChatUI.Base.Helper.Generic
     }
 
     //内部
-    public sealed partial class JsonConfigReaderWriter
+    public partial class JsonConfigManagerService
     {
         //除空
         private void RemoveEmpty()
@@ -140,11 +155,19 @@ namespace vNekoChatUI.Base.Helper.Generic
         //轮换chatgpt api key
         private string NextChatGptApiKey()
         {
-            if (currentChatGptApiKeyIndex >= _configModel.ChatGptApiKeys.Count)
+            var checkedApiKeyList = _configModel.ChatGptApiKeys.Where(s => string.IsNullOrWhiteSpace(s.Value) is false && s.IsChecked).ToList();
+            bool hasNonEmptyString = checkedApiKeyList.Count > 0;
+
+            if (hasNonEmptyString)
             {
-                currentChatGptApiKeyIndex = 0;
+                if (currentChatGptApiKeyIndex >= checkedApiKeyList.Count)
+                {
+                    currentChatGptApiKeyIndex = 0;
+                }
+                return checkedApiKeyList[currentChatGptApiKeyIndex++].Value ?? "";
             }
-            return _configModel.ChatGptApiKeys[currentChatGptApiKeyIndex++].Value ?? "";
+
+            return "empty apikey";
         }
 
         //首个bing cookie
@@ -155,37 +178,50 @@ namespace vNekoChatUI.Base.Helper.Generic
         //轮换bing cookie
         private string NextBingGptCookie()
         {
-            bool hasNonEmptyString = _configModel.BingGptCookies.Any(s => string.IsNullOrWhiteSpace(s.Value) is false);
+            var checkedCookieList = _configModel.BingGptCookies.Where(s => string.IsNullOrWhiteSpace(s.Value) is false && s.IsChecked).ToList();
+            bool hasNonEmptyString = checkedCookieList.Count > 0 ;
 
             if (hasNonEmptyString)
             {
-                if (currentBingGptCookieIndex >= _configModel.BingGptCookies.Count)
+                if (currentBingGptCookieIndex >= checkedCookieList.Count())
                 {
                     currentBingGptCookieIndex = 0;
                 }
-                return _configModel.BingGptCookies[currentBingGptCookieIndex++].Value ?? "";
+                return checkedCookieList[currentBingGptCookieIndex++].Value ?? "";
             }
 
             return "empty cookie";
         }
+
+        //存档
+        private void SaveConfigToDesktop()
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(500);//给点反应时间
+                using (StreamWriter sw = new StreamWriter($"{_jsonPath}", false, Encoding.Unicode))
+                {
+                    sw.WriteLine(JsonSerializer.Serialize(_configModel, _options));
+                }
+                LogProxy.Instance.Print("SaveConfigToDesktop done");
+            });
+        }
     }
 
     //公开
-    public sealed partial class JsonConfigReaderWriter
+    public partial class JsonConfigManagerService
     {
         /// <summary>
         /// 使用首个chatgpt api key
         /// </summary>
         public string GetChatGptApiKey()
         {
-            return FirstChatGptApiKey();
-
-            //var result = NextChatGptApiKey();
-            //if (result.Trim().Length == 0)
-            //{
-            //    return GetChatGptApiKey();
-            //}
-            //return result;
+            var result = NextChatGptApiKey();
+            if (result.Trim().Length == 0)
+            {
+                return GetChatGptApiKey();
+            }
+            return result;
         }
 
         /// <summary>
@@ -212,11 +248,11 @@ namespace vNekoChatUI.Base.Helper.Generic
             _configModel.BingGptCookies.Add(new() { Value = cookie });
         }
 
-        public ObservableCollection<ObservableString> GetCurrentChatGptApiKeys()
+        public dynamic GetCurrentChatGptApiKeys()
         {
             return _configModel.ChatGptApiKeys;
         }
-        public ObservableCollection<ObservableString> GetCurrentBingGptCookies()
+        public dynamic GetCurrentBingGptCookies()
         {
             return _configModel.BingGptCookies;
         }
@@ -226,17 +262,6 @@ namespace vNekoChatUI.Base.Helper.Generic
             _configModel.ChatGptApiKeys.Clear();
             _configModel.BingGptCookies.Clear();
         }
-        public void SaveToDesktop()
-        {
-            Task.Run(async () =>
-            {
-                await Task.Delay(500);//给点反应时间
-                using (StreamWriter sw = new StreamWriter($"{_jsonPath}", false, Encoding.Unicode))
-                {
-                    sw.WriteLine(JsonSerializer.Serialize(_configModel, _options));
-                }
-                LogProxy.Instance.Print("SaveConfigToDesktop done");
-            });
-        }
+        public void SaveToDesktop() => this.SaveConfigToDesktop();
     }
 }

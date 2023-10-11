@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using vNekoChatUI.Base.Helper;
 using vNekoChatUI.Character.BingUtils.Models;
 
 namespace vNekoChatUI.Character.BingUtils.Services
@@ -16,22 +17,8 @@ namespace vNekoChatUI.Character.BingUtils.Services
     //限制为单例
     public sealed partial class BingGptApiClient
     {
-        private static readonly object objlock = new object();
-        private static BingGptApiClient? _instance;
-        public static BingGptApiClient Instance
-        {
-            get
-            {
-                lock (objlock)
-                {
-                    if (_instance is null)
-                    {
-                        _instance = new BingGptApiClient();
-                    }
-                }
-                return _instance;
-            }
-        }
+        private static readonly Lazy<BingGptApiClient> lazyObject = new(() => new BingGptApiClient());
+        public static BingGptApiClient Instance => lazyObject.Value;
     }
 
     //拉一下服务
@@ -141,7 +128,7 @@ namespace vNekoChatUI.Character.BingUtils.Services
                         if (response.IsSuccessStatusCode)
                         {
                             var responseString = await response.Content.ReadAsStringAsync();
-                            LogProxy.Instance.Print($"Download: {responseString}");
+                            LogProxy.Instance.Print($"Download(len={responseString.Length}): {responseString}");
 
                             {
                                 var obj = JsonSerializer.Deserialize<BingConversation>(responseString, jsonOptions);

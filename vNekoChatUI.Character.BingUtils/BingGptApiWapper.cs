@@ -3,11 +3,11 @@ using Common.WPF;
 using Common.WPF.Services;
 using System;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using vNekoChatUI.Base.Helper.Generic;
 using vNekoChatUI.Character.BingUtils.Models;
 using vNekoChatUI.Character.BingUtils.Services;
 
@@ -17,11 +17,12 @@ namespace vNekoChatUI.Character.BingUtils
     public partial class BingGptApiWapper
     {
         IFlagService _flagService = ServiceHost.Instance.GetService<IFlagService>();
+        IJsonConfigManagerService _jsonConfigManagerService = ServiceHost.Instance.GetService<IJsonConfigManagerService>();
     }
 
     public partial class BingGptApiWapper
     {
-        string _cookie => JsonConfigReaderWriter.Instance.GetBingGptCookie(_flagService.TryUseBingRandomCookie[0]);
+        string _cookie => _jsonConfigManagerService.GetBingGptCookie(_flagService.TryUseBingRandomCookie[0]);
 
         BingConversation? _bingConversation;//
 
@@ -86,7 +87,7 @@ namespace vNekoChatUI.Character.BingUtils
             if (invocation_id == 0 || _bingConversation is null)
             {
                 _stepUp?.Invoke(1);//计步器
-                LogProxy.Instance.Print($"\n※ step 1: await _client.CreateBingConversation\n");
+                LogProxy.Instance.Print($"\n※ step 1: await _client.CreateBingConversation (cookie={currentCookie.Substring(0, 8)}~~~)\n");
                 //新对话
                 _bingConversation = await _client.CreateBingConversation(currentCookie, cancellationToken);
                 if (_bingConversation is null || _bingConversation.Flag == false)
@@ -109,7 +110,7 @@ namespace vNekoChatUI.Character.BingUtils
                     if (cancellationToken.IsCancellationRequested) { break; }
 
                     _stepUp?.Invoke(2);//计步器
-                    LogProxy.Instance.Print($"\n※ step 2: await _client.WaitReplyAsync\n");
+                    LogProxy.Instance.Print($"\n※ step 2: await _client.WaitReplyAsync (cookie={currentCookie.Substring(0, 8)}~~~)\n");
                     var response = await _client.WaitReplyAsync(new Models.BingRequest($"{user_say}")
                     {
                         Session = new Models.ConversationSession(invocation_id,

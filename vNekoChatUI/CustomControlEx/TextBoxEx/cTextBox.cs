@@ -18,6 +18,41 @@ namespace vNekoChatUI.CustomControlEx.TextBoxEx
 
     public partial class cTextBox
     {
+        public string Placeholder
+        {
+            get { return (string)GetValue(PlaceholderProperty); }
+            set { SetValue(PlaceholderProperty, value); }
+        }
+        public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(
+            name: "Placeholder",
+            propertyType: typeof(string),
+            ownerType: typeof(cTextBox),
+            typeMetadata: new FrameworkPropertyMetadata("empty", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+        );
+        public string PlaceholderColor
+        {
+            get { return (string)GetValue(PlaceholderColorProperty); }
+            set { SetValue(PlaceholderColorProperty, value); }
+        }
+        public static readonly DependencyProperty PlaceholderColorProperty = DependencyProperty.Register(
+            name: "PlaceholderColor",
+            propertyType: typeof(string),
+            ownerType: typeof(cTextBox),
+            typeMetadata: new FrameworkPropertyMetadata("#FF000000", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+        );
+        public bool PlaceholderOnOff
+        {
+            get { return (bool)GetValue(PlaceholderOnOffProperty); }
+            set { SetValue(PlaceholderOnOffProperty, value); }
+        }
+        public static readonly DependencyProperty PlaceholderOnOffProperty = DependencyProperty.Register(
+            name: "PlaceholderOnOff",
+            propertyType: typeof(bool),
+            ownerType: typeof(cTextBox),
+            typeMetadata: new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+        );
+
+
         public string BorderBackground
         {
             get { return (string)GetValue(BorderBackgroundProperty); }

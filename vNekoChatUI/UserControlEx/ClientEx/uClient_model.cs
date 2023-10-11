@@ -14,7 +14,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using vNekoChatUI.Base.Helper;
-using vNekoChatUI.Base.Helper.Generic;
 using vNekoChatUI.Character;
 using vNekoChatUI.CustomControlEx.ListViewChatHistoryEx;
 using ChatMessage = vNekoChatUI.Character.ChatMessage;
@@ -296,7 +295,7 @@ namespace vNekoChatUI.UserControlEx.ClientEx
         /// <summary>
         /// 供viewmodel载入聊天记录
         /// </summary>
-        public void LoadChatHistory(BingChatHistoryModel item)
+        public void LoadChatHistory(dynamic item)
         {
             if (this.IsBot)
             {

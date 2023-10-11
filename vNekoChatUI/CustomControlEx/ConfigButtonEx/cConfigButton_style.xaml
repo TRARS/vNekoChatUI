@@ -5,7 +5,8 @@
                     xmlns:textboxex="clr-namespace:vNekoChatUI.CustomControlEx.TextBoxEx" 
                     xmlns:emptybuttonex="clr-namespace:vNekoChatUI.CustomControlEx.EmptyButtonEx"
                     xmlns:gridex="clr-namespace:vNekoChatUI.CustomControlEx.GridEx" 
-                    xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors">
+                    xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors" 
+                    xmlns:togglebuttonex="clr-namespace:vNekoChatUI.CustomControlEx.ToggleButtonEx">
 
     <local:cConfigButton_converter_border_clip x:Key="cConfigButton_converter_border_clip"/>
     <local:cConfigButton_converter_border_mask_margin x:Key="cConfigButton_converter_border_mask_margin"/>
@@ -22,11 +23,14 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         
-                        <TextBlock Grid.Column="0"
+                        <!--<TextBlock Grid.Column="0"
                                    Text="—"
                                    Foreground="#8EA9A9A9"
                                    VerticalAlignment="Center"
-                                   Margin="2,0,3,0"/>
+                                   Margin="2,0,3,0"/>-->
+
+                        <togglebuttonex:cToggleButton IsChecked="{Binding IsChecked, Mode=TwoWay}"
+                                                      VerticalAlignment="Center"/>
 
                         <textboxex:cTextBox x:Name="textbox"
                                             Grid.Column="1"
@@ -34,13 +38,16 @@
                                             MaxWidth="180"
                                             HorizontalAlignment="Stretch"
                                             Text="{Binding Value, Mode=TwoWay}"
+                                            Placeholder ="enter your key here"
+                                            PlaceholderColor ="#8E8EA0"
+                                            PlaceholderOnOff="True"
                                             BorderBackground="#404143"
                                             TextWrapping="NoWrap"
                                             AcceptsReturn="False"
                                             BorderThickness="0"
                                             CaretBrush="OrangeRed" />
 
-                        <TextBlock Grid.Column="1"
+                        <!--<TextBlock Grid.Column="1"
                                    IsHitTestVisible="False"
                                    Text="enter your key here"
                                    VerticalAlignment="Center"
@@ -58,7 +65,7 @@
                                     </Style.Triggers>
                                 </Style>
                             </TextBlock.Style>
-                        </TextBlock>
+                        </TextBlock>-->
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -148,13 +155,13 @@
 
                                                 <Border Grid.Row="1" Grid.ColumnSpan="2">
                                                     <ListView ItemsSource="{Binding ChatGptApiKeys,RelativeSource={RelativeSource TemplatedParent}}"
-                                                                          Background="Transparent" 
-                                                                          BorderThickness="0"
-                                                                          Margin="1"  
-                                                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                                          VirtualizingPanel.ScrollUnit="Pixel"
-                                                                          ItemContainerStyle="{StaticResource keyItem}"
-                                                                          >
+                                                              Background="Transparent" 
+                                                              BorderThickness="0"
+                                                              Margin="1"  
+                                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                              VirtualizingPanel.ScrollUnit="Pixel"
+                                                              ItemContainerStyle="{StaticResource keyItem}"
+                                                              >
                                                     </ListView>
                                                 </Border>
                                             </Grid>
