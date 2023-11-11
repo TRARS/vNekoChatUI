@@ -1,10 +1,10 @@
 #if DEBUG
 global using Console = System.Diagnostics.Debug;
-using System;
 #else
 global using Console = System.Diagnostics.Trace;
 #endif
 
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 
