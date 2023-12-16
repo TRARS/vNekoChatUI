@@ -305,6 +305,10 @@
             {
                 Debug.WriteLine($"Screenshot start");
 
+                //PuppeteerSharp
+                //10.1.2 使用BrowserFetcher.DefaultChromiumRevision参数，可正常截图
+                //13.0.2 使用BrowserTag.Latest参数，截图混乱
+                //故退回10.1.2
                 await browserFetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
                 var browser = await Puppeteer.LaunchAsync(new LaunchOptions
                     {

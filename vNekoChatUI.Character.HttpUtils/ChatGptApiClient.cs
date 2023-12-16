@@ -10,7 +10,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using vNekoChatUI.Base.Helper;
 using vNekoChatUI.Character.HttpUtils.Extensions;
 
 namespace vNekoChatUI.Character.HttpUtils

@@ -9,7 +9,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using vNekoChatUI.Base.Helper;
 using vNekoChatUI.Character.BingUtils.Models;
 
 namespace vNekoChatUI.Character.BingUtils.Services
@@ -139,13 +138,13 @@ namespace vNekoChatUI.Character.BingUtils.Services
                                     if (response.Headers.TryGetValues("X-Sydney-Encryptedconversationsignature", out var values))
                                     {
                                         obj.Encryptedconversationsignature = values?.FirstOrDefault();
-                                        if(obj.Encryptedconversationsignature is not null)
+                                        if (obj.Encryptedconversationsignature is not null)
                                         {
                                             obj.Encryptedconversationsignature = System.Web.HttpUtility.UrlEncode(obj.Encryptedconversationsignature);
                                         }
                                         //System.Windows.MessageBox.Show($"===\n{obj.ConversationId}\n{obj.Encryptedconversationsignature}\n===");
                                         LogProxy.Instance.Print($"Encryptedconversationsignature: \n{obj.Encryptedconversationsignature}");
-                                    } 
+                                    }
 
                                     obj.Flag = true;
                                     return obj;

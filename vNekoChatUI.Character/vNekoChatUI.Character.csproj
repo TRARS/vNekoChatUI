@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
+    <BaseOutputPath>$(SolutionDir)\bin\vNekoChatUI</BaseOutputPath>
   </PropertyGroup>
 
 

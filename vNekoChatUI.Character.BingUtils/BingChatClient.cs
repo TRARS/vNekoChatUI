@@ -231,7 +231,7 @@ namespace vNekoChatUI.Character.BingUtils.Services
                         ws.Options.SetRequestHeader("cookie", $"_U={cookie}");
                     }
 
-                    if(message.Session.EncryptedSignature is not null &&
+                    if (message.Session.EncryptedSignature is not null &&
                        string.IsNullOrEmpty(message.Session.EncryptedSignature) is false)
                     {
                         await ws.ConnectAsync(new Uri($"wss://sydney.bing.com/sydney/ChatHub?sec_access_token={message.Session.EncryptedSignature}"), token);
@@ -240,7 +240,7 @@ namespace vNekoChatUI.Character.BingUtils.Services
                     {
                         await ws.ConnectAsync(new Uri("wss://sydney.bing.com/sydney/ChatHub"), token);//这里有时候会卡半天
                     }
-       
+
                     LogProxy.Instance.Print($"——CreateNewChatHub 成功返回: {ws}");
 
                     return ws;

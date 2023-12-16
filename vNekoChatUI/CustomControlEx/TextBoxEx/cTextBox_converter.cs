@@ -34,7 +34,7 @@ namespace vNekoChatUI.CustomControlEx.TextBoxEx
                     return string.IsNullOrEmpty(text) ? Visibility.Visible : Visibility.Collapsed;
                 }
                 return Visibility.Collapsed;
-        
+
             }
             return Visibility.Collapsed;
         }

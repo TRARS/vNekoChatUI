@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -9,7 +8,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using static Common.WPF.Services.JsonConfigManagerService;
 
 namespace Common.WPF.Services
 {
@@ -26,7 +24,7 @@ namespace Common.WPF.Services
     }
 
     //内部类
-    public partial class JsonConfigManagerService: IJsonConfigManagerService
+    public partial class JsonConfigManagerService : IJsonConfigManagerService
     {
         public class NotificationObject : INotifyPropertyChanged
         {
@@ -179,7 +177,7 @@ namespace Common.WPF.Services
         private string NextBingGptCookie()
         {
             var checkedCookieList = _configModel.BingGptCookies.Where(s => string.IsNullOrWhiteSpace(s.Value) is false && s.IsChecked).ToList();
-            bool hasNonEmptyString = checkedCookieList.Count > 0 ;
+            bool hasNonEmptyString = checkedCookieList.Count > 0;
 
             if (hasNonEmptyString)
             {
