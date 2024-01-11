@@ -299,11 +299,11 @@
 
                                     <!--签名/资料 背景淡入-->
                                     <DoubleAnimationUsingKeyFrames Storyboard.TargetName="border_signature" 
-                                                                       Storyboard.TargetProperty="(OpacityMask).(GradientStops)[1].(Offset)">
+                                                                   Storyboard.TargetProperty="(OpacityMask).(GradientStops)[1].(Offset)">
                                         <LinearDoubleKeyFrame Value="0.25" KeyTime="0:0:0.05"/>
                                     </DoubleAnimationUsingKeyFrames>
                                     <DoubleAnimationUsingKeyFrames Storyboard.TargetName="border_signature" 
-                                                                       Storyboard.TargetProperty="(OpacityMask).(GradientStops)[2].(Offset)">
+                                                                   Storyboard.TargetProperty="(OpacityMask).(GradientStops)[2].(Offset)">
                                         <LinearDoubleKeyFrame Value="0.25" KeyTime="0:0:0.05"/>
                                         <LinearDoubleKeyFrame Value="1.00" KeyTime="0:0:0.15"/>
                                     </DoubleAnimationUsingKeyFrames>

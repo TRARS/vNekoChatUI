@@ -76,6 +76,7 @@ namespace vNekoChatUI.Character.BingUtils
                     "eredirecturl",
 
                     "nojbfedge",//no JailBreak Filter Edge
+                    "nosearchall",
                 },
 
                 CharStyle.Balanced => new List<string>()

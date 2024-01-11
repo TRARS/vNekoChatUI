@@ -101,7 +101,8 @@ namespace vNekoChatUI.Character.BingUtils.Services
                             //
                             conversationId = message.Session.ConversationId,
                             optionsSets = ChatHelper.GetDefaultOptions(_option.ChatStyle)
-                                                    .Where(item => item != (_flagService.TryUseBingAutoSave[0] ? "" : "autosave")).ToList(),
+                                                    .Where(item => item != (_flagService.TryUseBingAutoSave[0] ? "" : "autosave"))
+                                                    .Where(item => item != (_flagService.TryUseBingNoSearchAll[0] ? "" : "nosearchall")).ToList(),
                             allowedMessageTypes = new()
                             {
                                 "ActionRequest", "Chat", "Context", "InternalSearchQuery", "InternalSearchResult", "Disengaged", "InternalLoaderMessage", "Progress", "RenderCardRequest", "AdsQuery", "SemanticSerp", "GenerateContentQuery", "SearchQuery",

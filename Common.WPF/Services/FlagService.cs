@@ -5,6 +5,7 @@
         public bool[] TryUseBingBypassDetection { get; set; }
         public bool[] TryUseBingRandomCookie { get; set; }
         public bool[] TryUseBingAutoSave { get; set; }
+        public bool[] TryUseBingNoSearchAll { get; set; }
         public bool TryUseBingVisualSearch { get; set; }
     }
 
@@ -26,6 +27,11 @@
         /// 控制bing是否启用autosave参数
         /// </summary>
         public bool[] TryUseBingAutoSave { get; set; } = new bool[1] { false };
+
+        /// <summary>
+        /// 控制bing是否启用nosearchall参数
+        /// </summary>
+        public bool[] TryUseBingNoSearchAll { get; set; } = new bool[1] { false };
 
         /// <summary>
         /// 控制bing上传图片后拿到的地址是否通过user请求传递

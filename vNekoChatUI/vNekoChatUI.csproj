@@ -8,7 +8,16 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>x64</Platforms>
     <BaseOutputPath>$(SolutionDir)\bin\vNekoChatUI</BaseOutputPath>
+    <ApplicationIcon>vNekoChatUI.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="vNekoChatUI.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="vNekoChatUI.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ColorHelper" Version="1.8.1" />

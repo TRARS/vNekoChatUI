@@ -187,28 +187,8 @@ namespace vNekoChatUI.Character.SocketUtils
             //_resetEventMap.TryAdd(key, new ManualResetEvent(false));
             _socketMap.TryAdd(key, client);
 
-            //每个客户端安排一个线程
-            //Task.Run(() =>
-            //{
-            //    while (true)
-            //    {
-            //        _resetEventMap[key].Reset();
-            //        {
-            //            Socket TcpClient = _socketMap[key];
-
-            //            // 端末からデータ受信を待ち受ける
-            //            StateObject state = new StateObject();
-            //            state.workSocket = TcpClient;
-            //            state.key = key;
-            //            TcpClient.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(OnNewClientReceiveCallback_Forwarded), state);
-            //        }
-            //        _resetEventMap[key].WaitOne();
-            //    }
-            //});
-
-
             // 端末からデータ受信を待ち受ける
-            StateObject state = new StateObject();
+            StateObject state = new StateObject() { clientAddress = key };
             state.workSocket = client;
             //state.key = key;
             client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(OnNewClientReceiveCallback_Forwarded), state);
@@ -294,6 +274,8 @@ namespace vNekoChatUI.Character.SocketUtils
             catch (Exception ex)
             {
                 LogProxy.Instance.Print($"Server: OnNewClientReceiveCallback_Forwarded Error—{ex.Message}");
+
+                OnClientDisconnect(ar);
             }
         }
 
@@ -313,6 +295,25 @@ namespace vNekoChatUI.Character.SocketUtils
             catch (Exception ex)
             {
                 LogProxy.Instance.Print($"Server: OnSpecificClientSendCallback Error—{ex.Message}");
+            }
+        }
+
+        // 断连善后
+        private void OnClientDisconnect(IAsyncResult ar)
+        {
+            try
+            {
+                var address = ((StateObject)ar.AsyncState).clientAddress;
+
+                _socketMap.Remove(address);
+                _userMap.Remove(_userMapReverse[address]);
+                _userMapReverse.Remove(address);
+
+                LogProxy.Instance.Print($"★server -> Client({address})が切断した");
+            }
+            catch (Exception ex)
+            {
+                LogProxy.Instance.Print($"★server: OnClientDisconnect Error—{ex.Message}");
             }
         }
     }

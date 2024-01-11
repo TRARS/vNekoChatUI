@@ -111,6 +111,7 @@ namespace vNekoChatUI.UserControlEx.ClientEx
         public ToggleLightCommand BingBypassDetectionCommand { get; set; }
         public ToggleLightCommand BingRandomCookieCommand { get; set; }
         public ToggleLightCommand BingAutoSaveCommand { get; set; }
+        public ToggleLightCommand BingNoSearchAllCommand { get; set; }
 
         public RelayCommand StopReceivingMessagesCommand { get; set; }
 
@@ -455,6 +456,8 @@ namespace vNekoChatUI.UserControlEx.ClientEx
             this.BingRandomCookieCommand = new("BingRandomCookie", _flagService.TryUseBingRandomCookie);
             //Bing同步会话到官方网页端
             this.BingAutoSaveCommand = new("BingAutoSave", _flagService.TryUseBingAutoSave);
+            //Bing禁用搜索
+            this.BingNoSearchAllCommand = new("NoSearchAll", _flagService.TryUseBingNoSearchAll);
 
 
 

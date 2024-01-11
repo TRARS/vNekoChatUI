@@ -100,8 +100,15 @@
                                                     LightOnOff="{Binding BingRandomCookieCommand.IsLightOn}"
                                                     ToolTip="Bing使用随机生成字符串作cookie"
                                                     Margin="1"
-                                                    Visibility="Collapsed"
-                                                    d:Visibility="Visible"/>
+                                                    Visibility="Collapsed"/>
+                        <!--BingNoSearchAll开关-->
+                        <emptybuttonex:cEmptyButton Width="28" Height="28"
+                                                    BorderMouseOverColor="{Binding SelectedContact.UserborderColor}"
+                                                    BorderPathData="M607.965631 383.962504v63.99375c0 13.198711-10.798945 23.997656-23.997657 23.997657H248.000784c-13.198711 0-23.997656-10.798945-23.997657-23.997657v-63.99375c0-13.198711 10.798945-23.997656 23.997657-23.997657h335.96719c13.198711 0 23.997656 10.798945 23.997657 23.997657z m401.960746 569.3444L953.331904 1009.901377c-18.798164 18.798164-49.195196 18.798164-67.79338 0L685.958014 810.520848c-8.999121-8.999121-13.998633-21.19793-13.998633-33.99668V743.927351c-70.593106 55.19461-159.384435 87.991407-255.975002 87.991407C186.206818 831.918758 0.025 645.73694 0.025 415.959379S186.206818 0 415.984379 0s415.959379 186.181818 415.959379 415.959379c0 96.590567-32.796797 185.381896-87.991407 255.975002h32.596817c12.79875 0 24.997559 4.999512 33.99668 13.998633l199.380529 199.38053c18.598184 18.798164 18.598184 49.195196 0 67.99336zM687.957819 415.959379c0-150.385314-121.588126-271.97344-271.97344-271.97344S144.010939 265.574065 144.010939 415.959379s121.588126 271.97344 271.97344 271.97344 271.97344-121.588126 271.97344-271.97344z"
+                                                    Command="{Binding BingNoSearchAllCommand.Command}"
+                                                    LightOnOff="{Binding BingNoSearchAllCommand.IsLightOn}"
+                                                    ToolTip="Bing禁用搜索"
+                                                    Margin="1"/>
                         <!--BingAutoSave开关-->
                         <emptybuttonex:cEmptyButton Width="28" Height="28"
                                                     BorderMouseOverColor="{Binding SelectedContact.UserborderColor}"
@@ -151,22 +158,22 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
-                    <RowDefinition />
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
 
                 <!--右上-->
-                <Border>
-                    <Grid HorizontalAlignment="Stretch" 
-                      Margin="4">
+                <Border Grid.Row="0" BorderBrush="#2a2b32" BorderThickness="0,0,0,1" >
+                    <Grid HorizontalAlignment="Stretch"
+                          Margin="4">
 
                         <!--Content="{Binding SelectedContact.Username, FallbackValue=@BotName}"-->
                         <Label Foreground="White"
-                           FontWeight="Bold"
-                           Margin="5,0,5,0"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center"
-                           d:Content="@BotName">
+                               FontWeight="Bold"
+                               Margin="5,0,5,0"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               d:Content="@BotName">
                             <Label.Content>
                                 <MultiBinding Converter="{StaticResource uClient_converter_selectedcontact_title}" FallbackValue="@BotName">
                                     <Binding Path="SelectedContact.DisplayName" Mode="OneWay"/>
@@ -286,7 +293,7 @@
                 </Border>
 
                 <!--右中-->
-                <Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="#2a2b32">
+                <Border Grid.Row="1">
                     <Grid>
                         <ContentControl Content="{Binding SelectedContact.InnerListView}" Grid.Column="0">
                             <Behaviors:Interaction.Triggers>
@@ -307,9 +314,7 @@
                                                             Background="#202123"
                                                             d:Visibility="Visible"
                                                             />
-
-
-
+                        
                     </Grid>
                 </Border>
 

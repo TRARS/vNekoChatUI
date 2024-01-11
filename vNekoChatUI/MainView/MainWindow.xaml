@@ -26,8 +26,8 @@
 
         Title="MainWindow"
         
-        MinWidth="640" MinHeight="480"
-        Width="640" Height="480" SizeChanged="Window_StateChanged"
+        MinWidth="660" MinHeight="480"
+        Width="660" Height="480" SizeChanged="Window_StateChanged"
         >
     <Window.Resources>
         <local:RectConverter x:Key="RectConverter"/>

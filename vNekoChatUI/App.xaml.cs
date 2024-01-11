@@ -40,8 +40,6 @@ namespace vNekoChatUI
             AppHost = Host.CreateDefaultBuilder().ConfigureServices((hostContext, services) =>
             {
                 services.AddSingleton<MainView.MainWindow>();
-
-
             }).Build();
         }
 

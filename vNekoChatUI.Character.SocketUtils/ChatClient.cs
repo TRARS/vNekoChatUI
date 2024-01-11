@@ -167,12 +167,12 @@ namespace vNekoChatUI.Character.SocketUtils
                 else
                 {
                     // ここにまで辿り着けないよう祈る
-                    throw new InvalidOperationException("Cliten: The code should not reach this point.");
+                    throw new InvalidOperationException("Client: The code should not reach this point.");
                 }
             }
             catch (Exception ex)
             {
-                LogProxy.Instance.Print($"Cliten: InitReceiveCallback—{ex.Message}");
+                LogProxy.Instance.Print($"Client: InitReceiveCallback—{ex.Message}");
             }
         }
     }
@@ -229,16 +229,16 @@ namespace vNekoChatUI.Character.SocketUtils
                 else
                 {
                     // ここにまで辿り着けないよう祈る
-                    throw new InvalidOperationException("Cliten: The code should not reach this point.");
+                    throw new InvalidOperationException("Client: The code should not reach this point.");
                 }
             }
             catch (Exception ex)
             {
-                LogProxy.Instance.Print($"Cliten: OnServerMessageReceived—{ex.Message}");
+                LogProxy.Instance.Print($"Client: OnServerMessageReceived—{ex.Message}");
             }
         }
 
-        //服务端主动将消息发送至指定客户端后，执行该回调函数
+        //客户端主动将消息发送至服务端后，执行该回调函数
         private void OnSpecificClientSendCallback(IAsyncResult ar)
         {
             try
@@ -253,7 +253,7 @@ namespace vNekoChatUI.Character.SocketUtils
             }
             catch (Exception ex)
             {
-                LogProxy.Instance.Print($"Cliten: OnSpecificClientSendCallback Error—{ex.Message}");
+                LogProxy.Instance.Print($"Client: OnSpecificClientSendCallback Error—{ex.Message}");
             }
         }
     }

@@ -22,8 +22,8 @@ namespace vNekoChatUI.Character.SocketUtils
         // ソケット
         public Socket workSocket = null;
 
-        // 服务端专用，储存客户端对应的key
-        //public string key = string.Empty;
+        // 
+        public string clientAddress = string.Empty;
     }
 
 
