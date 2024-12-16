@@ -8,7 +8,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>x64</Platforms>
     <BaseOutputPath>$(SolutionDir)\bin\vNekoChatUI</BaseOutputPath>
-    <ApplicationIcon>vNekoChatUI.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,19 +16,29 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="vNekoChatUI.ico" />
+    <Content Include="Resources\AppIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ColorHelper" Version="1.8.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\Common.WPF\Common.WPF.csproj" />
     <ProjectReference Include="..\vNekoChatUI.Base\vNekoChatUI.Base.csproj" />
     <ProjectReference Include="..\vNekoChatUI.Character\vNekoChatUI.Character.csproj" />
+    <ProjectReference Include="..\vNekoChatUI.TrarsWindow\vNekoChatUI.TrarsWindow.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="TrarsUI.Shared">
+      <HintPath>..\vNekoChatUI.TrarsWindow\libs\TrarsUI.Shared.dll</HintPath>
+    </Reference>
   </ItemGroup>
   
   <ItemGroup>
@@ -92,5 +102,6 @@
   <ItemGroup>
     <PackageReference Update="Microsoft.VCRTForwarders.140" Version="1.0.7" />
   </ItemGroup>
+
 
 </Project>

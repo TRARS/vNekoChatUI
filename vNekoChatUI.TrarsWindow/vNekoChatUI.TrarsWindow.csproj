@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="TrarsUI.Shared">
+      <HintPath>..\libs\TrarsUI.Shared.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Analyzer Include="..\vNekoChatUI.TrarsWindow\libs\TrarsUI.SourceGenerators.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+  </ItemGroup>
+</Project>

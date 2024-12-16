@@ -1,11 +1,7 @@
 ﻿<Application x:Class="vNekoChatUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:vNekoChatUI"
-             >
-    <!--     StartupUri="MainView/MainWindow.xaml"
-             Startup="Application_Startup"
-             Exit="Application_Exit"-->
+             xmlns:local="clr-namespace:vNekoChatUI">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,7 +17,9 @@
                 <ResourceDictionary Source="/CustomControlEx/EmptyButtonEx/cEmptyButton_style.xaml"/>
                 <ResourceDictionary Source="/CustomControlEx/ConfigButtonEx/cConfigButton_style.xaml"/>
                 <ResourceDictionary Source="/CustomControlEx/ConsoleListViewEx/cConsoleListView_style.xaml"/>
-                
+
+                <ResourceDictionary Source="/Test/PromptEditor/Entry.xaml"/>
+                <ResourceDictionary Source="/TrarsUI.Shared;component/Resources/Colors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

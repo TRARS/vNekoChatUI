@@ -106,6 +106,18 @@ namespace vNekoChatUI.CustomControlEx.ConfigButtonEx
             typeMetadata: new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
 
+        public object GeminiApiKeys
+        {
+            get { return (object)GetValue(GeminiApiKeysProperty); }
+            set { SetValue(GeminiApiKeysProperty, value); }
+        }
+        public static readonly DependencyProperty GeminiApiKeysProperty = DependencyProperty.Register(
+            name: "GeminiApiKeys",
+            propertyType: typeof(object),
+            ownerType: typeof(cConfigButton),
+            typeMetadata: new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+        );
+
         public UserControlEx.ClientEx.RelayCommand AddChatGptApiKeyCommand
         {
             get { return (UserControlEx.ClientEx.RelayCommand)GetValue(AddChatGptApiKeyCommandProperty); }
@@ -125,6 +137,18 @@ namespace vNekoChatUI.CustomControlEx.ConfigButtonEx
         }
         public static readonly DependencyProperty AddBingGptCookieCommandProperty = DependencyProperty.Register(
             name: "AddBingGptCookieCommand",
+            propertyType: typeof(UserControlEx.ClientEx.RelayCommand),
+            ownerType: typeof(cConfigButton),
+            typeMetadata: new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+        );
+
+        public UserControlEx.ClientEx.RelayCommand AddGeminiApiKeyCommand
+        {
+            get { return (UserControlEx.ClientEx.RelayCommand)GetValue(AddGeminiApiKeyCommandProperty); }
+            set { SetValue(AddGeminiApiKeyCommandProperty, value); }
+        }
+        public static readonly DependencyProperty AddGeminiApiKeyCommandProperty = DependencyProperty.Register(
+            name: "AddGeminiApiKeyCommand",
             propertyType: typeof(UserControlEx.ClientEx.RelayCommand),
             ownerType: typeof(cConfigButton),
             typeMetadata: new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)

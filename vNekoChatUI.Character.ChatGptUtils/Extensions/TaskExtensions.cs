@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace vNekoChatUI.Character.HttpUtils.Extensions
+namespace vNekoChatUI.Character.ChatGptUtils.Extensions
 {
     //HttpRequestMessage克隆方法，供retry时使用
     public static class TaskExtensions

@@ -14,7 +14,6 @@ namespace vNekoChatUI.CustomControlEx.ContextMenuEx
         {
             this.StaysOpen = true;
             this.Focusable = true;
-
         }
     }
 

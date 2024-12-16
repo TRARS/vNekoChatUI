@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace vNekoChatUI.Character.HttpUtils
+namespace vNekoChatUI.Character.ChatGptUtils
 {
     public partial class ChatGptApiWrapper
     {

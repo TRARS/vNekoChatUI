@@ -10,9 +10,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using vNekoChatUI.Character.HttpUtils.Extensions;
+using vNekoChatUI.Character.ChatGptUtils.Extensions;
 
-namespace vNekoChatUI.Character.HttpUtils
+namespace vNekoChatUI.Character.ChatGptUtils
 {
     //限制为单例
     public sealed partial class ChatGptApiClient

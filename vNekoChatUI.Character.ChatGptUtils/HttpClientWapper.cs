@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace vNekoChatUI.Character.HttpUtils
+namespace vNekoChatUI.Character.ChatGptUtils
 {
     public partial class HttpClientWapper
     {

@@ -3,6 +3,12 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Windows;
 using System.Windows.Media.Animation;
+using TrarsUI.Shared.Helper.Extensions;
+using TrarsUI.Shared.Interfaces;
+using TrarsUI.Shared.Interfaces.UIComponents;
+using TrarsUI.Shared.Services;
+using vNekoChatUI.TrarsWindow.MVVM.ViewModels;
+using vNekoChatUI.TrarsWindow.MVVM.Views;
 
 namespace vNekoChatUI
 {
@@ -11,7 +17,7 @@ namespace vNekoChatUI
     /// </summary>
     public partial class App : Application
     {
-        public static IHost? AppHost { get; private set; }
+        private static IHost AppHost { get; set; } = GetHostBuilder().Build();
 
         private System.Threading.Mutex mutex = new System.Threading.Mutex(false, $"{Application.ResourceAssembly.GetName().Name} {Environment.UserName}");
 
@@ -35,17 +41,11 @@ namespace vNekoChatUI
 
             //使SelectionTextBrush生效
             AppContext.SetSwitch("Switch.System.Windows.Controls.Text.UseAdornerForTextboxSelectionRendering", false);
-
-            //?
-            AppHost = Host.CreateDefaultBuilder().ConfigureServices((hostContext, services) =>
-            {
-                services.AddSingleton<MainView.MainWindow>();
-            }).Build();
         }
 
         protected override async void OnStartup(StartupEventArgs e)
         {
-            await AppHost!.StartAsync();
+            await AppHost.StartAsync();
 
             var startupForm = AppHost.Services.GetRequiredService<MainView.MainWindow>();
             startupForm.Show();
@@ -61,7 +61,37 @@ namespace vNekoChatUI
                 mutex.Close();
             }
 
+            await AppHost.StopAsync();
             base.OnExit(e);
+        }
+
+        private static IHostBuilder GetHostBuilder()
+        {
+            return Host.CreateDefaultBuilder()
+                       .ConfigureServices(sc =>
+                       {
+                           sc.AddSingleton<MainView.MainWindow>();
+
+                           // Service
+                           sc.AddSingleton<IMessageBoxService, MessageBoxService>();
+                           sc.AddSingleton<ITokenProviderService, TokenProviderService>();
+                           sc.AddTransient<IDebouncerService, DebouncerService>();
+                           // UI组件VM
+                           sc.AddFormFactory<IuTitleBarVM, uTitleBarVM>();
+                           sc.AddFormFactory<IuRainbowLineVM, uRainbowLineVM>();
+                           sc.AddFormFactory<IuClientVM, uClientVM>();
+                           // ChildForm ChildFormVM
+                           sc.AddFormFactory<IChildForm, IChildFormEmpty, ChildForm>(sp =>
+                           {
+                               var childForm = (ChildForm)sp.GetRequiredService<IChildFormEmpty>();
+                               {
+                                   childForm.DataContext = sp.GetRequiredService<IAbstractFactory<IChildFormVM>>().Create();
+                                   childForm.SizeToContent = SizeToContent.WidthAndHeight;
+                               }
+                               return childForm;
+                           });
+                           sc.AddFormFactory<IChildFormVM, ChildFormVM>();
+                       });
         }
     }
 }

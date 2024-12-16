@@ -4,6 +4,18 @@
                     xmlns:contextmenuex="clr-namespace:vNekoChatUI.CustomControlEx.ContextMenuEx" 
                     xmlns:textboxex="clr-namespace:vNekoChatUI.CustomControlEx.TextBoxEx">
 
+    <VisualBrush x:Key="StripeTexture" TileMode="Tile" Viewport="0,0,3,3" ViewportUnits="Absolute" Viewbox="0,0,15,15" ViewboxUnits="Absolute">
+        <VisualBrush.Visual>
+            <Grid Background="Transparent" RenderTransformOrigin="0.5,0.5">
+                <Path Data="M 0,15 L 15,0" Stroke="White" StrokeThickness="5" Opacity="0.4" />
+                <Path Data="M 15,15 L 30,0" Stroke="White"  StrokeThickness="5" Opacity="0.4" />
+                <Path Data="M 15,-15 L 0,0" Stroke="White"  StrokeThickness="5" Opacity="0.4" />
+                <Path Data="M 0,30 L 15,15" Stroke="White"  StrokeThickness="5" Opacity="0.4" />
+                <Path Data="M 0,0 L -15,15" Stroke="White"  StrokeThickness="5" Opacity="0.4" />
+            </Grid>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <local:cEmptyButton_converter_border_clip x:Key="cEmptyButton_converter_border_clip"/>
     <local:cEmptyButton_converter_border_mask_margin x:Key="cEmptyButton_converter_border_mask_margin"/>
@@ -34,6 +46,10 @@
                               ContextMenuService.Placement="{Binding ContextMenuPlacementMode, RelativeSource={RelativeSource TemplatedParent}}"
                               >
 
+                            <Rectangle x:Name="enableFalse" Opacity="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                       RadiusX="4.5" RadiusY="4.5"
+                                       Fill="{StaticResource StripeTexture}"/>
+                            
                             <!--背景板0-->
                             <Border Background="{Binding BorderBackgroundZeroColor,RelativeSource={RelativeSource TemplatedParent}}"
                                     Opacity="1"
@@ -147,6 +163,10 @@
                             </BeginStoryboard>
                         </EventTrigger>
 
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" TargetName="grid" Value="0.75"/>
+                            <Setter Property="Opacity" TargetName="enableFalse" Value="1"/>
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:vNekoChatUI.UserControlEx.ClientEx"
-             xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
              xmlns:listviewcontactsex="clr-namespace:vNekoChatUI.CustomControlEx.ListViewContactsEx"
              xmlns:emptybuttonex="clr-namespace:vNekoChatUI.CustomControlEx.EmptyButtonEx" 
              xmlns:radiobuttonex="clr-namespace:vNekoChatUI.CustomControlEx.RadioButtonEx" 
@@ -80,17 +80,19 @@
                                                       DisableContextMenu="False"
                                                       ChatGptApiKeys="{Binding ChatGptApiKeys, Mode=OneWay}"
                                                       BingGptCookies="{Binding BingGptCookies, Mode=OneWay}"
+                                                      GeminiApiKeys="{Binding GeminiApiKeys, Mode=OneWay}"
                                                       AddChatGptApiKeyCommand="{Binding AddChatGptApiKeyCommand}"
                                                       AddBingGptCookieCommand="{Binding AddBingGptCookieCommand}"
+                                                      AddGeminiApiKeyCommand="{Binding AddGeminiApiKeyCommand}"
                                                       ContextMenuIsOpen ="False"
                                                       >
-                            <Behaviors:Interaction.Triggers>
-                                <Behaviors:EventTrigger EventName="Click">
-                                    <Behaviors:ChangePropertyAction TargetObject="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type configbuttonex:cConfigButton}}}"
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:ChangePropertyAction TargetObject="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type configbuttonex:cConfigButton}}}"
                                                                     PropertyName="ContextMenuIsOpen"
                                                                     Value="True"/>
-                                </Behaviors:EventTrigger>
-                            </Behaviors:Interaction.Triggers>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </configbuttonex:cConfigButton>
                         <!--Bing随机cookie开关-->
                         <emptybuttonex:cEmptyButton Width="28" Height="28"
@@ -102,7 +104,7 @@
                                                     Margin="1"
                                                     Visibility="Collapsed"/>
                         <!--BingNoSearchAll开关-->
-                        <emptybuttonex:cEmptyButton Width="28" Height="28"
+                        <emptybuttonex:cEmptyButton Width="28" Height="28" IsEnabled="False" Visibility="Collapsed"
                                                     BorderMouseOverColor="{Binding SelectedContact.UserborderColor}"
                                                     BorderPathData="M607.965631 383.962504v63.99375c0 13.198711-10.798945 23.997656-23.997657 23.997657H248.000784c-13.198711 0-23.997656-10.798945-23.997657-23.997657v-63.99375c0-13.198711 10.798945-23.997656 23.997657-23.997657h335.96719c13.198711 0 23.997656 10.798945 23.997657 23.997657z m401.960746 569.3444L953.331904 1009.901377c-18.798164 18.798164-49.195196 18.798164-67.79338 0L685.958014 810.520848c-8.999121-8.999121-13.998633-21.19793-13.998633-33.99668V743.927351c-70.593106 55.19461-159.384435 87.991407-255.975002 87.991407C186.206818 831.918758 0.025 645.73694 0.025 415.959379S186.206818 0 415.984379 0s415.959379 186.181818 415.959379 415.959379c0 96.590567-32.796797 185.381896-87.991407 255.975002h32.596817c12.79875 0 24.997559 4.999512 33.99668 13.998633l199.380529 199.38053c18.598184 18.798164 18.598184 49.195196 0 67.99336zM687.957819 415.959379c0-150.385314-121.588126-271.97344-271.97344-271.97344S144.010939 265.574065 144.010939 415.959379s121.588126 271.97344 271.97344 271.97344 271.97344-121.588126 271.97344-271.97344z"
                                                     Command="{Binding BingNoSearchAllCommand.Command}"
@@ -110,13 +112,21 @@
                                                     ToolTip="Bing禁用搜索"
                                                     Margin="1"/>
                         <!--BingAutoSave开关-->
-                        <emptybuttonex:cEmptyButton Width="28" Height="28"
+                        <emptybuttonex:cEmptyButton Width="28" Height="28" IsEnabled="False" Visibility="Collapsed"
                                                     BorderMouseOverColor="{Binding SelectedContact.UserborderColor}"
                                                     BorderPathData="M1024 640.192C1024 782.912 919.872 896 787.648 896h-512C123.904 896 0 761.6 0 597.504 0 451.968 94.656 331.52 226.432 302.976 284.16 195.456 391.808 128 512 128c152.32 0 282.112 108.416 323.392 261.12C941.888 413.44 1024 519.04 1024 640.192z m-341.312-139.84L512 314.24 341.312 500.48h341.376z m-213.376 0v256h85.376v-256H469.312z"
                                                     Command="{Binding BingAutoSaveCommand.Command}"
                                                     LightOnOff="{Binding BingAutoSaveCommand.IsLightOn}"
                                                     ToolTip="Bing使用autosave参数以同步会话到官方网页端"
                                                     Margin="1"/>
+                        
+                        <!--打开子窗体-->
+                        <emptybuttonex:cEmptyButton Command="{Binding OpenChildFormCommand}"
+                                                    Width="28" Height="28"
+                                                    BorderMouseOverColor="DimGray"
+                                                    BorderPathData="M0.986196 969.101766L89.250722 598.292135 647.108828 40.434029c25.31236-25.31236 59.500482-39.447833 95.167898-39.447833 35.667416 0 70.019904 14.135474 95.167897 39.447833l132.807704 132.807705c25.31236 25.31236 39.447833 59.500482 39.447834 95.167897 0 35.667416-14.135474 70.019904-39.447834 95.167897L412.394222 921.435634 41.420225 1009.700161c-11.341252 2.629856-23.339968-0.657464-31.558267-8.875763-8.218299-8.382665-11.669984-20.38138-8.875762-31.722632z m633.630818-54.405137h430.803211V1022.35634H634.617014v-107.659711z"
+                                                    Margin="1">
+                        </emptybuttonex:cEmptyButton>
                     </StackPanel>
                 </Grid>
 
@@ -192,17 +202,17 @@
                                                         LightOnOff="{Binding LogAreaCommand.IsLightOn}"
                                                         ToolTip="日志"
                                                         Margin="1">
-                                <!--<Behaviors:Interaction.Triggers>
-                                    <Behaviors:EventTrigger EventName="Click">
-                                        <Behaviors:ChangePropertyAction TargetObject="{Binding DataContext,
+                                <!--<i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:ChangePropertyAction TargetObject="{Binding DataContext,
                                                                                                RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                                         PropertyName="LogVisibility"
                                                                         Value="Visible"/>
-                                    </Behaviors:EventTrigger>
-                                </Behaviors:Interaction.Triggers>-->
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>-->
                             </emptybuttonex:cEmptyButton>
                             <!--临时绕过-->
-                            <emptybuttonex:cEmptyButton Width="28" Height="28"
+                            <emptybuttonex:cEmptyButton Width="28" Height="28" IsEnabled="False" Visibility="Collapsed"
                                                         BorderMouseOverColor="{Binding SelectedContact.UserborderColor}"
                                                         BorderPathData="M512 64C264 64 64 264 64 512s200 448 448 448 448-200 448-448S760 64 512 64z m-16 636.8c-51.2 0-92.8-41.6-92.8-92.8 0-51.2 41.6-92.8 92.8-92.8s92.8 41.6 92.8 92.8c0 49.6-41.6 92.8-92.8 92.8z m296-48c-6.4 6.4-16 9.6-25.6 9.6-8 0-17.6-3.2-24-9.6-6.4-6.4-11.2-14.4-11.2-24s3.2-14.4 9.6-24l40-54.4H640v-9.6c0-73.6-64-132.8-144-132.8s-144 60.8-144 132.8v9.6H155.2c-19.2 0-35.2-14.4-35.2-33.6 0-19.2 16-33.6 35.2-33.6h137.6c27.2-84.8 110.4-144 204.8-144s177.6 59.2 204.8 144h80l-40-54.4c-6.4-8-11.2-14.4-11.2-24s3.2-17.6 9.6-24c14.4-12.8 35.2-12.8 49.6 0l100.8 112c6.4 6.4 9.6 14.4 9.6 24s-3.2 17.6-9.6 24l-99.2 112z"
                                                         Command="{Binding BingBypassDetectionCommand.Command}"
@@ -271,7 +281,7 @@
                                                         IsChecked="True"
                                                         Margin="1"/>
                             <!--ChatMode.ChatGPT-->
-                            <radiobuttonex:cRadioButton Width="28" Height="28"
+                            <radiobuttonex:cRadioButton Width="28" Height="28" IsEnabled="False" 
                                                         Command="{Binding ChatModeChangeCommand}"
                                                         CommandParameter ="1"
                                                         BorderMouseOverColor="{Binding SelectedContact.UserborderColor}"
@@ -279,12 +289,21 @@
                                                         BorderPathData="M900.928 430.72a220.8 220.8 0 0 0-19.392-183.36 229.44 229.44 0 0 0-198.4-113.28c-16.192 0-32.32 1.6-48.064 4.992a226.112 226.112 0 0 0-76.48-55.424A228.8 228.8 0 0 0 465.92 64h-1.984c-99.2 0-187.2 63.168-217.664 156.288-31.616 6.4-61.44 19.328-87.488 38.016a224.32 224.32 0 0 0-63.808 70.272 223.616 223.616 0 0 0 28.16 264.704 220.608 220.608 0 0 0 19.392 183.36A227.84 227.84 0 0 0 247.808 870.4a231.744 231.744 0 0 0 141.12 14.528c21.184 23.616 47.296 42.496 76.416 55.424 29.184 12.928 60.8 19.648 92.8 19.648h2.048a228.48 228.48 0 0 0 217.664-156.416c31.616-6.4 61.44-19.328 87.488-38.016 26.112-18.624 47.872-42.624 63.808-70.272a223.232 223.232 0 0 0-28.16-264.576z m-341.312 470.72H559.36c-39.68 0-78.144-13.76-108.672-38.912a134.4 134.4 0 0 0 5.376-2.944l180.8-103.04a29.248 29.248 0 0 0 14.848-25.216V479.616l76.416 43.52a2.688 2.688 0 0 1 1.472 2.112v208.256c-0.064 92.608-76.16 167.68-169.984 167.936zM193.92 747.328a165.824 165.824 0 0 1-20.288-112.512l5.376 3.2 180.8 103.04a29.76 29.76 0 0 0 29.696 0l220.8-125.76v87.232a2.688 2.688 0 0 1-1.152 2.112l-182.784 104.128a172.288 172.288 0 0 1-170.112 0 169.344 169.344 0 0 1-62.336-61.44z m-47.552-389.44c19.84-34.048 51.2-60.16 88.576-73.6l-0.128 6.144V496.64a28.736 28.736 0 0 0 14.848 25.152l220.8 125.76-76.48 43.52a2.752 2.752 0 0 1-2.56 0.256L208.704 587.136a169.28 169.28 0 0 1-62.208-61.44 166.4 166.4 0 0 1-0.064-167.808z m627.84 144.128L553.6 376.32l76.48-43.52a2.752 2.752 0 0 1 2.56-0.192l182.784 104.128c25.856 14.72 47.36 35.904 62.272 61.44 14.912 25.6 22.784 54.528 22.784 83.968 0 70.4-44.48 133.312-111.36 157.568V527.424v-0.256a28.672 28.672 0 0 0-14.72-25.152z m76.16-112.96a245.76 245.76 0 0 0-5.44-3.136l-180.8-103.04a29.824 29.824 0 0 0-29.696 0l-220.8 125.76V321.408c0-0.832 0.448-1.664 1.152-2.176l182.784-104c25.856-14.72 55.168-22.464 84.992-22.464 94.016 0 170.24 75.2 170.24 167.936 0 9.472-0.832 19.008-2.496 28.352zM372.16 544.32l-76.48-43.52a2.688 2.688 0 0 1-1.472-2.112V290.368c0-92.672 76.224-167.808 170.24-167.808 39.68 0 78.272 13.76 108.8 38.912a158.528 158.528 0 0 0-5.312 3.008L387.2 267.52a29.184 29.184 0 0 0-14.848 25.216v0.128l-0.128 251.456z m41.472-88.32L512 399.936l98.368 56v112L512 624l-98.304-56v-112z"
                                                         Margin="1"/>
                             <!--ChatMode.NewBing-->
-                            <radiobuttonex:cRadioButton Width="28" Height="28"
+                            <radiobuttonex:cRadioButton Width="28" Height="28" IsEnabled="False"
                                                         Command="{Binding ChatModeChangeCommand}"
                                                         CommandParameter ="2"
                                                         BorderMouseOverColor="{Binding SelectedContact.UserborderColor}"
                                                         BorderPathColor="#858695"
                                                         BorderPathData="M213.333333 770.986667 626.346667 546.986667 512 491.946667 442.453333 332.8 810.666667 452.266667 810.666667 631.466667 382.72 890.453333 213.333333 770.986667 213.333333 133.546667 384 192 384 618.666667 213.333333 770.986667Z"
+                                                        Margin="1"/>
+                            
+                            <!--ChatMode.Gemini-->
+                            <radiobuttonex:cRadioButton Width="28" Height="28"
+                                                        Command="{Binding ChatModeChangeCommand}"
+                                                        CommandParameter ="3"
+                                                        BorderMouseOverColor="{Binding SelectedContact.UserborderColor}"
+                                                        BorderPathColor="#858695"
+                                                        BorderPathData="M16 8.016A8.522 8.522 0 008.016 16h-.032A8.521 8.521 0 000 8.016v-.032A8.521 8.521 0 007.984 0h.032A8.522 8.522 0 0016 7.984v.032z"
                                                         Margin="1"/>
                         </StackPanel>
 
@@ -296,12 +315,12 @@
                 <Border Grid.Row="1">
                     <Grid>
                         <ContentControl Content="{Binding SelectedContact.InnerListView}" Grid.Column="0">
-                            <Behaviors:Interaction.Triggers>
-                                <Behaviors:EventTrigger EventName="Drop">
-                                    <Behaviors:InvokeCommandAction Command="{Binding LoadBingChatHistoryCommand}"
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Drop">
+                                    <i:InvokeCommandAction Command="{Binding LoadBingChatHistoryCommand}"
                                                                    PassEventArgsToCommand="True"/>
-                                </Behaviors:EventTrigger>
-                            </Behaviors:Interaction.Triggers>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </ContentControl>
 
                         <consolelistviewex:cConsoleListView MaxHeight="192" d:Background="#16161B"
@@ -385,15 +404,15 @@
                   Width="8"
                   Height="{Binding Width, RelativeSource={RelativeSource Self}}"
                   d:Visibility="Visible">
-                <Behaviors:Interaction.Triggers>
-                    <Behaviors:DataTrigger Binding="{Binding ShowResizer, 
+                <i:Interaction.Triggers>
+                    <i:DataTrigger Binding="{Binding ShowResizer, 
                                                              RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"
                                            Value="False">
-                        <Behaviors:ChangePropertyAction TargetObject="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Path}}"
+                        <i:ChangePropertyAction TargetObject="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Path}}"
                                                         PropertyName="Visibility"
                                                         Value="Hidden"/>
-                    </Behaviors:DataTrigger>
-                </Behaviors:Interaction.Triggers>
+                    </i:DataTrigger>
+                </i:Interaction.Triggers>
             </Path>
         </Border>
     </Grid>

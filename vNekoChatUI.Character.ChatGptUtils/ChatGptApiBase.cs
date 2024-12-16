@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 //ChatGPT API交互时需要用到的对象
-namespace vNekoChatUI.Character.HttpUtils
+namespace vNekoChatUI.Character.ChatGptUtils
 {
     /// <summary>
     /// 役割を表現します。
@@ -212,7 +212,7 @@ namespace vNekoChatUI.Character.HttpUtils
 }
 
 // 从上层拿到聊天记录时用到的数据格式
-namespace vNekoChatUI.Character.HttpUtils
+namespace vNekoChatUI.Character.ChatGptUtils
 {
     //internal class InputData
     //{
@@ -237,7 +237,7 @@ namespace vNekoChatUI.Character.HttpUtils
 }
 
 //返回给上层的数据格式
-namespace vNekoChatUI.Character.HttpUtils
+namespace vNekoChatUI.Character.ChatGptUtils
 {
     public class Ai_Response
     {

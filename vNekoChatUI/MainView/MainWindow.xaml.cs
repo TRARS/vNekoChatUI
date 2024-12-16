@@ -1,9 +1,13 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
+using TrarsUI.Shared.Interfaces;
+using TrarsUI.Shared.Interfaces.UIComponents;
+using TrarsUI.Shared.Messages;
 using vNekoChatUI.Base.Helper;
 using vNekoChatUI.Base.Helper.Extensions;
 
@@ -153,7 +157,7 @@ namespace vNekoChatUI.MainView
     //
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(IAbstractFactory<IChildForm> childFormFactory)
         {
             InitializeComponent();
 
@@ -181,6 +185,16 @@ namespace vNekoChatUI.MainView
                 this.WindowState = (this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized);
             });
 
+            // 打开子窗体
+            WeakReferenceMessenger.Default.Register<OpenChildFormMessage>(this, (r, m) =>
+            {
+                // 届时应当注册到一个manager中，于主窗体被关闭前，先关子窗体。
+                var childForm = childFormFactory.Create();
+                {
+                    if (m.Value is not null) { childForm.SetClientContent(m.Value); }
+                    childForm.Show();
+                }
+            });
         }
     }
 }

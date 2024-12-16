@@ -122,7 +122,17 @@ namespace vNekoChatUI.CustomControlEx.TextBoxEx
             ownerType: typeof(cTextBox),
             typeMetadata: new FrameworkPropertyMetadata(double.MaxValue, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
-
+        public double BorderContentMinHeight
+        {
+            get { return (double)GetValue(BorderContentMinHeightProperty); }
+            set { SetValue(BorderContentMinHeightProperty, value); }
+        }
+        public static readonly DependencyProperty BorderContentMinHeightProperty = DependencyProperty.Register(
+            name: "BorderContentMinHeight",
+            propertyType: typeof(double),
+            ownerType: typeof(cTextBox),
+            typeMetadata: new FrameworkPropertyMetadata(5d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+        );
         /// <summary>
         /// 控制自身焦点
         /// </summary>

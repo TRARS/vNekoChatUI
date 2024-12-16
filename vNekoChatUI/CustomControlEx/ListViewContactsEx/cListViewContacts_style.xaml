@@ -212,7 +212,7 @@
                                                             Text="{Binding PlacementTarget.ItemModel.Profile, 
                                                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                             BorderBackground="#202123"
-                                                            BorderContentHeader="[system](#additional_instructions)"
+                                                            BorderContentHeader="System Instruction"
                                                             BorderContentHeaderColor="#98FF00">
                                     </textboxex:cTextBox>
                                     <!--调整内心独白-->
@@ -226,7 +226,7 @@
                                                             Text="{Binding PlacementTarget.ItemModel.InnerMonologue, 
                                                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                             BorderBackground="#202123"
-                                                            BorderContentHeader="[assistant](#inner_monologue)"
+                                                            BorderContentHeader="Gemini Model"
                                                             BorderContentHeaderColor="#98FF00">
                                     </textboxex:cTextBox>
                                     <!--调整索求后续时的提示词-->

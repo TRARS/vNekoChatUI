@@ -23,9 +23,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Ini" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.8.0.20230708" />
-    <PackageReference Include="OpenCvSharp4.Windows" Version="4.8.0.20230708" />
-    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.8.0.20230708" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.10.0.20241108" />
+    <PackageReference Include="OpenCvSharp4.Windows" Version="4.10.0.20241108" />
+    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.10.0.20241108" />
   </ItemGroup>
   
   <ItemGroup>

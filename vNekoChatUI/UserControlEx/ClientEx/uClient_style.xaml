@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:vNekoChatUI.UserControlEx.ClientEx" 
                     xmlns:effect="clr-namespace:vNekoChatUI.Resources.EffectEx.BitwiseEffect" 
-                    xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors" 
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
                     xmlns:emptybuttonex="clr-namespace:vNekoChatUI.CustomControlEx.EmptyButtonEx" 
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     

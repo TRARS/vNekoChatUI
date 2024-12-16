@@ -15,10 +15,13 @@ namespace Common.WPF.Services
     {
         public string GetChatGptApiKey();
         public string GetBingGptCookie(bool random_cookie = false);
+        public string GetGeminiApiKey();
         public void AddChatGptApiKey(string key);
         public void AddBingGptCookie(string cookie);
+        public void AddGeminiApiKey(string key);
         public dynamic GetCurrentChatGptApiKeys();
         public dynamic GetCurrentBingGptCookies();
+        public dynamic GetCurrentGeminiApiKeys();
         public void Clear();
         public void SaveToDesktop();
     }
@@ -69,6 +72,12 @@ namespace Common.WPF.Services
 
             [JsonPropertyName("BingGptCookie")]
             public ObservableCollection<ObservableString> BingGptCookies { get; init; } = new();
+
+            [JsonPropertyName("GeminiApiKey")]
+            public ObservableCollection<ObservableString> GeminiApiKeys { get; init; } = new();
+
+            [JsonPropertyName("LastUsedGeminiApiKey")]
+            public string LastUsedGeminiApiKey { get; set; } = string.Empty;
         }
     }
 
@@ -88,6 +97,7 @@ namespace Common.WPF.Services
 
         private int currentChatGptApiKeyIndex = 0;
         private int currentBingGptCookieIndex = 0;
+        private int currentGeminiApiKeyIndex = 0;
 
         public JsonConfigManagerService()
         {
@@ -98,6 +108,7 @@ namespace Common.WPF.Services
                     string jsonString = File.ReadAllText(_jsonPath);
                     _configModel = JsonSerializer.Deserialize<JsonConfigStruct>(jsonString, _options) ?? new();
                     this.RemoveEmpty();
+                    this.SetLastUsedGeminiApiKeyIndex(_configModel.LastUsedGeminiApiKey);
                 }
                 else
                 {
@@ -110,6 +121,10 @@ namespace Common.WPF.Services
                         BingGptCookies = new()
                         {
                             new() { Value = "Enter Your Bing Cookie" }
+                        },
+                        GeminiApiKeys = new()
+                        {
+                            new() { Value = "Enter Your Gemini API Key" }
                         },
                     };
                     this.SaveConfigToDesktop();
@@ -143,6 +158,21 @@ namespace Common.WPF.Services
                     _configModel.BingGptCookies.RemoveAt(i);
                 }
             }
+
+            for (int i = _configModel.GeminiApiKeys.Count - 1; i >= 0; i--)
+            {
+                if (string.IsNullOrWhiteSpace(_configModel.GeminiApiKeys[i].Value))
+                {
+                    _configModel.GeminiApiKeys.RemoveAt(i);
+                }
+            }
+        }
+        //设置GeminiApiKeyIndex
+        private void SetLastUsedGeminiApiKeyIndex(string lastApiKey)
+        {
+            var checkedApiKeyList = _configModel.GeminiApiKeys.Where(s => string.IsNullOrWhiteSpace(s.Value) is false && s.IsChecked).ToList();
+            currentGeminiApiKeyIndex = checkedApiKeyList.FindIndex(x => x.Value == lastApiKey);
+            if (currentGeminiApiKeyIndex < 0) { currentGeminiApiKeyIndex = 0; } // 没找到就归零
         }
 
         //首个chatgpt api key
@@ -191,6 +221,30 @@ namespace Common.WPF.Services
             return "empty cookie";
         }
 
+        //
+        //首个gemini api key
+        private string FirstGeminiApiKey()
+        {
+            return _configModel.GeminiApiKeys.FirstOrDefault()?.Value ?? "";
+        }
+        //轮换gemini api key
+        private string NextGeminiApiKey()
+        {
+            var checkedApiKeyList = _configModel.GeminiApiKeys.Where(s => string.IsNullOrWhiteSpace(s.Value) is false && s.IsChecked).ToList();
+            bool hasNonEmptyString = checkedApiKeyList.Count > 0;
+
+            if (hasNonEmptyString)
+            {
+                if (currentGeminiApiKeyIndex >= checkedApiKeyList.Count)
+                {
+                    currentGeminiApiKeyIndex = 0;
+                }
+                return checkedApiKeyList[currentGeminiApiKeyIndex++].Value ?? "";
+            }
+
+            return "empty apikey";
+        }
+
         //存档
         private void SaveConfigToDesktop()
         {
@@ -237,6 +291,21 @@ namespace Common.WPF.Services
             return result;
         }
 
+        /// <summary>
+        /// 每次使用不同 gemini api key
+        /// </summary>
+        public string GetGeminiApiKey()
+        {
+            var result = NextGeminiApiKey();
+            if (result.Trim().Length == 0)
+            {
+                return GetGeminiApiKey();
+            }
+
+            _configModel.LastUsedGeminiApiKey = result; SaveToDesktop();
+            return result;
+        }
+
         public void AddChatGptApiKey(string key)
         {
             _configModel.ChatGptApiKeys.Add(new() { Value = key });
@@ -244,6 +313,10 @@ namespace Common.WPF.Services
         public void AddBingGptCookie(string cookie)
         {
             _configModel.BingGptCookies.Add(new() { Value = cookie });
+        }
+        public void AddGeminiApiKey(string key)
+        {
+            _configModel.GeminiApiKeys.Add(new() { Value = key });
         }
 
         public dynamic GetCurrentChatGptApiKeys()
@@ -254,11 +327,16 @@ namespace Common.WPF.Services
         {
             return _configModel.BingGptCookies;
         }
+        public dynamic GetCurrentGeminiApiKeys()
+        {
+            return _configModel.GeminiApiKeys;
+        }
 
         public void Clear()
         {
             _configModel.ChatGptApiKeys.Clear();
             _configModel.BingGptCookies.Clear();
+            _configModel.GeminiApiKeys.Clear();
         }
         public void SaveToDesktop() => this.SaveConfigToDesktop();
     }

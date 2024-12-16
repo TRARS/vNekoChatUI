@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:vNekoChatUI.CustomControlEx.TextBoxEx">
+                    xmlns:local="clr-namespace:vNekoChatUI.CustomControlEx.TextBoxEx" xmlns:scrollviewerex="clr-namespace:TrarsUI.Shared.Controls.ScrollViewerEx;assembly=TrarsUI.Shared">
 
 
     <local:cTextBox_converter_bordercontentheader_visibility x:Key="cTextBox_converter_bordercontentheader_visibility"/>
@@ -24,7 +24,7 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             
                             <!--头部-->
@@ -58,14 +58,15 @@
                                         IsHitTestVisible="False">
                                 </Border>
 
-                                <ScrollViewer x:Name="PART_ContentHost" 
-                                              MaxHeight="{Binding BorderContentMaxHeight, RelativeSource={RelativeSource TemplatedParent}}"
-                                              Focusable="false" 
-                                              HorizontalScrollBarVisibility="Disabled" 
-                                              VerticalScrollBarVisibility="Visible"
-                                              VerticalAlignment="Center" 
-                                              Margin="{Binding BorderContentMargin, RelativeSource={RelativeSource TemplatedParent}}" >
-                                </ScrollViewer>
+                                <scrollviewerex:cScrollViewer x:Name="PART_ContentHost"
+                                                              MinHeight="{Binding BorderContentMinHeight, RelativeSource={RelativeSource TemplatedParent}}"
+                                                              MaxHeight="{Binding BorderContentMaxHeight, RelativeSource={RelativeSource TemplatedParent}}"
+                                                              Focusable="false" 
+                                                              HorizontalScrollBarVisibility="Disabled" 
+                                                              VerticalScrollBarVisibility="Visible"
+                                                              VerticalAlignment="Center" 
+                                                              Margin="{Binding BorderContentMargin, RelativeSource={RelativeSource TemplatedParent}}" >
+                                </scrollviewerex:cScrollViewer>
 
                                 <TextBlock Text="{Binding Placeholder, RelativeSource={RelativeSource TemplatedParent}}" 
                                            Foreground="{Binding PlaceholderColor, RelativeSource={RelativeSource TemplatedParent}}"

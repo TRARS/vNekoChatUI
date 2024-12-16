@@ -5,7 +5,7 @@
                     xmlns:textboxex="clr-namespace:vNekoChatUI.CustomControlEx.TextBoxEx" 
                     xmlns:emptybuttonex="clr-namespace:vNekoChatUI.CustomControlEx.EmptyButtonEx"
                     xmlns:gridex="clr-namespace:vNekoChatUI.CustomControlEx.GridEx" 
-                    xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors" 
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
                     xmlns:togglebuttonex="clr-namespace:vNekoChatUI.CustomControlEx.ToggleButtonEx">
 
     <local:cConfigButton_converter_border_clip x:Key="cConfigButton_converter_border_clip"/>
@@ -205,30 +205,68 @@
                                                 </Border>
                                             </Grid>
 
+                                            <!--GeminiApiKeys-->
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0"
+                                                           VerticalAlignment="Center"
+                                                           Text="GeminiApiKeys"
+                                                           Foreground="White"
+                                                           Margin="5,0,5,0"/>
+                                                <emptybuttonex:cEmptyButton Grid.Column="1"
+                                                                            HorizontalAlignment="Left"
+                                                                            VerticalAlignment="Center"
+                                                                            Command="{Binding AddGeminiApiKeyCommand,RelativeSource={RelativeSource TemplatedParent}}"
+                                                                            Width="16" Height="16"
+                                                                            BorderMouseOverColor="DarkGray"
+                                                                            BorderPathData="M42.666667 512c0 259.2 210.133333 469.333333 469.333333 469.333333s469.333333-210.133333 469.333333-469.333333S771.2 42.666667 512 42.666667 42.666667 252.8 42.666667 512z m469.333333-384a384 384 0 1 1 0 768 384 384 0 0 1 0-768z m-256 384a42.666667 42.666667 0 0 0 42.666667 42.666667h170.666666v170.666666a42.666667 42.666667 0 1 0 85.333334 0v-170.666666h170.666666a42.666667 42.666667 0 1 0 0-85.333334h-170.666666V298.666667a42.666667 42.666667 0 1 0-85.333334 0v170.666666H298.666667a42.666667 42.666667 0 0 0-42.666667 42.666667z"
+                                                                            BorderPathMargin="1"
+                                                                            Margin="0,0,0,0"/>
+
+                                                <Border Grid.Row="1" Grid.ColumnSpan="2">
+                                                    <ListView ItemsSource="{Binding GeminiApiKeys,RelativeSource={RelativeSource TemplatedParent}}"
+                                                              Background="Transparent" 
+                                                              BorderThickness="0"
+                                                              Margin="1"  
+                                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                              VirtualizingPanel.ScrollUnit="Pixel"
+                                                              ItemContainerStyle="{StaticResource keyItem}"
+                                                              >
+                                                    </ListView>
+                                                </Border>
+                                            </Grid>
                                         </StackPanel>
                                     </Border>
 
                                     <!--ContextMenu关闭时保存设置-->
-                                    <!--<Behaviors:Interaction.Triggers>
-                                        <Behaviors:DataTrigger Binding="{Binding IsOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" Value="False">
-                                            <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.SaveConfigToDesktopCommand, 
+                                    <!--<i:Interaction.Triggers>
+                                        <i:DataTrigger Binding="{Binding IsOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" Value="False">
+                                            <i:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.SaveConfigToDesktopCommand, 
                                                                                              RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                                            />
-                                        </Behaviors:DataTrigger>
-                                    </Behaviors:Interaction.Triggers>-->
+                                        </i:DataTrigger>
+                                    </i:Interaction.Triggers>-->
                                 </contextmenuex:cContextMenu>
                             </Grid.ContextMenu>
                         </gridex:cGrid>
 
                         <!--ContextMenu关闭时保存设置，写在这里比较方便-->
-                        <Behaviors:Interaction.Triggers>
-                            <Behaviors:DataTrigger Binding="{Binding ContextMenuIsOpen, 
+                        <i:Interaction.Triggers>
+                            <i:DataTrigger Binding="{Binding ContextMenuIsOpen, 
                                                                      RelativeSource={RelativeSource TemplatedParent}}"
                                                    Value="False">
-                                <Behaviors:InvokeCommandAction Command="{Binding DataContext.SaveConfigToDesktopCommand, 
+                                <i:InvokeCommandAction Command="{Binding DataContext.SaveConfigToDesktopCommand, 
                                                                                  RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"/>
-                            </Behaviors:DataTrigger>
-                        </Behaviors:Interaction.Triggers>
+                            </i:DataTrigger>
+                        </i:Interaction.Triggers>
                     </Border>
 
                     <ControlTemplate.Triggers>

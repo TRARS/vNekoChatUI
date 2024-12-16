@@ -1,11 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-                    xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors" 
+                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
                     xmlns:local="clr-namespace:vNekoChatUI.CustomControlEx.ListViewChatHistoryEx"
                     xmlns:gridex="clr-namespace:vNekoChatUI.CustomControlEx.GridEx"
                     xmlns:textboxex="clr-namespace:vNekoChatUI.CustomControlEx.TextBoxEx" 
                     xmlns:contextmenuex="clr-namespace:vNekoChatUI.CustomControlEx.ContextMenuEx" 
-                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+                    xmlns:system="clr-namespace:System;assembly=mscorlib" 
+                    xmlns:localBehaviors="clr-namespace:vNekoChatUI.Base.Helper.Behaviors;assembly=vNekoChatUI.Base">
     
     <local:cListViewChatHistory_converter_textblock_maxwidth x:Key="cListViewChatHistory_converter_textblock_maxwidth"/>
     <local:cListViewChatHistory_converter_contactcard_time_token x:Key="cListViewChatHistory_converter_contactcard_time_token"/>
@@ -155,16 +156,16 @@
                                                          FallbackValue=#000000}"
                                     IsHitTestVisible="True">
 
-                                <Behaviors:Interaction.Triggers>
-                                    <Behaviors:EventTrigger EventName="MouseLeftButtonUp">
-                                        <Behaviors:InvokeCommandAction Command="{Binding ParentModel.RightClickEditCommand, 
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding ParentModel.RightClickEditCommand, 
                                                                                          RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type gridex:cGrid}}}"/>
-                                        <Behaviors:ChangePropertyAction TargetObject="{Binding Inner_cTextBox, 
+                                        <i:ChangePropertyAction TargetObject="{Binding Inner_cTextBox, 
                                                                                                RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type gridex:cGrid}}}"
                                                                         PropertyName="IsHitTestVisible"
                                                                         Value="True"/>
-                                    </Behaviors:EventTrigger>
-                                </Behaviors:Interaction.Triggers>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
                             </Border>
 
                             <!--这里有点阴间-->
@@ -281,13 +282,13 @@
                                     </ContextMenu>
                                 </TextBox.ContextMenu>
 
-                                <Behaviors:Interaction.Triggers>
-                                    <Behaviors:EventTrigger EventName="LostFocus">
-                                        <Behaviors:ChangePropertyAction TargetObject="{Binding}"
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:ChangePropertyAction TargetObject="{Binding}"
                                                                         PropertyName="IsHitTestVisible"
                                                                         Value="False"/>
-                                    </Behaviors:EventTrigger>
-                                </Behaviors:Interaction.Triggers>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
                             </textboxex:cTextBox>
                             <Grid.ContextMenu>
                                 <contextmenuex:cContextMenu>
@@ -301,14 +302,14 @@
                                         <Button Width="44" Height="22" Style="{StaticResource RightClickButton}"
                                                 HorizontalAlignment="Left"
                                                 Margin="0,0,0,0">
-                                            <Behaviors:Interaction.Triggers>
-                                                <Behaviors:EventTrigger EventName="Click" >
-                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickCopyCommand, 
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click" >
+                                                    <i:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickCopyCommand, 
                                                                                                      RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
                                                                                    CommandParameter="{Binding PlacementTarget.ItemModel.Message, 
                                                                                                               RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
-                                                </Behaviors:EventTrigger>
-                                            </Behaviors:Interaction.Triggers>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
 
                                             <TextBlock Text="复制" 
                                                        FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -317,14 +318,14 @@
                                         <Button Width="44" Height="22" Style="{StaticResource RightClickButton}"
                                                 HorizontalAlignment="Left"
                                                 Margin="15,1,0,0">
-                                            <Behaviors:Interaction.Triggers>
-                                                <Behaviors:EventTrigger EventName="Click" >
-                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickRevokeCommand, 
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click" >
+                                                    <i:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickRevokeCommand, 
                                                                                                      RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
                                                                                    CommandParameter="{Binding PlacementTarget.ItemModel, 
                                                                                                               RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
-                                                </Behaviors:EventTrigger>
-                                            </Behaviors:Interaction.Triggers>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
 
                                             <TextBlock Text="撤回" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Button>
@@ -332,14 +333,14 @@
                                         <Button MinWidth="44" Height="22" Style="{StaticResource RightClickButton}"
                                                 HorizontalAlignment="Left"
                                                 Margin="30,1,0,0">
-                                            <Behaviors:Interaction.Triggers>
-                                                <Behaviors:EventTrigger EventName="Click" >
-                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickRevokeAllCommand, 
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click" >
+                                                    <i:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickRevokeAllCommand, 
                                                                                                      RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
                                                                                    CommandParameter="{Binding PlacementTarget.ItemModel, 
                                                                                                               RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
-                                                </Behaviors:EventTrigger>
-                                            </Behaviors:Interaction.Triggers>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
 
                                             <TextBlock Text="撤回以下" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Button>
@@ -347,16 +348,16 @@
                                         <Button Width="44" Height="22" Style="{StaticResource RightClickButton}" 
                                                 HorizontalAlignment="Left"
                                                 Margin="0,1,0,0">
-                                            <Behaviors:Interaction.Triggers>
-                                                <Behaviors:EventTrigger EventName="Click">
-                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickEditCommand, 
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click">
+                                                    <i:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickEditCommand, 
                                                                                                      RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
-                                                        <Behaviors:ChangePropertyAction TargetObject="{Binding PlacementTarget.Inner_cTextBox, 
+                                                        <i:ChangePropertyAction TargetObject="{Binding PlacementTarget.Inner_cTextBox, 
                                                                                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                                                         PropertyName="IsHitTestVisible"
                                                                                         Value="True"/>
-                                                </Behaviors:EventTrigger>
-                                            </Behaviors:Interaction.Triggers>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
 
                                             <TextBlock Text="编辑" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Button>
@@ -440,16 +441,16 @@
                             <Border x:Name="msg_background"
                                     CornerRadius="12,0,12,4"
                                     Background="{Binding UserborderColor}">
-                                <Behaviors:Interaction.Triggers>
-                                    <Behaviors:EventTrigger EventName="MouseLeftButtonUp">
-                                        <Behaviors:InvokeCommandAction Command="{Binding ParentModel.RightClickEditCommand, 
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseLeftButtonUp">
+                                        <i:InvokeCommandAction Command="{Binding ParentModel.RightClickEditCommand, 
                                                                                          RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type gridex:cGrid}}}"/>
-                                        <Behaviors:ChangePropertyAction TargetObject="{Binding Inner_cTextBox, 
+                                        <i:ChangePropertyAction TargetObject="{Binding Inner_cTextBox, 
                                                                                                RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type gridex:cGrid}}}"
                                                                         PropertyName="IsHitTestVisible"
                                                                         Value="True"/>
-                                    </Behaviors:EventTrigger>
-                                </Behaviors:Interaction.Triggers>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
                             </Border>
                             <!--这里有点阴间-->
                             <textboxex:cTextBox x:Name="msg_textbox"
@@ -502,13 +503,19 @@
                                     </ContextMenu>
                                 </TextBox.ContextMenu>
 
-                                <Behaviors:Interaction.Triggers>
-                                    <Behaviors:EventTrigger EventName="LostFocus">
-                                        <Behaviors:ChangePropertyAction TargetObject="{Binding}"
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="LostFocus">
+                                        <i:ChangePropertyAction TargetObject="{Binding}"
                                                                         PropertyName="IsHitTestVisible"
                                                                         Value="False"/>
-                                    </Behaviors:EventTrigger>
-                                </Behaviors:Interaction.Triggers>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                                <i:Interaction.Behaviors>
+                                    <localBehaviors:KeyPressBehavior Command="{Binding ParentModel.CtrlEnterDownCommand, RelativeSource={RelativeSource AncestorType={x:Type gridex:cGrid}}}"
+                                                                     CommandParameter="{Binding ItemModel, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type gridex:cGrid}}}"/>
+                                </i:Interaction.Behaviors>
+                    
                             </textboxex:cTextBox>
                             <Grid.ContextMenu>
                                 <contextmenuex:cContextMenu>
@@ -520,14 +527,14 @@
                                         <!--复制-->
                                         <Button Width="44" Height="22" Style="{StaticResource RightClickButton}"
                                                 HorizontalAlignment="Left">
-                                            <Behaviors:Interaction.Triggers>
-                                                <Behaviors:EventTrigger EventName="Click" >
-                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickCopyCommand, 
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click" >
+                                                    <i:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickCopyCommand, 
                                                                                                      RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
                                                                                    CommandParameter="{Binding PlacementTarget.ItemModel.Message, 
                                                                                                               RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
-                                                </Behaviors:EventTrigger>
-                                            </Behaviors:Interaction.Triggers>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
 
                                             <TextBlock Text="复制" 
                                                        FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -536,14 +543,14 @@
                                         <Button Width="44" Height="22" Style="{StaticResource RightClickButton}"
                                                 HorizontalAlignment="Left"
                                                 Margin="15,1,0,0">
-                                            <Behaviors:Interaction.Triggers>
-                                                <Behaviors:EventTrigger EventName="Click" >
-                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickRevokeCommand, 
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click" >
+                                                    <i:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickRevokeCommand, 
                                                                                                      RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
                                                                                    CommandParameter="{Binding PlacementTarget.ItemModel, 
                                                                                                               RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
-                                                </Behaviors:EventTrigger>
-                                            </Behaviors:Interaction.Triggers>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
 
                                             <TextBlock Text="撤回" 
                                                                FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -552,14 +559,14 @@
                                         <Button MinWidth="44" Height="22" Style="{StaticResource RightClickButton}"
                                                 HorizontalAlignment="Left"
                                                 Margin="30,1,0,0">
-                                            <Behaviors:Interaction.Triggers>
-                                                <Behaviors:EventTrigger EventName="Click" >
-                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickReSendCommand, 
-                                                                                                     RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
-                                                                                   CommandParameter="{Binding PlacementTarget.ItemModel, 
-                                                                                                              RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
-                                                </Behaviors:EventTrigger>
-                                            </Behaviors:Interaction.Triggers>
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click" >
+                                                    <i:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickReSendCommand, 
+                                                                                             RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
+                                                                           CommandParameter="{Binding PlacementTarget.ItemModel, 
+                                                                                                      RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
 
                                             <TextBlock Text="重新发送" 
                                                                FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -568,14 +575,14 @@
                                         <Button MinWidth="44" Height="22" Style="{StaticResource RightClickButton}"
                                                 HorizontalAlignment="Left"
                                                 Margin="30,1,0,0">
-                                            <Behaviors:Interaction.Triggers>
-                                                <Behaviors:EventTrigger EventName="Click" >
-                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickBingBypassDetectionCommand, 
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click" >
+                                                    <i:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickBingBypassDetectionCommand, 
                                                                                                      RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" 
                                                                                    CommandParameter="{Binding PlacementTarget.ItemModel, 
                                                                                                               RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
-                                                </Behaviors:EventTrigger>
-                                            </Behaviors:Interaction.Triggers>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
 
                                             <TextBlock Text="重新发送（过越狱检测）" 
                                                                FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -584,16 +591,16 @@
                                         <Button Width="44" Height="22" Style="{StaticResource RightClickButton}" 
                                                 HorizontalAlignment="Left"
                                                 Margin="0,1,0,0">
-                                            <Behaviors:Interaction.Triggers>
-                                                <Behaviors:EventTrigger EventName="Click">
-                                                    <Behaviors:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickEditCommand, 
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click">
+                                                    <i:InvokeCommandAction Command="{Binding PlacementTarget.ParentModel.RightClickEditCommand, 
                                                                                                      RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
-                                                    <Behaviors:ChangePropertyAction TargetObject="{Binding PlacementTarget.Inner_cTextBox, 
+                                                    <i:ChangePropertyAction TargetObject="{Binding PlacementTarget.Inner_cTextBox, 
                                                                                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                                                     PropertyName="IsHitTestVisible"
                                                                                     Value="True"/>
-                                                </Behaviors:EventTrigger>
-                                            </Behaviors:Interaction.Triggers>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
 
                                             <TextBlock Text="编辑" FontSize="11" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Button>

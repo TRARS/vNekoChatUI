@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using vNekoChatUI.Character.BingUtils;
-using vNekoChatUI.Character.HttpUtils;
+using vNekoChatUI.Character.ChatGptUtils;
 using vNekoChatUI.Character.SocketUtils;
 
 namespace vNekoChatUI.Character
@@ -131,8 +131,9 @@ namespace vNekoChatUI.Character
         private Func<string> _getChatHistoryCallBack;//从上层获取聊天记录
         private Func<int> _getDebugMode;//从上层获取当前DebugMode状态
 
-        private HttpUtils.HttpClientWapper _chatGptClient = new();//下层Http客户端（ChatGPT）
+        private ChatGptUtils.HttpClientWapper _chatGptClient = new();//下层Http客户端（ChatGPT）
         private BingUtils.HttpClientWapper _bingGptClient = new();//下层Http客户端（NewBing）
+        private GeminiUtils.HttpClientWapper _geminiClient = new();//下层Http客户端（NewBing）
 
         private Func<CancellationToken> _getCancellationToken;//取消任务
 
@@ -208,9 +209,8 @@ namespace vNekoChatUI.Character
                                 //拿到ChatGPT回复
                                 var jsonString = await _chatGptClient.Entry(history);
 
-                                //解析json，TotalTokens:本次消耗, Message:本次回复
+                                //解析json，TotalTokens: 本次消耗, Message: 本次回复
                                 var jsonObject = JsonSerializer.Deserialize<Ai_Response>(jsonString);
-                                //var result = Tuple.Create(jsonObject!.TotalTokens, jsonObject.Message);
 
                                 chatMessage.ReceiverMessage = jsonObject.Message;
                                 chatMessage.TotalTokens = jsonObject.TotalTokens;
@@ -253,6 +253,31 @@ namespace vNekoChatUI.Character
                             }
                         });
 
+                    }
+                    return;
+
+                //gemini
+                case 3:
+                    if (_autoReply && string.IsNullOrWhiteSpace(chatMessage.SenderMessage) is false)
+                    {
+                        await Task.Run(async () =>
+                        {
+                            try
+                            {
+                                //获取历史记录
+                                var history = _getChatHistoryCallBack.Invoke();
+                                //拿到Gemini回复
+                                var result = await _geminiClient.Entry(history, _getCancellationToken);
+
+                                chatMessage.ReceiverMessage = result;// jsonObject.Message;
+                                chatMessage.TotalTokens = -1;// jsonObject.TotalTokens;
+                                _autoReplyCallBack?.Invoke(chatMessage.GetJsonString());
+                            }
+                            catch (Exception ex)
+                            {
+                                throw new Exception($"ClientCallBack Error {ex.Message}");
+                            }
+                        });
                     }
                     return;
             }
