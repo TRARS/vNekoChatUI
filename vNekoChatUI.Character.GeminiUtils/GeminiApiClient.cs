@@ -107,10 +107,10 @@ namespace vNekoChatUI.Character.GeminiUtils
                         if (errorJsonObj.error.code == 429)
                         {
                             tryGetNextKey = true;  //复位
-                            //_ = Task.Run(() =>
-                            //{
-                            //    System.Windows.MessageBox.Show("接下来会尝试切换到下一个ApiKey");
-                            //});
+                            _ = Task.Run(() =>
+                            {
+                                System.Windows.MessageBox.Show("接下来会尝试切换到下一个ApiKey");
+                            });
 
                             if (retryLimit-- > 0)
                             {

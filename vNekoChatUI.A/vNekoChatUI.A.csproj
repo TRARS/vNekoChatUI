@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <Platforms>x64</Platforms>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="ColorHelper" Version="1.8.1" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\vNekoChatUI.Base\vNekoChatUI.Base.csproj" />
+    <ProjectReference Include="..\vNekoChatUI.Character\vNekoChatUI.Character.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="TrarsUI.Shared">
+      <HintPath>..\vNekoChatUI\libs\TrarsUI.Shared.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="MVVM\Views\AppIcon.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MVVM\Views\PEditor.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>

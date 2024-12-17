@@ -1,0 +1,109 @@
+﻿<UserControl x:Class="vNekoChatUI.MVVM.Views.uTitleBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:designtimeviewmodel="clr-namespace:vNekoChatUI.MVVM.DesignTimeViewModels"
+             xmlns:titlebarbuttonex="clr-namespace:TrarsUI.Shared.Controls.TitleBarButtonEx;assembly=TrarsUI.Shared"
+             xmlns:converters="clr-namespace:TrarsUI.Shared.Converters;assembly=TrarsUI.Shared"
+             mc:Ignorable="d" 
+             MinWidth="240"
+             d:MinWidth="240"
+             d:DataContext="{d:DesignInstance Type={x:Type designtimeviewmodel:uTitleBarVM}, IsDesignTimeCreatable=True}">
+    
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush Color="#862E2F34" x:Key="AreaColor"/>
+
+            <DoubleCollection x:Key = "double_def">15 11.5 12.5</DoubleCollection>
+            <Geometry x:Key="TitleIcon">
+                M853.333333 85.333333 170.666667 85.333333C123.733333 85.333333 85.333333 123.733333 85.333333 170.666667l0 768 170.666667-170.666667 597.333333 0c46.933333 0 85.333333-38.4 85.333333-85.333333L938.666667 170.666667C938.666667 123.733333 900.266667 85.333333 853.333333 85.333333zM256 384l512 0 0 85.333333L256 469.333333 256 384zM597.333333 597.333333 256 597.333333l0-85.333333 341.333333 0L597.333333 597.333333zM768 341.333333 256 341.333333 256 256l512 0L768 341.333333z
+            </Geometry>
+
+            <VisualBrush x:Key="StripeTexture" TileMode="Tile" Viewport="0,0,3,3" ViewportUnits="Absolute" Viewbox="0,0,15,15" ViewboxUnits="Absolute">
+                <VisualBrush.Visual>
+                    <Grid Background="Transparent" RenderTransformOrigin="0.5,0.5">
+                        <Path Data="M 0,15 L 15,0" Stroke="White" StrokeThickness="5" Opacity="0.4" />
+                        <Path Data="M 15,15 L 30,0" Stroke="White"  StrokeThickness="5" Opacity="0.4" />
+                        <Path Data="M 15,-15 L 0,0" Stroke="White"  StrokeThickness="5" Opacity="0.4" />
+                        <Path Data="M 0,30 L 15,15" Stroke="White"  StrokeThickness="5" Opacity="0.4" />
+                        <Path Data="M 0,0 L -15,15" Stroke="White"  StrokeThickness="5" Opacity="0.4" />
+                    </Grid>
+                </VisualBrush.Visual>
+            </VisualBrush>
+
+            <converters:TitleBarOpacityConverter x:Key="TitleBarOpacityConverter"/>
+            <converters:TitleBarIconConverter x:Key="TitleBarIconConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Rectangle Opacity="0.2" Fill="{StaticResource StripeTexture}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                   Grid.Column="0" Grid.ColumnSpan="2"/>
+
+        <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0" VerticalAlignment="Stretch" IsHitTestVisible="False"
+                    d:Background="#80DC146D">
+            <titlebarbuttonex:cTitleBarButton Type="EmptyBtn" Margin="1,0,0,0"
+                                              Height="24" Width="24" Focusable="False">
+                <Grid Width="20" Height="20" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Rectangle Fill="Snow" RadiusX="2.5" RadiusY="{Binding RadiusX, RelativeSource={RelativeSource Self}}" Margin="0"/>
+                    <Path Data="{Binding Icon, Converter={StaticResource TitleBarIconConverter}, ConverterParameter={StaticResource TitleIcon}}"
+                          Fill="#1B1B1B"
+                          Stretch="Uniform" 
+                          Width="18"
+                          Height="{Binding Width, RelativeSource={RelativeSource Self}}"
+                          d:Data="{StaticResource TitleIcon}"/>
+                </Grid>
+            </titlebarbuttonex:cTitleBarButton>
+            <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2,0,4,0"
+                       Text="{Binding Title}"
+                       Foreground="Snow"
+                       Opacity="{Binding IsActive, 
+                                         RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window},
+                                         Converter={StaticResource TitleBarOpacityConverter},
+                                         Mode=OneWay}"
+                       d:Background="Gray"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0" HorizontalAlignment="Right"
+                    d:Background="#8014DCDC">
+            <titlebarbuttonex:cTitleBarButton x:Name="TopmostBtn" Type="TopmostBtn" Width="30" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              IsActive="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Mode=OneWay}"
+                                              IsChecked="{Binding IsTopmost, Mode=OneWay}"
+                                              Command="{Binding TopmostButtonCommand}"
+                                              PathData="M320 64c-35.346 0-64 28.654-64 64 0 35.346 28.654 64 64 64h32v256.246c-105.811 5.21-190 92.65-190 199.754v48a8 8 0 0 0 8 8h295v248a8 8 0 0 0 8 8h80a8 8 0 0 0 8-8V704h295a8 8 0 0 0 8-8v-48c0-107.778-85.252-195.644-192-199.843V192h32c35.346 0 64-28.654 64-64 0-35.346-28.654-64-64-64H320z"
+                                              PathSize="{Binding [2], Source={StaticResource double_def}}"/>
+            <titlebarbuttonex:cTitleBarButton x:Name="ResetPosBtn" Type="ResetPosBtn" Width="30" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              IsActive="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Mode=OneWay}"
+                                              Command="{Binding ResetPosButtonCommand}"
+                                              PathData="M672.911 226.447A326.697 326.697 0 0 0 512 184.32c-180.982 0-327.68 146.698-327.68 327.68S331.018 839.68 512 839.68 839.68 692.982 839.68 512a61.44 61.44 0 0 1 122.88 0c0 248.832-201.728 450.56-450.56 450.56S61.44 760.832 61.44 512 263.168 61.44 512 61.44c90.87 0 177.377 27.095 250.163 75.756l69.694-69.694c8.355-8.356 22.22-8.028 30.965 0.717 4.055 4.075 6.472 9.462 6.759 15.094l11.018 231.956a31.068 31.068 0 0 1-32.85 32.85L615.793 337.08a23.142 23.142 0 0 1-21.873-22.917c0-5.611 2.17-10.916 6.062-14.786l72.909-72.91z"
+                                              PathSize="{Binding [2], Source={StaticResource double_def}}"/>
+            <titlebarbuttonex:cTitleBarButton x:Name="MinimizeBtn" Type="MaxMinBtn" Width="30" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="True"
+                                              IsActive="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Mode=OneWay}"
+                                              Command="{Binding MinimizeButtonCommand}"
+                                              PathData="M984.615385 955.076923c0 15.753846-13.784615 29.538462-29.538462 29.538462h-886.153846c-15.753846 0-29.538462-13.784615-29.538462-29.538462v-59.076923c0-15.753846 13.784615-29.538462 29.538462-29.538462h886.153846c15.753846 0 29.538462 13.784615 29.538462 29.538462v59.076923z"
+                                              PathSize="{Binding [1], Source={StaticResource double_def}}"
+                                              PathMargin="0,9,0,0"/>
+            <titlebarbuttonex:cTitleBarButton x:Name="MaximizeBtn" Type="MaxMinBtn" Width="30" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="False"
+                                              IsActive="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Mode=OneWay}"
+                                              Command="{Binding MaximizeButtonCommand}"
+                                              PathData="M915.995 960.219H110.228c-24.262 0-44-19.738-44-44V110.228c0-24.262 19.738-44 44-44h805.768c24.262 0 44 19.738 44 44v805.991c-0.001 24.261-19.739 44-44.001 44z m-785.767-64h765.768V130.228H130.228v765.991z
+                                                        M124.462 128.688h803.533v64H124.462z"
+                                              PathData2="M959.72 0H294.216a63.96 63.96 0 0 0-63.96 63.96v127.92H64.28A63.96 63.96 0 0 0 0.32 255.84V959.4a63.96 63.96 0 0 0 63.96 63.96h703.56a63.96 63.96 0 0 0 63.96-63.96V792.465h127.92a63.96 63.96 0 0 0 63.96-63.96V63.96A63.96 63.96 0 0 0 959.72 0zM767.84 728.505V959.4H64.28V255.84h703.56z m189.322 0H831.8V255.84a63.96 63.96 0 0 0-63.96-63.96H294.216V63.96H959.72z"
+                                              PathSize="{Binding [1], Source={StaticResource double_def}}"
+                                              PathSize2="{Binding [2], Source={StaticResource double_def}}"
+                                              IsMaximized="{Binding IsMaximized}"/>
+            <titlebarbuttonex:cTitleBarButton x:Name="CloseBtn" Type="CloseBtn" Width="30" Height="25" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              IsActive="{Binding IsActive, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Mode=OneWay}"
+                                              Command="{Binding CloseButtonCommand}"
+                                              Foreground="#FFDCDFE1"
+                                              PathData="M571.733333 512l268.8-268.8c17.066667-17.066667 17.066667-42.666667 0-59.733333-17.066667-17.066667-42.666667-17.066667-59.733333 0L512 452.266667 243.2 183.466667c-17.066667-17.066667-42.666667-17.066667-59.733333 0-17.066667 17.066667-17.066667 42.666667 0 59.733333L452.266667 512 183.466667 780.8c-17.066667 17.066667-17.066667 42.666667 0 59.733333 8.533333 8.533333 19.2 12.8 29.866666 12.8s21.333333-4.266667 29.866667-12.8L512 571.733333l268.8 268.8c8.533333 8.533333 19.2 12.8 29.866667 12.8s21.333333-4.266667 29.866666-12.8c17.066667-17.066667 17.066667-42.666667 0-59.733333L571.733333 512z"
+                                              PathSize="{Binding [1], Source={StaticResource double_def}}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

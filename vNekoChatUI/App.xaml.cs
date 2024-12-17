@@ -7,8 +7,9 @@ using TrarsUI.Shared.Helper.Extensions;
 using TrarsUI.Shared.Interfaces;
 using TrarsUI.Shared.Interfaces.UIComponents;
 using TrarsUI.Shared.Services;
-using vNekoChatUI.TrarsWindow.MVVM.ViewModels;
-using vNekoChatUI.TrarsWindow.MVVM.Views;
+using vNekoChatUI.A.Factories;
+using vNekoChatUI.MVVM.ViewModels;
+using vNekoChatUI.MVVM.Views;
 
 namespace vNekoChatUI
 {
@@ -46,10 +47,7 @@ namespace vNekoChatUI
         protected override async void OnStartup(StartupEventArgs e)
         {
             await AppHost.StartAsync();
-
-            var startupForm = AppHost.Services.GetRequiredService<MainView.MainWindow>();
-            startupForm.Show();
-
+            AppHost.Services.GetRequiredService<IAbstractFactory<IMainWindow>>().Create().Show();
             base.OnStartup(e);
         }
 
@@ -70,16 +68,33 @@ namespace vNekoChatUI
             return Host.CreateDefaultBuilder()
                        .ConfigureServices(sc =>
                        {
-                           sc.AddSingleton<MainView.MainWindow>();
-
                            // Service
                            sc.AddSingleton<IMessageBoxService, MessageBoxService>();
                            sc.AddSingleton<ITokenProviderService, TokenProviderService>();
+                           sc.AddSingleton<IContentProviderService, AContentProviderService>();
                            sc.AddTransient<IDebouncerService, DebouncerService>();
                            // UI组件VM
                            sc.AddFormFactory<IuTitleBarVM, uTitleBarVM>();
                            sc.AddFormFactory<IuRainbowLineVM, uRainbowLineVM>();
                            sc.AddFormFactory<IuClientVM, uClientVM>();
+                           // MainWindow MainWindowVM
+                           sc.AddFormFactory<IMainWindow, IMainWindowEmpty, MVVM.Views.MainWindow>(sp =>
+                           {
+                               var mainwindow = (MVVM.Views.MainWindow)(sp.GetRequiredService<IMainWindowEmpty>());
+                               {
+                                   mainwindow.DataContext = sp.GetRequiredService<IAbstractFactory<IMainWindowVM>>().Create();
+                                   //mainwindow.SizeToContent = SizeToContent.WidthAndHeight;
+                                   mainwindow.ResizeMode = ResizeMode.CanResize;
+                                   mainwindow.Width = 660;
+                                   mainwindow.Height = 480;
+                                   mainwindow.MinWidth = 660;
+                                   mainwindow.MinHeight = 480;
+                                   mainwindow.MaxWidth = 960;
+                                   mainwindow.MaxHeight = 720;
+                               }
+                               return mainwindow;
+                           });
+                           sc.AddFormFactory<IMainWindowVM, MVVM.ViewModels.MainWindowVM>();
                            // ChildForm ChildFormVM
                            sc.AddFormFactory<IChildForm, IChildFormEmpty, ChildForm>(sp =>
                            {
@@ -87,11 +102,18 @@ namespace vNekoChatUI
                                {
                                    childForm.DataContext = sp.GetRequiredService<IAbstractFactory<IChildFormVM>>().Create();
                                    childForm.SizeToContent = SizeToContent.WidthAndHeight;
+                                   childForm.MinHeight = 608;
+                                   childForm.MaxHeight = 608;
                                }
                                return childForm;
                            });
                            sc.AddFormFactory<IChildFormVM, ChildFormVM>();
                        });
+        }
+
+        public static T GetRequiredService<T>() where T : notnull
+        {
+            return AppHost.Services.GetRequiredService<T>();
         }
     }
 }

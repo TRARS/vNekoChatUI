@@ -5,20 +5,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/CustomControlEx/ContextMenuEx/cContextMenu_style.xaml"/>
-                <ResourceDictionary Source="/CustomControlEx/ListViewChatHistoryEx/cListViewChatHistory_style.xaml"/>
-                <ResourceDictionary Source="/CustomControlEx/ListViewChatHistoryEx/cScrollViewer_style.xaml"/>
-                <ResourceDictionary Source="/CustomControlEx/ListViewContactsEx/cListViewContacts_style.xaml"/>
-                <ResourceDictionary Source="/CustomControlEx/RadioButtonEx/cRadioButton_style.xaml"/>
-                <ResourceDictionary Source="/CustomControlEx/StepProgressIndicatorEx/cStepProgressIndicator_style.xaml"/>
-                <ResourceDictionary Source="/CustomControlEx/SuggestionMenuItemEx/cSuggestionMenuItem_style.xaml"/>
-                <ResourceDictionary Source="/CustomControlEx/TextBoxEx/cTextBox_style.xaml"/>
-                <ResourceDictionary Source="/CustomControlEx/ToggleButtonEx/cToggleButton_style.xaml"/>
-                <ResourceDictionary Source="/CustomControlEx/EmptyButtonEx/cEmptyButton_style.xaml"/>
-                <ResourceDictionary Source="/CustomControlEx/ConfigButtonEx/cConfigButton_style.xaml"/>
-                <ResourceDictionary Source="/CustomControlEx/ConsoleListViewEx/cConsoleListView_style.xaml"/>
-
-                <ResourceDictionary Source="/Test/PromptEditor/Entry.xaml"/>
+                <ResourceDictionary Source="/vNekoChatUI.A;component/Entry.xaml"/>
                 <ResourceDictionary Source="/TrarsUI.Shared;component/Resources/Colors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

@@ -8,15 +8,16 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>x64</Platforms>
     <BaseOutputPath>$(SolutionDir)\bin\vNekoChatUI</BaseOutputPath>
-    <ApplicationIcon>Resources\AppIcon.ico</ApplicationIcon>
+    <ApplicationIcon>MVVM\Resources\AppIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="MVVM\Resources\AppIcon.ico" />
     <None Remove="vNekoChatUI.ico" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\AppIcon.ico" />
+    <Content Include="MVVM\Resources\AppIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,67 +31,59 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Common.WPF\Common.WPF.csproj" />
+    <ProjectReference Include="..\vNekoChatUI.A\vNekoChatUI.A.csproj" />
     <ProjectReference Include="..\vNekoChatUI.Base\vNekoChatUI.Base.csproj" />
     <ProjectReference Include="..\vNekoChatUI.Character\vNekoChatUI.Character.csproj" />
-    <ProjectReference Include="..\vNekoChatUI.TrarsWindow\vNekoChatUI.TrarsWindow.csproj" />
   </ItemGroup>
   
   <ItemGroup>
-    <Reference Include="TrarsUI.Shared">
-      <HintPath>..\vNekoChatUI.TrarsWindow\libs\TrarsUI.Shared.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Resource Include="Resources\EffectEx\BitwiseEffect\BitwiseEffect.ps" />
-    <Resource Include="Resources\EffectEx\TranslationalEffect\TranslationalEffect.ps" />
-    <Resource Include="Resources\Icon\Bot\01.png" />
-    <Resource Include="Resources\Icon\Bot\02.png" />
-    <Resource Include="Resources\Icon\Bot\03.png" />
-    <Resource Include="Resources\Icon\Bot\04.png" />
-    <Resource Include="Resources\Icon\Bot\05.png" />
-    <Resource Include="Resources\Icon\Bot\06.png" />
-    <Resource Include="Resources\Icon\Bot\07.png" />
-    <Resource Include="Resources\Icon\Bot\08.png" />
-    <Resource Include="Resources\Icon\Bot\09.png" />
-    <Resource Include="Resources\Icon\Bot\10.png" />
-    <Resource Include="Resources\Icon\Bot\11.png" />
-    <Resource Include="Resources\Icon\Bot\12.png" />
-    <Resource Include="Resources\Icon\Bot\13.png" />
-    <Resource Include="Resources\Icon\Bot\14.png" />
-    <Resource Include="Resources\Icon\Bot\15.png" />
-    <Resource Include="Resources\Icon\Bot\16.png" />
-    <Resource Include="Resources\Icon\Bot\17.png" />
-    <Resource Include="Resources\Icon\Bot\18.png" />
-    <Resource Include="Resources\Icon\Bot\19.png" />
-    <Resource Include="Resources\Icon\Bot\20.png" />
-    <Resource Include="Resources\Icon\Bot\21.png" />
-    <Resource Include="Resources\Icon\Bot\22.png" />
-    <Resource Include="Resources\Icon\Bot\23.png" />
-    <Resource Include="Resources\Icon\Bot\24.png" />
-    <Resource Include="Resources\Icon\Bot\25.png" />
-    <Resource Include="Resources\Icon\Bot\26.png" />
-    <Resource Include="Resources\Icon\Bot\27.png" />
-    <Resource Include="Resources\Icon\Bot\28.png" />
-    <Resource Include="Resources\Icon\Bot\29.png" />
-    <Resource Include="Resources\Icon\Bot\30.png" />
-    <Resource Include="Resources\Icon\Bot\31.png" />
-    <Resource Include="Resources\Icon\Bot\32.png" />
-    <Resource Include="Resources\Icon\Bot\33.png" />
-    <Resource Include="Resources\Icon\Bot\34.png" />
-    <Resource Include="Resources\Icon\Bot\35.png" />
-    <Resource Include="Resources\Icon\Bot\36.png" />
-    <Resource Include="Resources\Icon\Bot\37.png" />
-    <Resource Include="Resources\Icon\Bot\38.png" />
-    <Resource Include="Resources\Icon\Bot\39.png" />
-    <Resource Include="Resources\Icon\Bot\40.png" />
-    <Resource Include="Resources\Icon\Player\00a.png" />
-    <Resource Include="Resources\Icon\Player\00b.png" />
-    <Resource Include="Resources\Icon\Player\00c.png" />
-    <Resource Include="Resources\Icon\Player\00d.png" />
-    <Resource Include="Resources\Icon\Player\00e.png" />
-    <Resource Include="Resources\Icon\vNekoBorder_42_-1,3,0,0.png" />
-    <Resource Include="Resources\Icon\vNekoBorder_44_-1,0,0,0.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\01.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\02.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\03.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\04.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\05.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\06.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\07.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\08.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\09.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\10.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\11.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\12.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\13.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\14.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\15.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\16.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\17.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\18.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\19.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\20.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\21.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\22.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\23.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\24.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\25.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\26.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\27.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\28.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\29.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\30.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\31.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\32.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\33.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\34.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\35.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\36.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\37.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\38.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\39.png" />
+    <Resource Include="MVVM\Resources\Icon\Bot\40.png" />
+    <Resource Include="MVVM\Resources\Icon\Player\00a.png" />
+    <Resource Include="MVVM\Resources\Icon\Player\00b.png" />
+    <Resource Include="MVVM\Resources\Icon\Player\00c.png" />
+    <Resource Include="MVVM\Resources\Icon\Player\00d.png" />
+    <Resource Include="MVVM\Resources\Icon\Player\00e.png" />
+    <Resource Include="MVVM\Resources\Icon\vNekoBorder_42_-1,3,0,0.png" />
+    <Resource Include="MVVM\Resources\Icon\vNekoBorder_44_-1,0,0,0.png" />
   </ItemGroup>
   
   <ItemGroup>
@@ -103,5 +96,10 @@
     <PackageReference Update="Microsoft.VCRTForwarders.140" Version="1.0.7" />
   </ItemGroup>
 
-
+  <ItemGroup>
+    <Reference Include="TrarsUI.Shared">
+      <HintPath>..\libs\TrarsUI.Shared.dll</HintPath>
+    </Reference>
+    <Analyzer Include="..\vNekoChatUI\libs\TrarsUI.SourceGenerators.dll" />
+  </ItemGroup>
 </Project>
