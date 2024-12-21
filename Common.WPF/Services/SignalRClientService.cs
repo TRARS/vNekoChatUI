@@ -29,6 +29,7 @@ namespace Common.WPF.Services
         Func<string>? GetChatHistoryProxy { get; set; }
         Action<string>? SetProfileProxy { get; set; }
         Action<string>? SetInnerMonologueProxy { get; set; }
+        Action<string>? SetContinuePrompt { get; set; }
         Action<List<Ai_Content>>? SetChatHistoryProxy { get; set; }
         Action<bool>? SetBingBypassDetectionFlagProxy { get; set; }
     }
@@ -147,6 +148,8 @@ namespace Common.WPF.Services
                                     SetProfileProxy?.Invoke(inputdata.Ai_Profile);
                                     //服务端修改内心独白
                                     SetInnerMonologueProxy?.Invoke(inputdata.Ai_InnerMonologue);
+                                    //服务端修改ContinuePrompt
+                                    SetContinuePrompt?.Invoke(inputdata.Ai_ContinuePrompt);
                                     //服务端发消息可能需要过越狱检测
                                     SetBingBypassDetectionFlagProxy?.Invoke(inputdata.Bypass_Detection);
                                     //服务端可能修改了聊天记录
@@ -311,6 +314,7 @@ namespace Common.WPF.Services
         public Func<string>? GetChatHistoryProxy { get; set; }
         public Action<string>? SetProfileProxy { get; set; }
         public Action<string>? SetInnerMonologueProxy { get; set; }
+        public Action<string>? SetContinuePrompt { get; set; }
         public Action<List<Ai_Content>>? SetChatHistoryProxy { get; set; }
         public Action<bool>? SetBingBypassDetectionFlagProxy { get; set; }
 

@@ -1,11 +1,13 @@
 ﻿using Common.WPF;
 using Common.WPF.Services;
+using CommunityToolkit.Mvvm.Messaging;
 using GenerativeAI.Models;
 using GenerativeAI.Types;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using TrarsUI.Shared.Messages;
 
 namespace vNekoChatUI.Character.GeminiUtils
 {
@@ -60,8 +62,9 @@ namespace vNekoChatUI.Character.GeminiUtils
 
         internal async Task<string> WaitReplyAsync(string? systemInstruction, GenerateContentRequest request, string geminiModel, CancellationToken cancellationToken)
         {
-            var retryLimit = 1; //retryTag:
+            var retryLimit = 1;
             var result = "";
+            var totalTokenCount = -1;
             var flag = false;
 
             do
@@ -94,6 +97,8 @@ namespace vNekoChatUI.Character.GeminiUtils
                     //request.SystemInstruction = RequestExtensions.FormatSystemInstruction($"{systemInstruction}");
                     var response = await model.GenerateContentAsync(request, cancellationToken);
                     result = $"{response?.Text()?.Trim()}";
+                    totalTokenCount = response?.UsageMetadata?.TotalTokenCount ?? 0;
+                    WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Response"));
                 }
                 catch (Exception ex)
                 {
@@ -109,24 +114,32 @@ namespace vNekoChatUI.Character.GeminiUtils
                             tryGetNextKey = true;  //复位
                             _ = Task.Run(() =>
                             {
-                                System.Windows.MessageBox.Show("接下来会尝试切换到下一个ApiKey");
+                                WeakReferenceMessenger.Default.Send(new AlertMessage("尝试切换到下一个ApiKey"));
                             });
 
                             if (retryLimit-- > 0)
                             {
                                 flag = true;
-                                await Task.Delay(1000, cancellationToken); // 1秒后自动重试？
-                                //goto retryTag;          // 允许重试次数内，跳转至方法开头
+                                await Task.Delay(1000, cancellationToken); // 1秒后自动重试，最多重试 retryLimit 次
                             }
                         }
+                        else
+                        {
+                            WeakReferenceMessenger.Default.Send(new AlertMessage($"Error: {errorJsonObj.error.code}"));
+                        }
                     }
+
 
                     result = $"リクエストエラー: {ex.Message}";
                 }
             }
             while (flag);
 
-            return result;
+            return (new Gemini_Response()
+            {
+                Message = result,
+                TotalTokens = totalTokenCount
+            }).GetJsonStr();
         }
     }
 

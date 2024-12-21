@@ -116,15 +116,16 @@
                     {
                         var para = jsonObj.MethodPara;
                         if (string.IsNullOrWhiteSpace(para)) { return; }
-
+                        Debug.WriteLine(para);
                         var data = JsonServiceInstance.Deserialize<InputData>(para);
                         {
                             ChatRoomModelInstance.AiName = data?.Ai_Name ?? "";
                             ChatRoomModelInstance.AiProfile = data?.Ai_Profile ?? "";
                             ChatRoomModelInstance.ChatHistory = data?.Ai_Content ?? new();
                             ChatRoomModelInstance.AiInnerMonologue = data?.Ai_InnerMonologue ?? "";
+                            ChatRoomModelInstance.AiContinuePrompt = data?.Ai_ContinuePrompt ?? "";
                         }
-
+                        Debug.WriteLine(ChatRoomModelInstance.AiContinuePrompt);
                         TryRefreshPageNow();
 
                         await MessageServiceInstance.NotifyChatRoomUpdated();
@@ -447,6 +448,7 @@
             ai_profile = ChatRoomModelInstance.AiProfile.Trim(),
             ai_content = ChatRoomModelInstance.ChatHistory,
             ai_innermonologue = ChatRoomModelInstance.AiInnerMonologue.Trim(),
+            ai_continueprompt = ChatRoomModelInstance.AiContinuePrompt.Trim(),
             history_changed = ChatRoomModelInstance.HistoryChanged,//正好用来表达服务端修改了聊天记录
             bypass_detection = bypass switch
             {

@@ -48,6 +48,7 @@ namespace vNekoChatUI.MVVM.ViewModels
                 var childForm = childFormFactory.Create();
                 {
                     var content = m.Value;
+                    childForm.SetWindowInfo(content.WindowInfo);
                     childForm.SetClientContent(content.ViewModel);
                     childForm.SetTitleBarIcon(content.Icon);
                     childForm.Show();

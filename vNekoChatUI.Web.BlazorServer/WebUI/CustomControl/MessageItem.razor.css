@@ -284,8 +284,26 @@ div[contenteditable="plaintext-only"]:focus {
             border-radius: 10px 0px 10px 0px; /* 文本背景的圆角 */
         }
 
-
-
+    /*接续词样式*/
+    .message-item.continueprompt {
+        max-width: 100%;
+        text-align: left;
+        color: white;
+        background: linear-gradient(to right, #914887, #8b257d);
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.35);
+        float: left;
+        clear: both;
+    }
+        .message-item.continueprompt::before {
+            display: inline-block;
+            content: "[user](#continueprompt)"; /* 添加要显示的文本 */
+            /*transform: translateX(-50%);*/ /* 将文本水平居中 */
+            color: #AAAAAA;
+            /*background-color: #6D1262;*/ /* 背景颜色 */
+            background-image: linear-gradient(to right, #6D1262 65%, rgba(0, 0, 0, 0));
+            padding: 3px 48px 3px 5px; /* 文本内边距 */
+            border-radius: 10px 0px 10px 0px; /* 文本背景的圆角 */
+        }
 
 
 

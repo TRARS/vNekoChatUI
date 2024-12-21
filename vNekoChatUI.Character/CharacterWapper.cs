@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using vNekoChatUI.Character.BingUtils;
 using vNekoChatUI.Character.ChatGptUtils;
+using vNekoChatUI.Character.GeminiUtils;
 using vNekoChatUI.Character.SocketUtils;
 
 namespace vNekoChatUI.Character
@@ -267,10 +268,13 @@ namespace vNekoChatUI.Character
                                 //获取历史记录
                                 var history = _getChatHistoryCallBack.Invoke();
                                 //拿到Gemini回复
-                                var result = await _geminiClient.Entry(history, _getCancellationToken);
+                                var jsonString = await _geminiClient.Entry(history, _getCancellationToken);
 
-                                chatMessage.ReceiverMessage = result;// jsonObject.Message;
-                                chatMessage.TotalTokens = -1;// jsonObject.TotalTokens;
+                                //解析json，TotalTokens: 本次消耗, Message: 本次回复
+                                var jsonObject = JsonSerializer.Deserialize<Gemini_Response>(jsonString);
+
+                                chatMessage.ReceiverMessage = jsonObject.Message;
+                                chatMessage.TotalTokens = jsonObject.TotalTokens;
                                 _autoReplyCallBack?.Invoke(chatMessage.GetJsonString());
                             }
                             catch (Exception ex)

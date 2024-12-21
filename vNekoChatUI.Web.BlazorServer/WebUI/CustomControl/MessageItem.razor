@@ -4,11 +4,12 @@
 @inject IJSRuntime JS
 
 
-<div class="message-item @((IsInstructions, IsMonologue, IsUser) switch
+<div class="message-item @((IsInstructions, IsMonologue, IsUser, IsContinuePrompt) switch
     {
-        (true, _, _) => "instructions",
-        (_, true, _) => "monologue",
-        (_, _, true) => "right",
+        (true, _, _, _) => "instructions",
+        (_, true, _, _) => "monologue",
+        (_, _, true, _) => "right",
+        (_, _, _, true) => "continueprompt", // right
         _ => "left"
     }) @(IsHidden?"hidden":"") @(IsDarkMode?"dark":"")">
 
@@ -55,7 +56,7 @@
     }
 
     @*右上角按钮*@
-    @if (IsInstructions is false && IsMonologue is false)
+    @if (IsInstructions is false && IsMonologue is false && IsContinuePrompt is false)
     {
         @*删除*@
         <div class="button first" @onclick="HideButtonClick">
@@ -102,6 +103,9 @@
 
     [Parameter]
     public bool IsUser { get; set; } = false;
+
+    [Parameter]
+    public bool IsContinuePrompt { get; set; } = false;
 
     [Parameter]
     public string Content {

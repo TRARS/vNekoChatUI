@@ -379,7 +379,7 @@ namespace vNekoChatUI.A.MVVM.Models
                 ai_profile = this.Profile.Trim(),//string.Format(this.Profile.Trim(), this.Username, this.Usertone),
                 ai_content = message_history,
                 ai_innermonologue = this.InnerMonologue,
-                ai_continuePrompt = this.ContinuePrompt,
+                ai_continueprompt = this.ContinuePrompt,
                 history_changed = this.IsHistoryChanged,
                 bypass_detection = _flagService.TryUseBingBypassDetection[0],//本次请求是否启用过越狱检测
             };

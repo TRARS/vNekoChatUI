@@ -78,9 +78,9 @@ namespace vNekoChatUI
                            sc.AddFormFactory<IuRainbowLineVM, uRainbowLineVM>();
                            sc.AddFormFactory<IuClientVM, uClientVM>();
                            // MainWindow MainWindowVM
-                           sc.AddFormFactory<IMainWindow, IMainWindowEmpty, MVVM.Views.MainWindow>(sp =>
+                           sc.AddFormFactory<IMainWindow, IMainWindowEmpty, MainWindow>(sp =>
                            {
-                               var mainwindow = (MVVM.Views.MainWindow)(sp.GetRequiredService<IMainWindowEmpty>());
+                               var mainwindow = (MainWindow)(sp.GetRequiredService<IMainWindowEmpty>());
                                {
                                    mainwindow.DataContext = sp.GetRequiredService<IAbstractFactory<IMainWindowVM>>().Create();
                                    //mainwindow.SizeToContent = SizeToContent.WidthAndHeight;
@@ -94,7 +94,7 @@ namespace vNekoChatUI
                                }
                                return mainwindow;
                            });
-                           sc.AddFormFactory<IMainWindowVM, MVVM.ViewModels.MainWindowVM>();
+                           sc.AddFormFactory<IMainWindowVM, MainWindowVM>();
                            // ChildForm ChildFormVM
                            sc.AddFormFactory<IChildForm, IChildFormEmpty, ChildForm>(sp =>
                            {
@@ -102,8 +102,6 @@ namespace vNekoChatUI
                                {
                                    childForm.DataContext = sp.GetRequiredService<IAbstractFactory<IChildFormVM>>().Create();
                                    childForm.SizeToContent = SizeToContent.WidthAndHeight;
-                                   childForm.MinHeight = 608;
-                                   childForm.MaxHeight = 608;
                                }
                                return childForm;
                            });

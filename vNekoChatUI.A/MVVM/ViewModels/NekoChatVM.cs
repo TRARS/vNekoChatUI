@@ -319,16 +319,16 @@ namespace vNekoChatUI.A.MVVM.ViewModels
         [ObservableProperty]
         private ContactModel? _playerContact;
 
-
         //聊天对象
         [ObservableProperty]
         private ContactModel? _selectedContact;
-
 
         //输入框文本
         [ObservableProperty]
         private string _userMessage;
 
+        //提示消息
+        public TrarsUI.Shared.Collections.LimitedSizeObservableCollection<string> SystemMessages { get; set; }
 
         //调试模式Flag
         [ObservableProperty]
@@ -357,7 +357,7 @@ namespace vNekoChatUI.A.MVVM.ViewModels
         public NekoChatVM()
         {
             //
-            this.Title = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name} ({System.IO.File.GetLastWriteTime(this.GetType().Assembly.Location):yyyy-MM-dd HH:mm:ss})";
+            this.Title = $"{Application.ResourceAssembly.GetName().Name} ({System.IO.File.GetLastWriteTime(this.GetType().Assembly.Location):yyyy-MM-dd HH:mm:ss})";
 
             //载入命令
             LoadCommand();
@@ -367,6 +367,17 @@ namespace vNekoChatUI.A.MVVM.ViewModels
 
             //载入命令
             LoadBlazorCommand();
+
+
+            //系统消息
+            this.SystemMessages = new(10, 5);
+            WeakReferenceMessenger.Default.Register<AlertMessage>(this, (r, m) =>
+            {
+                Application.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    this.SystemMessages.Add(m.Value);
+                });
+            });
         }
     }
 
@@ -391,63 +402,6 @@ namespace vNekoChatUI.A.MVVM.ViewModels
             this.PlayerContacts = new();
 
 
-
-
-
-
-
-            //发送消息按钮
-            //this.SendCommand = new(async para =>
-            //{
-            //    if (para is not null) { this.UserMessage = $"{para}"; }
-
-            //    var sourceContact = PlayerContact;  //确定发件人 为Player
-            //    var targetContact = SelectedContact;//确定收件人 为当前聊天对象
-
-            //    if (sourceContact is not null && targetContact is not null)
-            //    {
-            //        if (DebugMode is not ChatMode.Debug && string.IsNullOrWhiteSpace(this.UserMessage))
-            //        {
-            //            return;//非Debug模式不允许发送空消息
-            //        }
-
-            //        {
-            //            //获取输入框文本，若为空则替换为自动发言
-            //            var user_input = string.IsNullOrWhiteSpace(this.UserMessage) switch
-            //            {
-            //                true => sourceContact.Say?.Invoke(),
-            //                false => this.UserMessage,
-            //            };
-
-            //            //清空输入框
-            //            this.UserMessage = string.Empty;
-
-            //            //模拟发消息
-            //            await sourceContact.SendTo(targetContact, $"{user_input}"); //User -> Bot
-            //        }
-            //    }
-            //});
-
-            //添加BOT按钮
-            //this.AddBotCommand = new(async para =>
-            //{
-            //    //不在这里实例化
-            //});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             //log区
             this.LogAreaCommand = new("LogArea", new bool[1] { false });
             //Bing临时过越狱检测
@@ -458,7 +412,6 @@ namespace vNekoChatUI.A.MVVM.ViewModels
             this.BingAutoSaveCommand = new("BingAutoSave", _flagService.TryUseBingAutoSave);
             //Bing禁用搜索
             this.BingNoSearchAllCommand = new("NoSearchAll", _flagService.TryUseBingNoSearchAll);
-
 
 
             //从聊天气泡文本框右键菜单重新发送
@@ -587,7 +540,7 @@ namespace vNekoChatUI.A.MVVM.ViewModels
 
         // 打开PEditor
         [RelayCommand]
-        private void OnOpenChildForm()
+        private void OnOpenPEditor()
         {
             WeakReferenceMessenger.Default.Send(new OpenChildFormMessage(new()
             {
@@ -595,12 +548,22 @@ namespace vNekoChatUI.A.MVVM.ViewModels
                 ViewModel = new PEditorVM()
                 {
                     Bot = SelectedContact ?? BotContacts[0],
+                },
+                WindowInfo = new()
+                {
+                    MinHeight = 608,
+                    MaxHeight = 608
                 }
             }));
 
-            //WeakReferenceMessenger.Default.Send(new OpenChildFormMessage(new() 
+            //WeakReferenceMessenger.Default.Send(new OpenChildFormMessage(new()
             //{
-            //    ViewModel = new AppIconVM()
+            //    ViewModel = new AppIconVM(),
+            //    WindowInfo = new()
+            //    {
+            //        MinWidth = 608,
+            //        MinHeight = 608
+            //    }
             //}));
         }
     }
@@ -726,12 +689,14 @@ namespace vNekoChatUI.A.MVVM.ViewModels
                     bot.DisplayName = "assistant";
 
                     bot.Profile = "";
+
                     bot.InnerMonologue = "gemini-1.5-pro-latest";
-                    bot.ContinuePrompt = "";
-                    //@$"
-                    //{charName}的心情指数: 1 
-                    //{charName}的快感指数: 1 
-                    //".Trim();
+                    bot.ContinuePrompt =
+@$"
+- 角色发言中，应当描述不重复的、新颖的、符合上下文的【莉莉娅的话语】
+- 角色独白中，应当描述不重复的、新颖的、符合上下文的【莉莉娅的心理】
+- 场景交互中，应当描述不重复的、新颖的、符合上下文的【莉莉娅与场景的互动】
+".Trim();
                 }
             }
 
@@ -1015,6 +980,13 @@ namespace vNekoChatUI.A.MVVM.ViewModels
                 if (SelectedContact is not null)
                 {
                     SelectedContact.InnerMonologue = $"{x}";
+                }
+            };
+            _signalRClientService.SetContinuePrompt ??= (x) =>
+            {
+                if (SelectedContact is not null)
+                {
+                    SelectedContact.ContinuePrompt = $"{x}";
                 }
             };
             _signalRClientService.SetBingBypassDetectionFlagProxy ??= (x) =>

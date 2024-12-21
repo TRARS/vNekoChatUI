@@ -60,17 +60,38 @@
         <div style="margin:10px;" />
     }
 
+    <!--接续词-->
+    <div class="div-box" style="margin-bottom:-10px;">
+        <div class="wrap">
+            <ul class="ul-none">
+                <!--ContinuePrompt-->
+                <MessageItem IsDarkMode="@ChatRoomModelInstance.IsDarkMode" 
+                              IsHidden=false
+                              IsContinuePrompt=true
+                              Content="@ChatRoomModelInstance.AiContinuePrompt"
+                              TextChanged="UpdateAiContinuePrompt"
+                              TimerKey="suxDHvsyzgwJdwrs" />
+            </ul>
+        </div>
+    </div>
+
+    <!--分界线-->
+    @if (ChatRoomModelInstance.ChatHistory.Count > 0)
+    {
+        <div style="margin:10px;" />
+    }
+
     <!--提示词收尾-->
     <div class="div-box" style="margin-bottom:-10px;">
         <div class="wrap">
             <ul class="ul-none">
                 <!--Bing内心独白-->
-                <MessageItem IsDarkMode="@ChatRoomModelInstance.IsDarkMode" 
-                              IsHidden=false
-                              IsMonologue=true
-                              Content="@ChatRoomModelInstance.AiInnerMonologue"
-                              TextChanged="UpdateAiInnerMonologue"
-                              TimerKey="y98hy9vz$s7EXjfw" />
+                <MessageItem IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
+                             IsHidden=false
+                             IsMonologue=true
+                             Content="@ChatRoomModelInstance.AiInnerMonologue"
+                             TextChanged="UpdateAiInnerMonologue"
+                             TimerKey="y98hy9vz$s7EXjfw" />
             </ul>
         </div>
     </div>
@@ -173,6 +194,10 @@
     private void UpdateAiInnerMonologue(string newText)
     {
         ChatRoomModelInstance.AiInnerMonologue = newText;
+    }
+    private void UpdateAiContinuePrompt(string newText)
+    {
+        ChatRoomModelInstance.AiContinuePrompt = newText;
     }
     private void UpdateChatHistoryItem(Ai_Content item, string newText, int index)
     {

@@ -31,7 +31,8 @@ namespace vNekoChatUI.A.MVVM.Commands
                 if (callback is not null)
                 {
                     await callback.Invoke();
-                    IsLightOn = isLightOn[0];//刷新
+                    //IsLightOn = isLightOn[0];//刷新
+                    OnPropertyChanged(nameof(IsLightOn));
                 }
                 LogProxy.Instance.Print($"{propName} = {_isLightOn[0]}");
             });

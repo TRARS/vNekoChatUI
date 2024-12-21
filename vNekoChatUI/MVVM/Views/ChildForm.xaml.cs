@@ -37,6 +37,19 @@ namespace vNekoChatUI.MVVM.Views
             // 设置Token
             token = tokenProvider.GetRecurrentTokenForChildForm();
 
+            // 设置WindowInfo
+            WeakReferenceMessenger.Default.Register<SetWindowInfoMessage, string>(this, token, (r, m) =>
+            {
+                var info = m.Value;
+                this.Width = info.Width ?? this.Width;
+                this.Height = info.Height ?? this.Height;
+                this.MinWidth = info.MinWidth ?? this.MinWidth;
+                this.MaxWidth = info.MaxWidth ?? this.MaxWidth;
+                this.MinHeight = info.MinHeight ?? this.MinHeight;
+                this.MaxHeight = info.MaxHeight ?? this.MaxHeight;
+                this.SizeToContent = info.SizeToContent ?? this.SizeToContent;
+            });
+
             // 标题
             WeakReferenceMessenger.Default.Register<WindowTitleChangedMessage, string>(this, token, (r, m) =>
             {
@@ -74,10 +87,11 @@ namespace vNekoChatUI.MVVM.Views
             });
 
             // 最小化
-            WeakReferenceMessenger.Default.Register<WindowMinimizeMessage, string>(this, token, (r, m) =>
+            WeakReferenceMessenger.Default.Register<WindowMinimizeMessage, string>(this, token, async (r, m) =>
             {
+                shadowHelper.ShadowFadeInOut(token, null);
+                await Task.Delay(64);
                 ((ChildForm)r).WindowState = WindowState.Minimized;
-                shadowHelper.ShadowFadeInOut(token, false);
             });
 
             // 最大化
@@ -132,9 +146,12 @@ namespace vNekoChatUI.MVVM.Views
                 WeakReferenceMessenger.Default.Send(new WindowStateUpdateMessage(stateInfo), token);
 
                 var flag = this.WindowState == WindowState.Normal;
-                shadowHelper.ShadowFadeInOut(token, flag);
+                if (this.WindowState != WindowState.Minimized)
+                {
+                    shadowHelper.ShadowFadeInOut(token, flag);
+                }
 
-                if (this.WindowState is WindowState.Normal)
+                if (this.WindowState == WindowState.Normal)
                 {
                     await Task.Delay(128);
                     await shadowHelper.ShadowZindex(token);
@@ -201,6 +218,11 @@ namespace vNekoChatUI.MVVM.Views
         public void SetTitleBarIcon(string icon)
         {
             WeakReferenceMessenger.Default.Send(new SetTitleBarIconMessage(icon), token);
+        }
+
+        public void SetWindowInfo(WindowInfo info)
+        {
+            WeakReferenceMessenger.Default.Send(new SetWindowInfoMessage(info), token);
         }
     }
 }

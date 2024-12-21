@@ -74,10 +74,11 @@ namespace vNekoChatUI.MVVM.Views
             });
 
             // 最小化
-            WeakReferenceMessenger.Default.Register<WindowMinimizeMessage, string>(this, token, (r, m) =>
+            WeakReferenceMessenger.Default.Register<WindowMinimizeMessage, string>(this, token, async (r, m) =>
             {
+                shadowHelper.ShadowFadeInOut(token, null);
+                await Task.Delay(64);
                 ((MainWindow)r).WindowState = WindowState.Minimized;
-                shadowHelper.ShadowFadeInOut(token, false);
             });
 
             // 最大化
@@ -89,7 +90,7 @@ namespace vNekoChatUI.MVVM.Views
             // 关闭
             WeakReferenceMessenger.Default.Register<WindowCloseMessage, string>(this, token, (r, m) =>
             {
-                canExit = false; shadowHelper.Close(token); //shadowHelper.ShadowFadeInOut(token, false);
+                canExit = false; shadowHelper.Close(token);
 
                 ((MainWindow)r).SetDoubleAnimation(OpacityProperty, Opacity, 0d, 256).ContinueWith(() =>
                 {
@@ -133,9 +134,12 @@ namespace vNekoChatUI.MVVM.Views
                 WeakReferenceMessenger.Default.Send(new WindowStateUpdateMessage(stateInfo), token);
 
                 var flag = this.WindowState == WindowState.Normal;
-                shadowHelper.ShadowFadeInOut(token, flag);
+                if (this.WindowState != WindowState.Minimized)
+                {
+                    shadowHelper.ShadowFadeInOut(token, flag);
+                }
 
-                if (this.WindowState is WindowState.Normal)
+                if (this.WindowState == WindowState.Normal)
                 {
                     await Task.Delay(128);
                     await shadowHelper.ShadowZindex(token);

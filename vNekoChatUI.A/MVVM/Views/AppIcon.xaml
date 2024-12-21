@@ -16,7 +16,7 @@
     
     <Grid>
         <StackPanel Orientation="Vertical">
-            <buttonatypeex:cButtonAtype Content="Save" HorizontalAlignment="Center" Margin="2">
+            <buttonatypeex:cButtonAtype Content="Save" HorizontalAlignment="Center" MinWidth="60" Margin="2">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <i:InvokeCommandAction Command="{Binding SaveIconCommand}"

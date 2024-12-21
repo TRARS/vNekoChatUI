@@ -23,6 +23,10 @@
         <v:NekoChat/>
     </DataTemplate>
     
+    <DataTemplate DataType="{x:Type vm:PCreatorVM}">
+        <v:PCreator/>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type vm:PEditorVM}">
         <v:PEditor/>
     </DataTemplate>

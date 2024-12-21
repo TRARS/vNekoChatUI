@@ -20,7 +20,7 @@ namespace Common.WebWpfCommon
         [JsonPropertyName("ai_innermonologue")]
         public string Ai_InnerMonologue { get; set; } = string.Empty;
 
-        [JsonPropertyName("ai_continuePrompt")]
+        [JsonPropertyName("ai_continueprompt")]
         public string Ai_ContinuePrompt { get; set; } = string.Empty;
 
         [JsonPropertyName("history_changed")]

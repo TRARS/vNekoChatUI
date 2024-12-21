@@ -9,6 +9,7 @@ namespace vNekoChatUI.Web.BlazorServer.WebUI.MainViewModel
         string AiProfile { get; set; }
         string AiInnerMonologue { get; set; }
         List<Ai_Content> ChatHistory { get; set; }
+        string AiContinuePrompt { get; set; }
 
         //发送用
         bool NeedRefreshPage { get; set; }
@@ -35,6 +36,7 @@ namespace vNekoChatUI.Web.BlazorServer.WebUI.MainViewModel
         public string AiProfile { get; set; } = "";
         public string AiInnerMonologue { get; set; } = "";
         public List<Ai_Content> ChatHistory { get; set; } = new();
+        public string AiContinuePrompt { get; set; } = "";
 
         //
         public bool NeedRefreshPage { get; set; } = false;
