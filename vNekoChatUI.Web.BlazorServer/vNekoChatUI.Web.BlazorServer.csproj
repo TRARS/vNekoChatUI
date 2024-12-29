@@ -43,7 +43,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
-    <PackageReference Include="PuppeteerSharp" Version="10.1.2" />
+    <PackageReference Include="PuppeteerSharp" Version="20.0.5" />
   </ItemGroup>
 
   <ItemGroup>

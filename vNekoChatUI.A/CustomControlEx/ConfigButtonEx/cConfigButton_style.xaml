@@ -2,11 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:vNekoChatUI.A.CustomControlEx.ConfigButtonEx" 
                     xmlns:contextmenuex="clr-namespace:vNekoChatUI.A.CustomControlEx.ContextMenuEx" 
-                    xmlns:textboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.TextBoxEx" 
                     xmlns:emptybuttonex="clr-namespace:vNekoChatUI.A.CustomControlEx.EmptyButtonEx"
                     xmlns:gridex="clr-namespace:vNekoChatUI.A.CustomControlEx.GridEx" 
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
-                    xmlns:togglebuttonex="clr-namespace:vNekoChatUI.A.CustomControlEx.ToggleButtonEx">
+                    xmlns:togglebuttonex="clr-namespace:vNekoChatUI.A.CustomControlEx.ToggleButtonEx"
+                    xmlns:promptboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.PromptBoxEx" xmlns:textboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.TextBoxEx">
 
     <local:cConfigButton_converter_border_clip x:Key="cConfigButton_converter_border_clip"/>
     <local:cConfigButton_converter_border_mask_margin x:Key="cConfigButton_converter_border_mask_margin"/>
@@ -20,6 +20,8 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="32"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         
@@ -30,23 +32,48 @@
                                    Margin="2,0,3,0"/>-->
 
                         <togglebuttonex:cToggleButton IsChecked="{Binding IsChecked, Mode=TwoWay}"
-                                                      VerticalAlignment="Center"/>
+                                                      VerticalAlignment="Center"
+                                                      GuideLineVisibility="Collapsed"/>
 
-                        <textboxex:cTextBox x:Name="textbox"
-                                            Grid.Column="1"
-                                            MinWidth="60" MinHeight="22"
-                                            MaxWidth="180"
-                                            HorizontalAlignment="Stretch"
-                                            Text="{Binding Value, Mode=TwoWay}"
-                                            Placeholder ="enter your key here"
-                                            PlaceholderColor ="#8E8EA0"
-                                            PlaceholderOnOff="True"
-                                            BorderBackground="#404143"
-                                            TextWrapping="NoWrap"
-                                            AcceptsReturn="False"
-                                            BorderThickness="0"
-                                            CaretBrush="OrangeRed" />
+                        <Border Grid.Column="1" 
+                                VerticalAlignment="Center"
+                                CornerRadius="2.5"
+                                BorderBrush="Gray"
+                                BorderThickness="1"
+                                Background="Black"
+                                Padding="2,0"
+                                Margin="0,0,3,0">
+                            <TextBlock Text="{Binding Tag, Mode=OneWay}" Foreground="White" VerticalAlignment="Center"/>
+                        </Border>
+                        
+                        <Border Grid.Column="2"
+                                VerticalAlignment="Center"
+                                CornerRadius="2.5"
+                                BorderBrush="Gray"
+                                BorderThickness="1"
+                                Background="Black"
+                                Padding="2,0"
+                                Margin="0,0,3,0">
+                            <TextBlock Text="{Binding Num, Mode=OneWay}" Foreground="White" VerticalAlignment="Center"/>
+                        </Border>
+                        
+                        <Border Grid.Column="3"
+                                Padding="0,0"
+                                HorizontalAlignment="Stretch">
+                            <textboxex:cTextBox x:Name="textbox"
+                                                    MinWidth="60" MinHeight="22"
+                                                    MaxWidth="180"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding Value, Mode=TwoWay}"
 
+                                                    BorderBackground="#404143"
+                                                    TextWrapping="NoWrap"
+                                                    AcceptsReturn="False"
+                                                    BorderThickness="0"
+                                                    CaretBrush="OrangeRed" 
+                                                    />
+                        </Border>
                         <!--<TextBlock Grid.Column="1"
                                    IsHitTestVisible="False"
                                    Text="enter your key here"
@@ -130,7 +157,7 @@
                                             <!--ChatGptApiKeys-->
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto" MinWidth="110"/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
                                                 <Grid.RowDefinitions>
@@ -169,7 +196,7 @@
                                             <!--BingGptApiKeys-->
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto" MinWidth="110"/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
                                                 <Grid.RowDefinitions>
@@ -208,7 +235,7 @@
                                             <!--GeminiApiKeys-->
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="auto"/>
+                                                    <ColumnDefinition Width="auto" MinWidth="110"/>
                                                     <ColumnDefinition/>
                                                 </Grid.ColumnDefinitions>
                                                 <Grid.RowDefinitions>

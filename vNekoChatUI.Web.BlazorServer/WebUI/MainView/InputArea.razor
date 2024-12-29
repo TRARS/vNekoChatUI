@@ -22,15 +22,15 @@
         <!--进度条+输入框-->
         <div class="div-inputbox">
             <ProgressBar IsDarkMode="@IsDarkMode"  
-                          CurrentProgress="@currentStep" />
+            CurrentProgress="@currentStep" />
             <InputBox IsDarkMode="@IsDarkMode"
-                       Text="@messageInput" 
-                       TextChanged="UpdateMessageInput" 
-                       OnKeyDown="HandleKeyDown" 
-                       OnKeyUp="HandleKeyUp" />
+            Text="@messageInput" 
+            TextChanged="UpdateMessageInput" 
+            OnKeyDown="HandleKeyDown" 
+            OnKeyUp="HandleKeyUp" />
         </div>
-       
-      
+
+
         <!--按钮-->
         <div class="div-btnbox">
             <!--清除客户端历史记录按钮.窄屏时显示-->
@@ -40,25 +40,25 @@
 
             @*Text="Send(Normal)"*@
             <SquareButton OnClick="async () => { await SendToClient(SendToClientOption.Normal); }" 
-                          ExColor="red"
-                          PathData="M478.4128 491.7248l-202.1376-30.1056a81.92 81.92 0 0 1-64.67584-52.38784L125.52192 178.4832c-7.8848-21.17632 2.49856-44.8512 23.22432-52.92032a39.38304 39.38304 0 0 1 31.90784 1.47456L878.592 475.15648c19.90656 9.9328 28.18048 34.48832 18.432 54.82496-3.8912 8.21248-10.40384 14.848-18.432 18.8416L180.6336 896.96256a39.77216 39.77216 0 0 1-53.6576-18.8416 41.7792 41.7792 0 0 1-1.45408-32.58368l86.07744-230.74816a81.92 81.92 0 0 1 64.67584-52.38784l202.1376-30.1056a20.48 20.48 0 0 0 0-40.5504z"
-                          ToolTip="Send" />
+            ExColor="red"
+            PathData="M478.4128 491.7248l-202.1376-30.1056a81.92 81.92 0 0 1-64.67584-52.38784L125.52192 178.4832c-7.8848-21.17632 2.49856-44.8512 23.22432-52.92032a39.38304 39.38304 0 0 1 31.90784 1.47456L878.592 475.15648c19.90656 9.9328 28.18048 34.48832 18.432 54.82496-3.8912 8.21248-10.40384 14.848-18.432 18.8416L180.6336 896.96256a39.77216 39.77216 0 0 1-53.6576-18.8416 41.7792 41.7792 0 0 1-1.45408-32.58368l86.07744-230.74816a81.92 81.92 0 0 1 64.67584-52.38784l202.1376-30.1056a20.48 20.48 0 0 0 0-40.5504z"
+            ToolTip="Send" />
             @*Text="Send(BingBypassDetection)"*@
             <SquareButton OnClick="async () => { await SendToClient(SendToClientOption.BingBypassDetection); }"  
-                          ExColor="green"
-                          PathData="M478.4128 491.7248l-202.1376-30.1056a81.92 81.92 0 0 1-64.67584-52.38784L125.52192 178.4832c-7.8848-21.17632 2.49856-44.8512 23.22432-52.92032a39.38304 39.38304 0 0 1 31.90784 1.47456L878.592 475.15648c19.90656 9.9328 28.18048 34.48832 18.432 54.82496-3.8912 8.21248-10.40384 14.848-18.432 18.8416L180.6336 896.96256a39.77216 39.77216 0 0 1-53.6576-18.8416 41.7792 41.7792 0 0 1-1.45408-32.58368l86.07744-230.74816a81.92 81.92 0 0 1 64.67584-52.38784l202.1376-30.1056a20.48 20.48 0 0 0 0-40.5504z"
-                          ToolTip="Send_BingBypassDetection" />
+            ExColor="green"
+            PathData="M478.4128 491.7248l-202.1376-30.1056a81.92 81.92 0 0 1-64.67584-52.38784L125.52192 178.4832c-7.8848-21.17632 2.49856-44.8512 23.22432-52.92032a39.38304 39.38304 0 0 1 31.90784 1.47456L878.592 475.15648c19.90656 9.9328 28.18048 34.48832 18.432 54.82496-3.8912 8.21248-10.40384 14.848-18.432 18.8416L180.6336 896.96256a39.77216 39.77216 0 0 1-53.6576-18.8416 41.7792 41.7792 0 0 1-1.45408-32.58368l86.07744-230.74816a81.92 81.92 0 0 1 64.67584-52.38784l202.1376-30.1056a20.48 20.48 0 0 0 0-40.5504z"
+            ToolTip="Send_BingBypassDetection" />
             @*Text="Stop"*@
             <SquareButton OnClick="SendStopToClient"  
-                          ExColor="purple"
-                          PathData="M57.164721 515.766482c0-252.834765 205.705996-458.591761 458.591761-458.591761s458.590761 205.756995 458.59076 458.591761-205.705996 458.540761-458.59076 458.540761S57.164721 768.601247 57.164721 515.766482z m85.454583 0c0 205.756995 167.328183 373.137178 373.136178 373.137178 205.756995 0 373.187178-167.379183 373.187177-373.137178S721.513477 142.574304 515.756482 142.574304c-205.808995 0-373.137178 167.435182-373.137178 373.192178z m419.597951 141.078311l-0.199999-4.24698V400.991042a42.629792 42.629792 0 0 1 42.420793-42.98379h0.357998a42.417793 42.417793 0 0 1 42.365793 38.582812l0.199999 4.144979 0.051 251.708771a42.715791 42.715791 0 0 1-85.199584 4.399979z m-181.860112 0l-0.199999-4.19998-0.1-251.657771a42.630792 42.630792 0 0 1 42.420793-42.98379h0.357998a42.466793 42.466793 0 0 1 42.420793 38.582812l0.199999 4.144979v251.708771a42.661792 42.661792 0 0 1-85.099584 4.399979z"
-                          ToolTip="Stop" />
+            ExColor="purple"
+            PathData="M57.164721 515.766482c0-252.834765 205.705996-458.591761 458.591761-458.591761s458.590761 205.756995 458.59076 458.591761-205.705996 458.540761-458.59076 458.540761S57.164721 768.601247 57.164721 515.766482z m85.454583 0c0 205.756995 167.328183 373.137178 373.136178 373.137178 205.756995 0 373.187178-167.379183 373.187177-373.137178S721.513477 142.574304 515.756482 142.574304c-205.808995 0-373.137178 167.435182-373.137178 373.192178z m419.597951 141.078311l-0.199999-4.24698V400.991042a42.629792 42.629792 0 0 1 42.420793-42.98379h0.357998a42.417793 42.417793 0 0 1 42.365793 38.582812l0.199999 4.144979 0.051 251.708771a42.715791 42.715791 0 0 1-85.199584 4.399979z m-181.860112 0l-0.199999-4.19998-0.1-251.657771a42.630792 42.630792 0 0 1 42.420793-42.98379h0.357998a42.466793 42.466793 0 0 1 42.420793 38.582812l0.199999 4.144979v251.708771a42.661792 42.661792 0 0 1-85.099584 4.399979z"
+            ToolTip="Stop" />
             @*Text="GetChatHistory" *@
             <SquareButton OnClick="GetChatHistory"
-                          ExColor="cyan"
-                          PathData="M768 74.666667c40.533333 0 72.533333 32 74.666667 70.4v294.4c-40.533333-21.333333-89.6-34.133333-138.666667-34.133334-164.266667 0-298.666667 134.4-298.666667 298.666667 0 102.4 51.2 192 128 245.333333H192c-40.533333 0-72.533333-32-74.666667-70.4V149.333333c0-40.533333 32-72.533333 70.4-74.666666H768z m-405.333333 362.666666h-108.8c-17.066667 2.133333-29.866667 14.933333-29.866667 32s12.8 29.866667 29.866667 32H364.8c17.066667-2.133333 29.866667-14.933333 29.866667-32s-14.933333-32-32-32z m320-170.666666H253.866667c-17.066667 2.133333-29.866667 14.933333-29.866667 32s12.8 29.866667 29.866667 32H684.8c17.066667-2.133333 29.866667-14.933333 29.866667-32s-14.933333-32-32-32z
+            ExColor="cyan"
+            PathData="M768 74.666667c40.533333 0 72.533333 32 74.666667 70.4v294.4c-40.533333-21.333333-89.6-34.133333-138.666667-34.133334-164.266667 0-298.666667 134.4-298.666667 298.666667 0 102.4 51.2 192 128 245.333333H192c-40.533333 0-72.533333-32-74.666667-70.4V149.333333c0-40.533333 32-72.533333 70.4-74.666666H768z m-405.333333 362.666666h-108.8c-17.066667 2.133333-29.866667 14.933333-29.866667 32s12.8 29.866667 29.866667 32H364.8c17.066667-2.133333 29.866667-14.933333 29.866667-32s-14.933333-32-32-32z m320-170.666666H253.866667c-17.066667 2.133333-29.866667 14.933333-29.866667 32s12.8 29.866667 29.866667 32H684.8c17.066667-2.133333 29.866667-14.933333 29.866667-32s-14.933333-32-32-32z
                                      M714.666667 469.333333C851.2 469.333333 960 578.133333 960 714.666667S851.2 960 714.666667 960 469.333333 851.2 469.333333 714.666667 578.133333 469.333333 714.666667 469.333333z m0 106.666667c-17.066667 0-32 14.933333-32 32v113.066667c2.133333 10.666667 8.533333 21.333333 19.2 25.6l85.333333 38.4 2.133333 2.133333c14.933333 4.266667 32-2.133333 38.4-17.066667l2.133334-2.133333c4.266667-14.933333-2.133333-32-17.066667-38.4L746.666667 699.733333V605.866667c-2.133333-17.066667-14.933333-29.866667-32-29.866667z"
-                          ToolTip="GetChatHistory" />
+            ToolTip="GetChatHistory" />
         </div>
     </div>
 </div>
@@ -116,7 +116,7 @@
                     {
                         var para = jsonObj.MethodPara;
                         if (string.IsNullOrWhiteSpace(para)) { return; }
-                        Debug.WriteLine(para);
+                        //Debug.WriteLine(para);
                         var data = JsonServiceInstance.Deserialize<InputData>(para);
                         {
                             ChatRoomModelInstance.AiName = data?.Ai_Name ?? "";
@@ -125,7 +125,7 @@
                             ChatRoomModelInstance.AiInnerMonologue = data?.Ai_InnerMonologue ?? "";
                             ChatRoomModelInstance.AiContinuePrompt = data?.Ai_ContinuePrompt ?? "";
                         }
-                        Debug.WriteLine(ChatRoomModelInstance.AiContinuePrompt);
+                        //Debug.WriteLine(ChatRoomModelInstance.AiContinuePrompt);
                         TryRefreshPageNow();
 
                         await MessageServiceInstance.NotifyChatRoomUpdated();
@@ -302,7 +302,7 @@
     {
         try
         {
-            using (var browserFetcher = new BrowserFetcher())
+            var browserFetcher = new BrowserFetcher();
             {
                 Debug.WriteLine($"Screenshot start");
 
@@ -310,7 +310,7 @@
                 //10.1.2 使用BrowserFetcher.DefaultChromiumRevision参数，可正常截图
                 //13.0.2 使用BrowserTag.Latest参数，截图混乱
                 //故退回10.1.2
-                await browserFetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+                await browserFetcher.DownloadAsync(BrowserTag.Latest);
                 var browser = await Puppeteer.LaunchAsync(new LaunchOptions
                     {
                         Headless = true,
@@ -345,6 +345,7 @@
                         screenshotOptions.FullPage = true; //是否截取整个页面
                         screenshotOptions.OmitBackground = true;//是否使用透明背景，而不是默认白色背景
                         screenshotOptions.Type = ScreenshotType.Png; //截图格式
+                        screenshotOptions.CaptureBeyondViewport = false;
 
                         switch (platformOpt)
                         {
@@ -357,7 +358,7 @@
                                 {
                                     var base64data = await page.ScreenshotBase64Async(screenshotOptions);
                                     await JS.InvokeVoidAsync("downloadbase64img", "_screenshot_base64data.png", $"data:image/png;base64,{base64data}");
-                                 
+
                                     break;
                                 }
                         }
@@ -414,6 +415,7 @@
     private async Task ClearClient()
     {
         if (hubConnection is null) { return; }
+        if (!(await JS.InvokeAsync<bool>("confirm", "Clear Chat History？"))) { return; }
         ChatRoomModelInstance.ChatHistory.Clear();
 
         await ExecuteClientCommandWithName("ServerClearChatHistory");
@@ -506,8 +508,15 @@
         };
         var jsonStr = GetMethodContentJsonStr(method_content);
         var data = TextCompressor.Instance.CompressText(jsonStr);//压缩一下
-
-        await hubConnection.SendAsync("ExecuteClientCommandWithName", data);
+        try
+        {
+            await hubConnection.SendAsync("ExecuteClientCommandWithName", data);
+        }
+        catch(Exception ex)
+        {
+            Debug.WriteLine($"ExecuteClientCommandWithName({method_name}): {ex.Message}");
+        }
+       
         //Debug.WriteLine($"{method_name} ok");
     }
 }

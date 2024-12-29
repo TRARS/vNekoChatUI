@@ -28,6 +28,10 @@ namespace vNekoChatUI.Web.BlazorServer
                 opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                     new[] { "application/octet-stream" });
             });//бя
+            builder.Services.AddSignalR(options =>
+            {
+                options.MaximumReceiveMessageSize = 10 * 1024 * 1024;// ╔ш╓├╬к 10 MB
+            });//бя
 
             var app = builder.Build();
 

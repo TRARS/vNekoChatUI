@@ -1,14 +1,21 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using TrarsUI.Shared.Interfaces;
 using TrarsUI.Shared.Interfaces.UIComponents;
 using TrarsUI.Shared.Messages;
 
 namespace vNekoChatUI.MVVM.ViewModels
 {
-    partial class MainWindowVM : IMainWindowVM
+    partial class MainWindowVM : ObservableObject, IMainWindowVM
     {
         public ObservableCollection<IToken> SubViewModelList { get; init; }
+        public ObservableCollection<string> DialogMessageList { get; init; }
+
+        [ObservableProperty]
+        private TaskCompletionSource<bool> taskCompletionSource;
 
         public MainWindowVM(IMessageBoxService messageBox,
                             ITokenProviderService tokenProvider,
@@ -26,6 +33,7 @@ namespace vNekoChatUI.MVVM.ViewModels
 
             titleBar.Token = rainbowLine.Token = client.Token = token;
 
+            this.DialogMessageList = new();
             this.SubViewModelList = new()
             {
                 titleBar,
@@ -53,6 +61,18 @@ namespace vNekoChatUI.MVVM.ViewModels
                     childForm.SetTitleBarIcon(content.Icon);
                     childForm.Show();
                 }
+            });
+
+            // 本地弹框
+            WeakReferenceMessenger.Default.Register<DialogYesNoMessage, string>(this, token, (r, m) =>
+            {
+                m.Reply(((Func<Task<bool>>)(() =>
+                {
+                    m.Callback?.Invoke(this.DialogMessageList.Clear);
+                    this.DialogMessageList.Add(m.Message);
+                    TaskCompletionSource = new TaskCompletionSource<bool>();
+                    return TaskCompletionSource.Task;
+                }))());
             });
         }
     }

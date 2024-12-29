@@ -4,7 +4,8 @@
                     xmlns:scrollviewerex="clr-namespace:vNekoChatUI.A.CustomControlEx.ListViewChatHistoryEx"
                     xmlns:gridex="clr-namespace:vNekoChatUI.A.CustomControlEx.GridEx"
                     xmlns:contextmenuex="clr-namespace:vNekoChatUI.A.CustomControlEx.ContextMenuEx" 
-                    xmlns:textboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.TextBoxEx">
+                    xmlns:textboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.TextBoxEx" 
+                    xmlns:promptboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.PromptBoxEx">
 
     <local:cListViewContacts_converter_borderbrush x:Key="cListViewContacts_converter_borderbrush"/>
     <local:cListViewContacts_converter_imagesource x:Key="cListViewContacts_converter_imagesource"/>
@@ -163,7 +164,7 @@
                             <contextmenuex:cContextMenu>
                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <!--调整显示名-->
-                                    <textboxex:cTextBox MinWidth="60" MinHeight="22"
+                                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22"
                                                             MaxWidth="320"
                                                             HorizontalAlignment="Left"
                                                             VerticalScrollBarVisibility="Disabled"
@@ -176,7 +177,7 @@
                                                             BorderContentHeader="DisplayName"
                                                             BorderContentHeaderColor="#FFD400"/>
                                     <!--调整颜色-->
-                                    <textboxex:cTextBox MinWidth="60" MinHeight="22"
+                                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22"
                                                             MaxWidth="320"
                                                             HorizontalAlignment="Left"
                                                             VerticalScrollBarVisibility="Disabled"
@@ -189,7 +190,7 @@
                                                             BorderContentHeader="DisplayBackgroundColor"
                                                             BorderContentHeaderColor="#FFD400"/>
                                     <!--调整头像？-->
-                                    <textboxex:cTextBox MinWidth="60" MinHeight="22"
+                                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22"
                                                             MaxWidth="320"
                                                             HorizontalAlignment="Left"
                                                             VerticalScrollBarVisibility="Disabled"
@@ -202,7 +203,7 @@
                                                             BorderContentHeader="DisplayAvatar"
                                                             BorderContentHeaderColor="#00FFDE"/>
                                     <!--人设输入框-->
-                                    <textboxex:cTextBox MinWidth="60" MinHeight="22"
+                                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22"
                                                             MaxWidth="320" 
                                                             BorderContentMaxHeight="480"
                                                             VerticalScrollBarVisibility="Auto"
@@ -214,9 +215,9 @@
                                                             BorderBackground="#202123"
                                                             BorderContentHeader="System Instruction"
                                                             BorderContentHeaderColor="#98FF00">
-                                    </textboxex:cTextBox>
+                                    </promptboxex:cPromptBox>
                                     <!--调整内心独白-->
-                                    <textboxex:cTextBox MinWidth="60" MinHeight="22"
+                                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22"
                                                             MaxWidth="320" 
                                                             BorderContentMaxHeight="240"
                                                             VerticalScrollBarVisibility="Auto"
@@ -228,9 +229,9 @@
                                                             BorderBackground="#202123"
                                                             BorderContentHeader="Gemini Model"
                                                             BorderContentHeaderColor="#98FF00">
-                                    </textboxex:cTextBox>
+                                    </promptboxex:cPromptBox>
                                     <!--调整索求后续时的提示词-->
-                                    <textboxex:cTextBox MinWidth="60" MinHeight="22"
+                                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22"
                                                             MaxWidth="320" 
                                                             BorderContentMaxHeight="240"
                                                             VerticalScrollBarVisibility="Auto"
@@ -242,7 +243,7 @@
                                                             BorderBackground="#202123"
                                                             BorderContentHeader="ContinuePrompt"
                                                             BorderContentHeaderColor="#FF0021">
-                                    </textboxex:cTextBox>
+                                    </promptboxex:cPromptBox>
                                     
                                     <StackPanel.Effect>
                                         <DropShadowEffect ShadowDepth="0" BlurRadius="2" RenderingBias="Performance" Color="OrangeRed" />
@@ -539,7 +540,7 @@
                             <contextmenuex:cContextMenu>
                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <!--调整显示名-->
-                                    <textboxex:cTextBox MinWidth="60" MinHeight="22"
+                                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22"
                                                             MaxWidth="320"
                                                             HorizontalAlignment="Left"
                                                             VerticalScrollBarVisibility="Disabled"
@@ -552,7 +553,7 @@
                                                             BorderContentHeader="DisplayName"
                                                             BorderContentHeaderColor="#FFD400"/>
                                     <!--调整颜色-->
-                                    <textboxex:cTextBox MinWidth="60" MinHeight="22"
+                                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22"
                                                             MaxWidth="320"
                                                             HorizontalAlignment="Left"
                                                             VerticalScrollBarVisibility="Disabled"
@@ -565,7 +566,7 @@
                                                             BorderContentHeader="DisplayBackgroundColor"
                                                             BorderContentHeaderColor="#FFD400"/>
                                     <!--调整头像？-->
-                                    <textboxex:cTextBox MinWidth="60" MinHeight="22"
+                                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22"
                                                             MaxWidth="320"
                                                             HorizontalAlignment="Left"
                                                             VerticalScrollBarVisibility="Disabled"
@@ -578,7 +579,7 @@
                                                             BorderContentHeader="DisplayAvatar"
                                                             BorderContentHeaderColor="#00FFDE"/>
                                     <!--调整签名？-->
-                                    <textboxex:cTextBox MinWidth="60" MinHeight="22"
+                                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22"
                                                             MaxWidth="320"
                                                             HorizontalAlignment="Left"
                                                             VerticalScrollBarVisibility="Disabled"

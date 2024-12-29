@@ -12,6 +12,7 @@
         <ResourceDictionary Source="/vNekoChatUI.A;component/CustomControlEx/ListViewChatHistoryEx/cListViewChatHistory_style.xaml"/>
         <ResourceDictionary Source="/vNekoChatUI.A;component/CustomControlEx/ListViewChatHistoryEx/cScrollViewer_style.xaml"/>
         <ResourceDictionary Source="/vNekoChatUI.A;component/CustomControlEx/ListViewContactsEx/cListViewContacts_style.xaml"/>
+        <ResourceDictionary Source="/vNekoChatUI.A;component/CustomControlEx/PromptBoxEx/cPromptBox_style.xaml"/>
         <ResourceDictionary Source="/vNekoChatUI.A;component/CustomControlEx/RadioButtonEx/cRadioButton_style.xaml"/>
         <ResourceDictionary Source="/vNekoChatUI.A;component/CustomControlEx/StepProgressIndicatorEx/cStepProgressIndicator_style.xaml"/>
         <ResourceDictionary Source="/vNekoChatUI.A;component/CustomControlEx/SuggestionMenuItemEx/cSuggestionMenuItem_style.xaml"/>
@@ -29,9 +30,5 @@
 
     <DataTemplate DataType="{x:Type vm:PEditorVM}">
         <v:PEditor/>
-    </DataTemplate>
-    
-    <DataTemplate DataType="{x:Type vm:AppIconVM}">
-        <v:AppIcon/>
     </DataTemplate>
 </ResourceDictionary>

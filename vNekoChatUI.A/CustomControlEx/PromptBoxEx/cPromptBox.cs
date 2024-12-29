@@ -1,18 +1,53 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace vNekoChatUI.A.CustomControlEx.TextBoxEx
+namespace vNekoChatUI.A.CustomControlEx.PromptBoxEx
 {
-    public partial class cTextBox : TextBox
+    public partial class cPromptBox : TextBox
     {
-        static cTextBox()
+        static cPromptBox()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(cTextBox), new FrameworkPropertyMetadata(typeof(cTextBox)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(cPromptBox), new FrameworkPropertyMetadata(typeof(cPromptBox)));
         }
     }
 
-    public partial class cTextBox
+    public partial class cPromptBox
     {
+        public string Placeholder
+        {
+            get { return (string)GetValue(PlaceholderProperty); }
+            set { SetValue(PlaceholderProperty, value); }
+        }
+        public static readonly DependencyProperty PlaceholderProperty = DependencyProperty.Register(
+            name: "Placeholder",
+            propertyType: typeof(string),
+            ownerType: typeof(cPromptBox),
+            typeMetadata: new FrameworkPropertyMetadata("empty", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+        );
+        public string PlaceholderColor
+        {
+            get { return (string)GetValue(PlaceholderColorProperty); }
+            set { SetValue(PlaceholderColorProperty, value); }
+        }
+        public static readonly DependencyProperty PlaceholderColorProperty = DependencyProperty.Register(
+            name: "PlaceholderColor",
+            propertyType: typeof(string),
+            ownerType: typeof(cPromptBox),
+            typeMetadata: new FrameworkPropertyMetadata("#FF000000", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+        );
+        public bool PlaceholderOnOff
+        {
+            get { return (bool)GetValue(PlaceholderOnOffProperty); }
+            set { SetValue(PlaceholderOnOffProperty, value); }
+        }
+        public static readonly DependencyProperty PlaceholderOnOffProperty = DependencyProperty.Register(
+            name: "PlaceholderOnOff",
+            propertyType: typeof(bool),
+            ownerType: typeof(cPromptBox),
+            typeMetadata: new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+        );
+
+
         public string BorderBackground
         {
             get { return (string)GetValue(BorderBackgroundProperty); }
@@ -21,7 +56,7 @@ namespace vNekoChatUI.A.CustomControlEx.TextBoxEx
         public static readonly DependencyProperty BorderBackgroundProperty = DependencyProperty.Register(
             name: "BorderBackground",
             propertyType: typeof(string),
-            ownerType: typeof(cTextBox),
+            ownerType: typeof(cPromptBox),
             typeMetadata: new FrameworkPropertyMetadata("#00000000", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
 
@@ -33,7 +68,7 @@ namespace vNekoChatUI.A.CustomControlEx.TextBoxEx
         public static readonly DependencyProperty BorderCornerRadiusProperty = DependencyProperty.Register(
             name: "BorderCornerRadius",
             propertyType: typeof(CornerRadius),
-            ownerType: typeof(cTextBox),
+            ownerType: typeof(cPromptBox),
             typeMetadata: new FrameworkPropertyMetadata(new CornerRadius(2.5), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
 
@@ -45,7 +80,7 @@ namespace vNekoChatUI.A.CustomControlEx.TextBoxEx
         public static readonly DependencyProperty BorderContentMarginProperty = DependencyProperty.Register(
             name: "BorderContentMargin",
             propertyType: typeof(Thickness),
-            ownerType: typeof(cTextBox),
+            ownerType: typeof(cPromptBox),
             typeMetadata: new FrameworkPropertyMetadata(new Thickness(4), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
 
@@ -57,7 +92,7 @@ namespace vNekoChatUI.A.CustomControlEx.TextBoxEx
         public static readonly DependencyProperty BorderContentHeaderProperty = DependencyProperty.Register(
             name: "BorderContentHeader",
             propertyType: typeof(string),
-            ownerType: typeof(cTextBox),
+            ownerType: typeof(cPromptBox),
             typeMetadata: new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
         public string BorderContentHeaderColor
@@ -68,7 +103,7 @@ namespace vNekoChatUI.A.CustomControlEx.TextBoxEx
         public static readonly DependencyProperty BorderContentHeaderColorProperty = DependencyProperty.Register(
             name: "BorderContentHeaderColor",
             propertyType: typeof(string),
-            ownerType: typeof(cTextBox),
+            ownerType: typeof(cPromptBox),
             typeMetadata: new FrameworkPropertyMetadata("#FF000000", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
         public double BorderContentMaxHeight
@@ -79,7 +114,7 @@ namespace vNekoChatUI.A.CustomControlEx.TextBoxEx
         public static readonly DependencyProperty BorderContentMaxHeightProperty = DependencyProperty.Register(
             name: "BorderContentMaxHeight",
             propertyType: typeof(double),
-            ownerType: typeof(cTextBox),
+            ownerType: typeof(cPromptBox),
             typeMetadata: new FrameworkPropertyMetadata(double.MaxValue, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
         public double BorderContentMinHeight
@@ -90,7 +125,7 @@ namespace vNekoChatUI.A.CustomControlEx.TextBoxEx
         public static readonly DependencyProperty BorderContentMinHeightProperty = DependencyProperty.Register(
             name: "BorderContentMinHeight",
             propertyType: typeof(double),
-            ownerType: typeof(cTextBox),
+            ownerType: typeof(cPromptBox),
             typeMetadata: new FrameworkPropertyMetadata(5d, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
         /// <summary>
@@ -104,10 +139,10 @@ namespace vNekoChatUI.A.CustomControlEx.TextBoxEx
         public static readonly DependencyProperty IsHitTestVisibleCallBackProperty = DependencyProperty.Register(
             name: "IsHitTestVisibleCallBack",
             propertyType: typeof(bool),
-            ownerType: typeof(cTextBox),
+            ownerType: typeof(cPromptBox),
             typeMetadata: new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (d, e) =>
             {
-                var control = (cTextBox)d;
+                var control = (cPromptBox)d;
                 var newValue = e.NewValue as bool?;
                 if (newValue is true)
                 {
@@ -128,7 +163,7 @@ namespace vNekoChatUI.A.CustomControlEx.TextBoxEx
         public static readonly DependencyProperty ItemModelProperty = DependencyProperty.Register(
             name: "ItemModel",
             propertyType: typeof(object),
-            ownerType: typeof(cTextBox),
+            ownerType: typeof(cPromptBox),
             typeMetadata: new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
 
@@ -143,8 +178,84 @@ namespace vNekoChatUI.A.CustomControlEx.TextBoxEx
         public static readonly DependencyProperty ParentModelProperty = DependencyProperty.Register(
             name: "ParentModel",
             propertyType: typeof(object),
-            ownerType: typeof(cTextBox),
+            ownerType: typeof(cPromptBox),
             typeMetadata: new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
+        );
+    }
+
+    public partial class cPromptBox
+    {
+        public new string Text
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+        public new static readonly DependencyProperty TextProperty = DependencyProperty.Register(
+            name: "Text",
+            propertyType: typeof(string),
+            ownerType: typeof(cPromptBox),
+            typeMetadata: new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (s, e) =>
+            {
+                if (e.NewValue is string text)
+                {
+                    var tb = (cPromptBox)s;
+                    if (tb.IsManuallyEnabled) { tb.TextBuffer = text; }
+                }
+            })
+        );
+
+        public string TextBuffer
+        {
+            get { return (string)GetValue(TextBufferProperty); }
+            set { SetValue(TextBufferProperty, value); }
+        }
+        public static readonly DependencyProperty TextBufferProperty = DependencyProperty.Register(
+            name: "TextBuffer",
+            propertyType: typeof(string),
+            ownerType: typeof(cPromptBox),
+            typeMetadata: new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (s, e) =>
+            {
+                if (e.NewValue is string buffer)
+                {
+                    var tb = (cPromptBox)s;
+                    if (tb.IsManuallyEnabled) { tb.Text = buffer; }
+                }
+            })
+        );
+
+        public bool IsManuallyEnabled
+        {
+            get { return (bool)GetValue(IsManuallyEnabledProperty); }
+            set { SetValue(IsManuallyEnabledProperty, value); }
+        }
+        public static readonly DependencyProperty IsManuallyEnabledProperty = DependencyProperty.Register(
+            name: "IsManuallyEnabled",
+            propertyType: typeof(bool),
+            ownerType: typeof(cPromptBox),
+            typeMetadata: new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (s, e) =>
+            {
+                if (e.NewValue is bool flag)
+                {
+                    var tb = (cPromptBox)s;
+                    if (flag) { tb.Text = tb.TextBuffer; }
+                    if (flag is false)
+                    {
+                        tb.Text = string.Empty;
+                    }
+                }
+            })
+        );
+
+        public bool UseOnOff
+        {
+            get { return (bool)GetValue(UseOnOffProperty); }
+            set { SetValue(UseOnOffProperty, value); }
+        }
+        public static readonly DependencyProperty UseOnOffProperty = DependencyProperty.Register(
+            name: "UseOnOff",
+            propertyType: typeof(bool),
+            ownerType: typeof(cPromptBox),
+            typeMetadata: new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault)
         );
     }
 }

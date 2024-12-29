@@ -16,6 +16,12 @@ namespace vNekoChatUI.MVVM.Views
     [UseChrome]
     public partial class MainWindow : Window, IMainWindow
     {
+        public string Token
+        {
+            get => token;
+            set => token = value;
+        }
+
         string token = string.Empty;
         bool canExit = false;
         bool canDebounce = false;

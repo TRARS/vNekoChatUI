@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:vNekoChatUI.A.MVVM.Views"
              mc:Ignorable="d" 
              xmlns:v="clr-namespace:vNekoChatUI.A.MVVM.Views"
-             xmlns:vm="clr-namespace:vNekoChatUI.A.MVVM.ViewModels"
+             xmlns:vm="clr-namespace:vNekoChatUI.A.MVVM.ViewModels" 
+             xmlns:comboboxex="clr-namespace:TrarsUI.Shared.Controls.ComboBoxEx;assembly=TrarsUI.Shared"
              d:DesignHeight="150" d:DesignWidth="300">
 
     <d:UserControl.DataContext>
@@ -16,8 +17,16 @@
     <Grid>
         <Border Background="#444654" Margin="3" CornerRadius="4"
                 d:Background="DarkCyan">
-            <TextBlock Text="Not Implemented" HorizontalAlignment="Center" VerticalAlignment="Center"
-                       FontWeight="Bold" FontSize="20"/>
+            <!--<TextBlock Text="Not Implemented" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.25"
+                       FontWeight="Bold" FontSize="20"/>-->
+            <Grid Margin="0,1,0,1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="480"/>
+                </Grid.ColumnDefinitions>
+                
+                <comboboxex:cComboBox/>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>

@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -163,16 +164,47 @@ namespace vNekoChatUI.A.MVVM.ViewModels
 
         // 清空聊天记录按钮
         [RelayCommand]
-        private void OnClear()
+        private async Task OnClearAsync(object para)
         {
-            if (SelectedContact is not null)
+            if (para is not null)
             {
-                SelectedContact.Signature = string.Empty;
-            }
-            if (SelectedContact is not null && SelectedContact.Messages.Count >= 1)
-            {
-                SelectedContact.IsHistoryChanged = true;
-                SelectedContact.Messages.Clear();
+                Action act = () =>
+                {
+                    if (SelectedContact is not null)
+                    {
+                        SelectedContact.Signature = string.Empty;
+                    }
+                    if (SelectedContact is not null && SelectedContact.Messages.Count >= 1)
+                    {
+                        SelectedContact.IsHistoryChanged = true;
+                        SelectedContact.Messages.Clear();
+                    }
+                };
+
+                if (para is string)
+                {
+                    act.Invoke(); return;
+                }
+
+                try
+                {
+                    Action? yesnoCallback = null;
+                    var msg = $"Clear History ?";
+                    var token = ((IToken)para).Token;
+                    var yesno = await WeakReferenceMessenger.Default.Send(new DialogYesNoMessage(msg, (x) => { yesnoCallback = x; }), token);
+
+                    if (yesno is true)
+                    {
+                        act.Invoke();
+
+                        Debug.WriteLine($"Clear History");
+                    }
+                    yesnoCallback?.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"OnClear error: {ex.Message}");
+                }
             }
         }
 
@@ -215,9 +247,32 @@ namespace vNekoChatUI.A.MVVM.ViewModels
 
         // 刷新设定
         [RelayCommand]
-        private void OnProfileRefresh()
+        private async Task OnProfileRefresh(object para)
         {
-            profileRefresh?.Invoke();
+            if (para is not null)
+            {
+                if (para is string) { profileRefresh?.Invoke(); return; }
+
+                try
+                {
+                    Action? yesnoCallback = null;
+                    var msg = $"ProfileRefresh ?";
+                    var token = ((IToken)para).Token;
+                    var yesno = await WeakReferenceMessenger.Default.Send(new DialogYesNoMessage(msg, (x) => { yesnoCallback = x; }), token);
+
+                    if (yesno is true)
+                    {
+                        profileRefresh?.Invoke();
+
+                        Debug.WriteLine($"ProfileRefresh");
+                    }
+                    yesnoCallback?.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"OnProfileRefresh error: {ex.Message}");
+                }
+            }
         }
         Action? profileRefresh;
 
@@ -370,7 +425,7 @@ namespace vNekoChatUI.A.MVVM.ViewModels
 
 
             //系统消息
-            this.SystemMessages = new(10, 5);
+            this.SystemMessages = new(3, 1);
             WeakReferenceMessenger.Default.Register<AlertMessage>(this, (r, m) =>
             {
                 Application.Current.Dispatcher.BeginInvoke(() =>
@@ -555,16 +610,6 @@ namespace vNekoChatUI.A.MVVM.ViewModels
                     MaxHeight = 608
                 }
             }));
-
-            //WeakReferenceMessenger.Default.Send(new OpenChildFormMessage(new()
-            //{
-            //    ViewModel = new AppIconVM(),
-            //    WindowInfo = new()
-            //    {
-            //        MinWidth = 608,
-            //        MinHeight = 608
-            //    }
-            //}));
         }
     }
 
@@ -689,14 +734,8 @@ namespace vNekoChatUI.A.MVVM.ViewModels
                     bot.DisplayName = "assistant";
 
                     bot.Profile = "";
-
                     bot.InnerMonologue = "gemini-1.5-pro-latest";
-                    bot.ContinuePrompt =
-@$"
-- 角色发言中，应当描述不重复的、新颖的、符合上下文的【莉莉娅的话语】
-- 角色独白中，应当描述不重复的、新颖的、符合上下文的【莉莉娅的心理】
-- 场景交互中，应当描述不重复的、新颖的、符合上下文的【莉莉娅与场景的互动】
-".Trim();
+                    bot.ContinuePrompt = "";
                 }
             }
 

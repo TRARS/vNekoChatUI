@@ -61,7 +61,7 @@ namespace vNekoChatUI.Character.GeminiUtils
                 }
             }
 
-            return await _client.WaitReplyAsync(ai_profile, content, ai_innermonologue, cancellationToken);
+            return await _client.WaitReplyAsync(ai_name, ai_profile, content, ai_innermonologue, cancellationToken);
         }
 
         private GenerateContentRequest CreateContentRequest(string systemInstruction, List<Content> history)

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -29,17 +29,8 @@ namespace Common.WPF.Services
     //内部类
     public partial class JsonConfigManagerService : IJsonConfigManagerService
     {
-        public class NotificationObject : INotifyPropertyChanged
-        {
-            public event PropertyChangedEventHandler? PropertyChanged;
-            public void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
         //可观察
-        public class ObservableString : NotificationObject
+        public partial class ObservableString : ObservableObject
         {
             private string _value = string.Empty;
             public string Value
@@ -47,21 +38,19 @@ namespace Common.WPF.Services
                 get { return _value; }
                 set
                 {
-                    _value = value.Trim();
-                    NotifyPropertyChanged();
+                    SetProperty(ref _value, value.Trim());
                 }
             }
 
+            [ObservableProperty]
             private bool _isChecked = true;
-            public bool IsChecked
-            {
-                get { return _isChecked; }
-                set
-                {
-                    _isChecked = value;
-                    NotifyPropertyChanged();
-                }
-            }
+
+            [ObservableProperty]
+            private string _tag = string.Empty;
+
+            [property: JsonIgnore]
+            [ObservableProperty]
+            private int _num = 0;
         }
 
         //模型
@@ -239,7 +228,16 @@ namespace Common.WPF.Services
                 {
                     currentGeminiApiKeyIndex = 0;
                 }
-                return checkedApiKeyList[currentGeminiApiKeyIndex++].Value ?? "";
+
+                //var key = checkedApiKeyList[currentGeminiApiKeyIndex++];
+                //key.Num++;
+                var key = checkedApiKeyList[currentGeminiApiKeyIndex];
+                Debug.WriteLine($"Fetching API Key: {key.Value}, Index = {currentGeminiApiKeyIndex}");
+                currentGeminiApiKeyIndex++; // 索引自增
+                Debug.WriteLine($"After fetching: Index = {currentGeminiApiKeyIndex}");
+                key.Num++;
+
+                return key.Value ?? "";
             }
 
             return "empty apikey";
@@ -292,7 +290,7 @@ namespace Common.WPF.Services
         }
 
         /// <summary>
-        /// 每次使用不同 gemini api key
+        /// 每次使用相同 gemini api key 直至额度枯竭
         /// </summary>
         public string GetGeminiApiKey()
         {

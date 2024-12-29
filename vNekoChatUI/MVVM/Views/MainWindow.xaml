@@ -8,7 +8,8 @@
         xmlns:vm="clr-namespace:vNekoChatUI.MVVM.ViewModels"
         xmlns:v="clr-namespace:vNekoChatUI.MVVM.Views"
         xmlns:windowborderex="clr-namespace:TrarsUI.Shared.Controls.WindowBorderEx;assembly=TrarsUI.Shared"
-        xmlns:converter="clr-namespace:TrarsUI.Shared.Converters;assembly=TrarsUI.Shared"
+        xmlns:converter="clr-namespace:TrarsUI.Shared.Converters;assembly=TrarsUI.Shared" 
+        xmlns:dialogoverlayex="clr-namespace:TrarsUI.Shared.Controls.DialogOverlayEx;assembly=TrarsUI.Shared"
         mc:Ignorable="d"
         SnapsToDevicePixels="True" 
         WindowStartupLocation="Manual" 
@@ -107,7 +108,13 @@
             <ContentControl Grid.Row="1" Content="{Binding SubViewModelList[1]}"/>
 
             <!--客户区-->
-            <ContentControl Grid.Row="2" Content="{Binding SubViewModelList[2]}"/>
+            <Grid Grid.Row="2" >
+                <ContentControl Content="{Binding SubViewModelList[2]}"/>
+                <dialogoverlayex:cDialogOverlay x:Name="Dialog"
+                                                Background="#AF000000"
+                                                Messages="{Binding DialogMessageList}"
+                                                TaskCompletionSource="{Binding TaskCompletionSource, Mode=OneWay}"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

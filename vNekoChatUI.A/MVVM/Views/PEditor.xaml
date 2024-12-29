@@ -8,7 +8,8 @@
              xmlns:textboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.TextBoxEx" 
              xmlns:textboxatypeex="clr-namespace:TrarsUI.Shared.Controls.TextBoxAtypeEx;assembly=TrarsUI.Shared" 
              xmlns:scrollviewerex="clr-namespace:TrarsUI.Shared.Controls.ScrollViewerEx;assembly=TrarsUI.Shared" 
-             xmlns:emptybuttonex="clr-namespace:vNekoChatUI.A.CustomControlEx.EmptyButtonEx"
+             xmlns:emptybuttonex="clr-namespace:vNekoChatUI.A.CustomControlEx.EmptyButtonEx" 
+             xmlns:promptboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.PromptBoxEx"
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="300">
 
@@ -41,54 +42,58 @@
                 </Border>
                 
                 <Border Grid.Row="1" CornerRadius="2" Margin="1,0">
-                    <textboxex:cTextBox MinWidth="60" MinHeight="22" Margin="0,-1,0,0"                                                                                                      
-                                        BorderContentMaxHeight="100"                                                            
-                                        VerticalScrollBarVisibility="Auto"                                                            
-                                        FontFamily="Calibri"                                                            
-                                        CaretBrush="OrangeRed"                                                            
-                                        AcceptsReturn="False"
-                                        Text="{Binding Bot.DisplayName, UpdateSourceTrigger=PropertyChanged}"
-                                        BorderBackground="#202123"
-                                        BorderContentHeader="DisplayName"
-                                        BorderContentHeaderColor="#FFD400"/>
+                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22" Margin="0,-1,0,0"                                                                                                      
+                                            BorderContentMaxHeight="100"                                                            
+                                            VerticalScrollBarVisibility="Auto"                                                            
+                                            FontFamily="Calibri"                                                            
+                                            CaretBrush="OrangeRed"                                                            
+                                            AcceptsReturn="False"
+                                            Text="{Binding Bot.DisplayName, UpdateSourceTrigger=PropertyChanged}"
+                                            BorderBackground="#202123"
+                                            BorderContentHeader="DisplayName"
+                                            BorderContentHeaderColor="#FFD400"
+                                            UseOnOff="False"/>
                 </Border>
 
                 <Border Grid.Row="2" CornerRadius="2" Margin="1,0">
-                    <textboxex:cTextBox MinWidth="60" MinHeight="22" Margin="0,-1,0,0"
-                                        VerticalScrollBarVisibility="Auto"                                                            
-                                        FontFamily="Calibri"                                                            
-                                        CaretBrush="OrangeRed"                                                            
-                                        AcceptsReturn="True"
-                                        Text="{Binding Bot.Profile, UpdateSourceTrigger=PropertyChanged}"
-                                        BorderBackground="#202123"
-                                        BorderContentHeader="System Instruction"
-                                        BorderContentHeaderColor="#98FF00"/>
+                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22" Margin="0,-1,0,0"
+                                            VerticalScrollBarVisibility="Auto"                                                            
+                                            FontFamily="Calibri"                                                            
+                                            CaretBrush="OrangeRed"                                                            
+                                            AcceptsReturn="True"
+                                            Text="{Binding Bot.Profile, UpdateSourceTrigger=PropertyChanged}"
+                                            BorderBackground="#202123"
+                                            BorderContentHeader="System Instruction"
+                                            BorderContentHeaderColor="#98FF00"
+                                            UseOnOff="True"/>
                 </Border>
 
                 <Border Grid.Row="3" CornerRadius="2" Margin="1,0">
-                    <textboxex:cTextBox MinWidth="60" MinHeight="22" Margin="0,-1,0,0"                                                                                                       
-                                        BorderContentMaxHeight="100"                                                            
-                                        VerticalScrollBarVisibility="Auto"                                                            
-                                        FontFamily="Calibri"                                                            
-                                        CaretBrush="OrangeRed"                                                            
-                                        AcceptsReturn="True"
-                                        Text="{Binding Bot.ContinuePrompt, UpdateSourceTrigger=PropertyChanged}"
-                                        BorderBackground="#202123"
-                                        BorderContentHeader="ContinuePrompt"
-                                        BorderContentHeaderColor="#FF0021"/>
+                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22" Margin="0,-1,0,0"                                                                                                       
+                                            BorderContentMaxHeight="100"                                                            
+                                            VerticalScrollBarVisibility="Auto"                                                            
+                                            FontFamily="Calibri"                                                            
+                                            CaretBrush="OrangeRed"                                                            
+                                            AcceptsReturn="True"
+                                            Text="{Binding Bot.ContinuePrompt, UpdateSourceTrigger=PropertyChanged}"
+                                            BorderBackground="#202123"
+                                            BorderContentHeader="ContinuePrompt"
+                                            BorderContentHeaderColor="#FF0021"
+                                            UseOnOff="True"/>
                 </Border>
 
                 <Border Grid.Row="4" CornerRadius="2" Margin="1,0">
-                    <textboxex:cTextBox MinWidth="60" MinHeight="22" Margin="0,-1,0,0"                                                                                                      
-                                        BorderContentMaxHeight="100"                                                            
-                                        VerticalScrollBarVisibility="Auto"                                                            
-                                        FontFamily="Calibri"                                                            
-                                        CaretBrush="OrangeRed"                                                            
-                                        AcceptsReturn="False"
-                                        Text="{Binding Bot.InnerMonologue, UpdateSourceTrigger=PropertyChanged}"
-                                        BorderBackground="#202123"
-                                        BorderContentHeader="Gemini Model"
-                                        BorderContentHeaderColor="#98FF00"/>
+                    <promptboxex:cPromptBox MinWidth="60" MinHeight="22" Margin="0,-1,0,0"                                                                                                      
+                                            BorderContentMaxHeight="100"                                                            
+                                            VerticalScrollBarVisibility="Auto"                                                            
+                                            FontFamily="Calibri"                                                            
+                                            CaretBrush="OrangeRed"                                                            
+                                            AcceptsReturn="False"
+                                            Text="{Binding Bot.InnerMonologue, UpdateSourceTrigger=PropertyChanged}"
+                                            BorderBackground="#202123"
+                                            BorderContentHeader="Gemini Model"
+                                            BorderContentHeaderColor="#98FF00"
+                                            UseOnOff="True"/>
                 </Border>
             </Grid>
         </Border>

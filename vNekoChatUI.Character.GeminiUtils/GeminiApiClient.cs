@@ -3,7 +3,6 @@ using Common.WPF.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using GenerativeAI.Models;
 using GenerativeAI.Types;
-using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -20,6 +19,7 @@ namespace vNekoChatUI.Character.GeminiUtils
     public sealed partial class GeminiApiClient
     {
         IJsonConfigManagerService _jsonConfigManagerService = ServiceHost.Instance.GetService<IJsonConfigManagerService>();
+        IStreamService _streamService = ServiceHost.Instance.GetService<IStreamService>();
 
         private GenerativeModel model;
         private SafetySetting[] safetySetting =
@@ -60,12 +60,20 @@ namespace vNekoChatUI.Character.GeminiUtils
         string currentGeminiModel = "";
         bool tryGetNextKey = true;
 
-        internal async Task<string> WaitReplyAsync(string? systemInstruction, GenerateContentRequest request, string geminiModel, CancellationToken cancellationToken)
+        internal async Task<string> WaitReplyAsync(string ai_name, string? systemInstruction, GenerateContentRequest request, string geminiModel, CancellationToken cancellationToken)
         {
             var retryLimit = 1;
             var result = "";
             var totalTokenCount = -1;
             var flag = false;
+
+            var fullstr = "";
+            var action = new Action<string>(s =>
+            {
+                fullstr += s;
+                _streamService.StartStreamingText(ai_name, fullstr);
+                WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Streaming"));
+            });
 
             do
             {
@@ -89,15 +97,18 @@ namespace vNekoChatUI.Character.GeminiUtils
                     model.SafetySettings = safetySetting;
 
                     var line = "------------------------";
-                    Debug.WriteLine($"{line}\n({currentGeminiModel}) ({currentApiKey})\nSystemInstruction:\n{currentSystemInstruction}\n{line}");
+                    //Debug.WriteLine($"{line}\n({currentGeminiModel}) ({currentApiKey})\nSystemInstruction:\n{currentSystemInstruction}\n{line}");
                 }
 
                 try
                 {
-                    //request.SystemInstruction = RequestExtensions.FormatSystemInstruction($"{systemInstruction}");
-                    var response = await model.GenerateContentAsync(request, cancellationToken);
-                    result = $"{response?.Text()?.Trim()}";
-                    totalTokenCount = response?.UsageMetadata?.TotalTokenCount ?? 0;
+                    //var response = await model.GenerateContentAsync(request, cancellationToken);
+                    //result = $"{response?.Text()?.Trim()}";
+                    //totalTokenCount = response?.UsageMetadata?.TotalTokenCount ?? 0;
+                    //WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Response"));
+
+                    var response = await model.StreamContentAsync(request, action, cancellationToken);
+                    result = $"{response?.Trim()}";
                     WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Response"));
                 }
                 catch (Exception ex)
