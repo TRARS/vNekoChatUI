@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:vNekoChatUI.A.CustomControlEx.TextBoxEx" 
                     xmlns:scrollviewerex="clr-namespace:TrarsUI.Shared.Controls.ScrollViewerEx;assembly=TrarsUI.Shared"
-                    xmlns:textboxatypeex="clr-namespace:TrarsUI.Shared.Controls.TextBoxAtypeEx;assembly=TrarsUI.Shared">
+                    xmlns:textboxatypeex="clr-namespace:TrarsUI.Shared.Controls.TextBoxEx;assembly=TrarsUI.Shared">
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <local:cTextBox_converter_bordercontentheader_visibility x:Key="cTextBox_converter_bordercontentheader_visibility"/>

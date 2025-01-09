@@ -6,7 +6,9 @@
                     xmlns:gridex="clr-namespace:vNekoChatUI.A.CustomControlEx.GridEx" 
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
                     xmlns:togglebuttonex="clr-namespace:vNekoChatUI.A.CustomControlEx.ToggleButtonEx"
-                    xmlns:promptboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.PromptBoxEx" xmlns:textboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.TextBoxEx">
+                    xmlns:promptboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.PromptBoxEx" 
+                    xmlns:textboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.TextBoxEx"
+                    xmlns:textboxatypeex="clr-namespace:TrarsUI.Shared.Controls.TextBoxEx;assembly=TrarsUI.Shared">
 
     <local:cConfigButton_converter_border_clip x:Key="cConfigButton_converter_border_clip"/>
     <local:cConfigButton_converter_border_mask_margin x:Key="cConfigButton_converter_border_mask_margin"/>
@@ -38,12 +40,13 @@
                         <Border Grid.Column="1" 
                                 VerticalAlignment="Center"
                                 CornerRadius="2.5"
-                                BorderBrush="Gray"
+                                BorderBrush="Transparent"
                                 BorderThickness="1"
-                                Background="Black"
-                                Padding="2,0"
+                                Background="Transparent"
                                 Margin="0,0,3,0">
-                            <TextBlock Text="{Binding Tag, Mode=OneWay}" Foreground="White" VerticalAlignment="Center"/>
+                            <textboxatypeex:cTextBoxAtype Text="{Binding Tag, Mode=TwoWay}" Foreground="White" VerticalAlignment="Center"
+                                                          Height="20"
+                                                          AcceptsReturn="False"/>
                         </Border>
                         
                         <Border Grid.Column="2"

@@ -16,13 +16,6 @@ namespace vNekoChatUI.MVVM.Views
     [UseChrome]
     public partial class ChildForm : Window, IChildForm
     {
-        public string Token
-        {
-            get => token;
-            set => token = value;
-        }
-
-        string token = string.Empty;
         bool canExit = false;
         bool canDebounce = false;
         ShadowHelper shadowHelper = new();
@@ -37,14 +30,14 @@ namespace vNekoChatUI.MVVM.Views
             // 通过任务栏图标最小化
             OnTaskbarMinimize = () =>
             {
-                WeakReferenceMessenger.Default.Send(new WindowMinimizeMessage("OnTaskbarMinimize"), token);
+                WeakReferenceMessenger.Default.Send(new WindowMinimizeMessage("OnTaskbarMinimize"), this.Token);
             };
 
             // 设置Token
-            token = tokenProvider.GetRecurrentTokenForChildForm();
+            this.Token = tokenProvider.GetRecurrentTokenForChildForm();
 
             // 设置WindowInfo
-            WeakReferenceMessenger.Default.Register<SetWindowInfoMessage, string>(this, token, (r, m) =>
+            WeakReferenceMessenger.Default.Register<SetWindowInfoMessage, string>(this, this.Token, (r, m) =>
             {
                 var info = m.Value;
                 this.Width = info.Width ?? this.Width;
@@ -54,62 +47,63 @@ namespace vNekoChatUI.MVVM.Views
                 this.MinHeight = info.MinHeight ?? this.MinHeight;
                 this.MaxHeight = info.MaxHeight ?? this.MaxHeight;
                 this.SizeToContent = info.SizeToContent ?? this.SizeToContent;
+                this.ResizeMode = info.ResizeMode ?? this.ResizeMode;
             });
 
             // 标题
-            WeakReferenceMessenger.Default.Register<WindowTitleChangedMessage, string>(this, token, (r, m) =>
+            WeakReferenceMessenger.Default.Register<WindowTitleChangedMessage, string>(this, this.Token, (r, m) =>
             {
                 this.Dispatcher.BeginInvoke(() => { this.Title = m.Value; });
             });
 
             // 顶置
-            WeakReferenceMessenger.Default.Register<WindowTopmostMessage, string>(this, token, (r, m) =>
+            WeakReferenceMessenger.Default.Register<WindowTopmostMessage, string>(this, this.Token, (r, m) =>
             {
                 var flag = !((ChildForm)r).Topmost;
-                shadowHelper.ShadowTopmost(token, flag);
+                shadowHelper.ShadowTopmost(this.Token, flag);
 
                 ((ChildForm)r).Topmost = flag;
                 m.Reply(flag);
             });
 
             // 重置位置
-            WeakReferenceMessenger.Default.Register<WindowPosResetMessage, string>(this, token, async (r, m) =>
+            WeakReferenceMessenger.Default.Register<WindowPosResetMessage, string>(this, this.Token, async (r, m) =>
             {
                 canDebounce = true;
-                shadowHelper.ShadowFadeInOut(token, false); await Task.Delay(64);
+                shadowHelper.ShadowFadeInOut(this.Token, false); await Task.Delay(64);
 
                 ((ChildForm)r).SetDoubleAnimation(OpacityProperty, 1d, 0d, 96).ContinueWith(async () =>
                 {
-                    await Task.Delay(1);
+                    await Task.Delay(64);
                     ((ChildForm)r).TryMoveToPrimaryMonitor(m.Value);
                     await Task.Delay(96);
                     ((ChildForm)r).SetDoubleAnimation(OpacityProperty, 0d, 1d, 192).ContinueWith(async () =>
                     {
-                        shadowHelper.ShadowFadeInOut(token, true);
+                        shadowHelper.ShadowFadeInOut(this.Token, true);
                         await Task.Delay(128); canDebounce = false;
-                        await shadowHelper.ShadowZindex(token);
+                        await shadowHelper.ShadowZindex(this.Token);
                     }).Begin();
                 }).Begin();
             });
 
             // 最小化
-            WeakReferenceMessenger.Default.Register<WindowMinimizeMessage, string>(this, token, async (r, m) =>
+            WeakReferenceMessenger.Default.Register<WindowMinimizeMessage, string>(this, this.Token, async (r, m) =>
             {
-                shadowHelper.ShadowFadeInOut(token, null);
+                shadowHelper.ShadowFadeInOut(this.Token, null);
                 await Task.Delay(64);
                 ((ChildForm)r).WindowState = WindowState.Minimized;
             });
 
             // 最大化
-            WeakReferenceMessenger.Default.Register<WindowMaximizeMessage, string>(this, token, (r, m) =>
+            WeakReferenceMessenger.Default.Register<WindowMaximizeMessage, string>(this, this.Token, (r, m) =>
             {
                 ((ChildForm)r).WindowState = (((ChildForm)r).WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
             });
 
             // 关闭
-            WeakReferenceMessenger.Default.Register<WindowCloseMessage, string>(this, token, (r, m) =>
+            WeakReferenceMessenger.Default.Register<WindowCloseMessage, string>(this, this.Token, (r, m) =>
             {
-                canExit = false; shadowHelper.Close(token);
+                canExit = false; shadowHelper.Close(this.Token);
 
                 ((ChildForm)r).SetDoubleAnimation(OpacityProperty, Opacity, 0d, 256).ContinueWith(() =>
                 {
@@ -120,7 +114,7 @@ namespace vNekoChatUI.MVVM.Views
             });
 
             // 窗体截图
-            WeakReferenceMessenger.Default.Register<WindowSaveToTransparentPngMessage, string>(this, token, async (r, m) =>
+            WeakReferenceMessenger.Default.Register<WindowSaveToTransparentPngMessage, string>(this, this.Token, async (r, m) =>
             {
                 await Task.Delay(1000);
                 ((ChildForm)r).SaveToPng(allowTransparency: true);
@@ -130,14 +124,13 @@ namespace vNekoChatUI.MVVM.Views
             this.Loaded += async (s, e) =>
             {
                 var stateInfo = new WindowStateInfo(this.WindowState == WindowState.Maximized, this.Topmost);
-                WeakReferenceMessenger.Default.Send(new WindowStateUpdateMessage(stateInfo), token);
+                WeakReferenceMessenger.Default.Send(new WindowStateUpdateMessage(stateInfo), this.Token);
 
                 // 阴影
                 var mainLayer = this;
                 var shadowLayer = shadowHelper.CreateSubWindow<Shadow>(shadow =>
                 {
-                    shadowHelper.ShadowInit(token, shadow, mainLayer, mainLayer.PART_Border.CornerRadius);
-                    //shadowHelper.SetOwner(mainLayer, shadow.GetHandle());
+                    shadowHelper.ShadowInit(this.Token, shadow, mainLayer, mainLayer.PART_Border.CornerRadius);
                 });
 
                 await Task.Delay(256);
@@ -149,38 +142,38 @@ namespace vNekoChatUI.MVVM.Views
             this.StateChanged += async (s, e) =>
             {
                 var stateInfo = new WindowStateInfo(this.WindowState == WindowState.Maximized, this.Topmost);
-                WeakReferenceMessenger.Default.Send(new WindowStateUpdateMessage(stateInfo), token);
+                WeakReferenceMessenger.Default.Send(new WindowStateUpdateMessage(stateInfo), this.Token);
 
                 var flag = this.WindowState == WindowState.Normal;
                 if (this.WindowState != WindowState.Minimized)
                 {
-                    shadowHelper.ShadowFadeInOut(token, flag);
+                    shadowHelper.ShadowFadeInOut(this.Token, flag);
                 }
 
                 if (this.WindowState == WindowState.Normal)
                 {
                     await Task.Delay(128);
-                    await shadowHelper.ShadowZindex(token);
+                    await shadowHelper.ShadowZindex(this.Token);
                 }
             };
 
             // LocationChanged
             this.LocationChanged += (s, e) =>
             {
-                shadowHelper.ShadowMove(token);
+                shadowHelper.ShadowMove(this.Token);
             };
 
             // SizeChanged
             this.SizeChanged += (s, e) =>
             {
-                shadowHelper.ShadowMove(token);
+                shadowHelper.ShadowMove(this.Token);
             };
 
             // Activated
             this.Activated += async (s, e) =>
             {
-                await shadowHelper.ShadowZindex(token);
-                shadowHelper.ShadowBlurRadius(token, true);
+                await shadowHelper.ShadowZindex(this.Token);
+                shadowHelper.ShadowBlurRadius(this.Token, true);
                 this.IsActive = true;
 
                 debouncer.Cancel();
@@ -189,7 +182,7 @@ namespace vNekoChatUI.MVVM.Views
             // Deactivated
             this.Deactivated += async (s, e) =>
             {
-                shadowHelper.ShadowBlurRadius(token, false);
+                shadowHelper.ShadowBlurRadius(this.Token, false);
 
                 // 防闪烁
                 if (canDebounce)
@@ -209,7 +202,7 @@ namespace vNekoChatUI.MVVM.Views
             this.Closing += (s, e) =>
             {
                 e.Cancel = !canExit;
-                WeakReferenceMessenger.Default.Send(new WindowCloseMessage("Closing"), token);
+                WeakReferenceMessenger.Default.Send(new WindowCloseMessage("Closing"), this.Token);
             };
         }
     }
@@ -218,17 +211,17 @@ namespace vNekoChatUI.MVVM.Views
     {
         public void SetClientContent(IContentVM obj)
         {
-            WeakReferenceMessenger.Default.Send(new SetContentMessage(obj), token);
+            WeakReferenceMessenger.Default.Send(new SetContentMessage(obj), this.Token);
         }
 
         public void SetTitleBarIcon(string icon)
         {
-            WeakReferenceMessenger.Default.Send(new SetTitleBarIconMessage(icon), token);
+            WeakReferenceMessenger.Default.Send(new SetTitleBarIconMessage(icon), this.Token);
         }
 
         public void SetWindowInfo(WindowInfo info)
         {
-            WeakReferenceMessenger.Default.Send(new SetWindowInfoMessage(info), token);
+            WeakReferenceMessenger.Default.Send(new SetWindowInfoMessage(info), this.Token);
         }
     }
 }

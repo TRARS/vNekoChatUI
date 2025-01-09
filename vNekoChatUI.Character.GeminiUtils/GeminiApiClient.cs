@@ -3,6 +3,8 @@ using Common.WPF.Services;
 using CommunityToolkit.Mvvm.Messaging;
 using GenerativeAI.Models;
 using GenerativeAI.Types;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -18,6 +20,7 @@ namespace vNekoChatUI.Character.GeminiUtils
 
     public sealed partial class GeminiApiClient
     {
+        IDefWebService _defWebService = ServiceHost.Instance.GetService<IDefWebService>();
         IJsonConfigManagerService _jsonConfigManagerService = ServiceHost.Instance.GetService<IJsonConfigManagerService>();
         IStreamService _streamService = ServiceHost.Instance.GetService<IStreamService>();
 
@@ -50,6 +53,43 @@ namespace vNekoChatUI.Character.GeminiUtils
                     Threshold = HarmBlockThreshold.BLOCK_NONE
                 }
             ];
+
+        HttpClient _client;
+
+        public GeminiApiClient()
+        {
+            // Microsoft DependancyInjection
+            var service = new ServiceCollection();
+            {
+                service.AddHttpClient(string.Empty, httpClient =>
+                {
+                    //                   
+                }).ConfigurePrimaryHttpMessageHandler(() =>
+                {
+                    var handler = new HttpClientHandler()
+                    {
+                        Proxy = _defWebService.GetWebProxy(),
+                        //UseProxy = true,
+                    };
+
+                    if (true)
+                    {
+                        //サーバ証明書のエラーを無視する方法
+                        handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                    }
+
+                    return handler;
+                });
+            }
+            var provider = service.BuildServiceProvider();
+
+            // Microsoft Http クライアントファクトリーを得る
+            var factory = provider.GetRequiredService<IHttpClientFactory>();
+
+            // Http クライアントを得る
+            _client = factory.CreateClient();
+            _client.Timeout = TimeSpan.FromSeconds(30);//超时
+        }
     }
 
     public sealed partial class GeminiApiClient
@@ -93,7 +133,7 @@ namespace vNekoChatUI.Character.GeminiUtils
 
                     // gemini-1.5-pro-latest  好
                     // gemini-exp-1121        不好使，违规内容会被夹
-                    model = new GenerativeModel(currentApiKey, currentGeminiModel, systemInstruction: currentSystemInstruction);
+                    model = new GenerativeModel(currentApiKey, currentGeminiModel, _client, systemInstruction: currentSystemInstruction);
                     model.SafetySettings = safetySetting;
 
                     var line = "------------------------";

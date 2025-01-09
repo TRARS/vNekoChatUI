@@ -6,7 +6,7 @@
                     xmlns:textboxex="clr-namespace:vNekoChatUI.A.CustomControlEx.TextBoxEx" 
                     xmlns:contextmenuex="clr-namespace:vNekoChatUI.A.CustomControlEx.ContextMenuEx" 
                     xmlns:system="clr-namespace:System;assembly=mscorlib" 
-                    xmlns:localBehaviors="clr-namespace:vNekoChatUI.Base.Helper.Behaviors;assembly=vNekoChatUI.Base">
+                    xmlns:localBehaviors="clr-namespace:vNekoChatUI.Base.Helper.Behaviors;assembly=vNekoChatUI.Base" xmlns:scrollviewerex="clr-namespace:TrarsUI.Shared.Controls.ScrollViewerEx;assembly=TrarsUI.Shared">
     
     <local:cListViewChatHistory_converter_textblock_maxwidth x:Key="cListViewChatHistory_converter_textblock_maxwidth"/>
     <local:cListViewChatHistory_converter_contactcard_time_token x:Key="cListViewChatHistory_converter_contactcard_time_token"/>
@@ -687,11 +687,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:cListViewChatHistory}" >
-                    <local:cScrollViewer AllowScreenshot="True"
+                    <Border>
+                        <local:cScrollViewer AllowScreenshot="True" 
                                          Focusable="false" 
                                          Padding="{TemplateBinding Padding}">
-                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                    </local:cScrollViewer>
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </local:cScrollViewer>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

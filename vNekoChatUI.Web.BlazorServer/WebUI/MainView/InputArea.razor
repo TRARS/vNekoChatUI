@@ -310,6 +310,7 @@
                 //10.1.2 使用BrowserFetcher.DefaultChromiumRevision参数，可正常截图
                 //13.0.2 使用BrowserTag.Latest参数，截图混乱
                 //故退回10.1.2
+                //纵向尺寸超过16384px后开始循环，无解
                 await browserFetcher.DownloadAsync(BrowserTag.Latest);
                 var browser = await Puppeteer.LaunchAsync(new LaunchOptions
                     {
@@ -331,11 +332,11 @@
                     await page.SetJavaScriptEnabledAsync(true);
                     //初始化时指定窗口大小
                     await page.SetViewportAsync(new ViewPortOptions
-                        {
-                            Width = currentWidth,
-                            Height = 0,
-                            DeviceScaleFactor = ratio
-                        });
+                    {
+                        Width = currentWidth,
+                        Height = 0,
+                        DeviceScaleFactor = ratio
+                    });
                     //打开网页
                     await page.GoToAsync($"http://127.0.0.1:14285/chatroom?NavigationOff={navigation_off}&&InputBoxOff={inputbox_off}");
                     {

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using TrarsUI.Shared.DTOs;
 using TrarsUI.Shared.Interfaces;
 using TrarsUI.Shared.Interfaces.UIComponents;
 using TrarsUI.Shared.Messages;
@@ -12,7 +13,7 @@ namespace vNekoChatUI.MVVM.ViewModels
     partial class MainWindowVM : ObservableObject, IMainWindowVM
     {
         public ObservableCollection<IToken> SubViewModelList { get; init; }
-        public ObservableCollection<string> DialogMessageList { get; init; }
+        public ObservableCollection<DialogPacket> DialogMessageList { get; init; }
 
         [ObservableProperty]
         private TaskCompletionSource<bool> taskCompletionSource;
@@ -45,7 +46,7 @@ namespace vNekoChatUI.MVVM.ViewModels
             {
                 var contentVM = contentProvider.Create();
                 {
-                    titleBar.Title = $"{contentVM?.Title ?? "null"}"; // + " -> " + token;
+                    titleBar.Title = $"{contentVM?.Title ?? "null"}" + " -> " + token;
                 }
                 client.SetContent(contentVM);
             }
@@ -55,10 +56,10 @@ namespace vNekoChatUI.MVVM.ViewModels
             {
                 var childForm = childFormFactory.Create();
                 {
-                    var content = m.Value;
-                    childForm.SetWindowInfo(content.WindowInfo);
-                    childForm.SetClientContent(content.ViewModel);
-                    childForm.SetTitleBarIcon(content.Icon);
+                    var context = m.Value;
+                    childForm.SetWindowInfo(context.WindowInfo);
+                    childForm.SetClientContent(context.ViewModel);
+                    childForm.SetTitleBarIcon(context.Icon);
                     childForm.Show();
                 }
             });
@@ -68,8 +69,12 @@ namespace vNekoChatUI.MVVM.ViewModels
             {
                 m.Reply(((Func<Task<bool>>)(() =>
                 {
-                    m.Callback?.Invoke(this.DialogMessageList.Clear);
-                    this.DialogMessageList.Add(m.Message);
+                    var tk = tokenProvider.GetRandomToken();
+                    var msg = m.Message;
+                    var dp = new DialogPacket(tk, msg);
+                    m.Callback?.Invoke(() => { this.DialogMessageList.Remove(dp); tokenProvider.RemoveToken(tk); });
+                    this.DialogMessageList.Add(dp);
+
                     TaskCompletionSource = new TaskCompletionSource<bool>();
                     return TaskCompletionSource.Task;
                 }))());

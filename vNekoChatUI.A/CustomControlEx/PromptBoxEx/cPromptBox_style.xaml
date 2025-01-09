@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:vNekoChatUI.A.CustomControlEx.PromptBoxEx" 
                     xmlns:scrollviewerex="clr-namespace:TrarsUI.Shared.Controls.ScrollViewerEx;assembly=TrarsUI.Shared"
-                    xmlns:textboxatypeex="clr-namespace:TrarsUI.Shared.Controls.TextBoxAtypeEx;assembly=TrarsUI.Shared" xmlns:togglebuttonex="clr-namespace:vNekoChatUI.A.CustomControlEx.ToggleButtonEx">
+                    xmlns:textboxatypeex="clr-namespace:TrarsUI.Shared.Controls.TextBoxEx;assembly=TrarsUI.Shared"
+                    xmlns:togglebuttonex="clr-namespace:vNekoChatUI.A.CustomControlEx.ToggleButtonEx">
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <local:cPromptBox_converter_bordercontentheader_visibility x:Key="cPromptBox_converter_bordercontentheader_visibility"/>

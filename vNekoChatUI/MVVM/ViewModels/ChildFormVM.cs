@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using TrarsUI.Shared.DTOs;
 using TrarsUI.Shared.Interfaces;
 using TrarsUI.Shared.Interfaces.UIComponents;
 using TrarsUI.Shared.Messages;
@@ -12,7 +13,7 @@ namespace vNekoChatUI.MVVM.ViewModels
     partial class ChildFormVM : ObservableObject, IChildFormVM
     {
         public ObservableCollection<IToken> SubViewModelList { get; init; }
-        public ObservableCollection<string> DialogMessageList { get; init; }
+        public ObservableCollection<DialogPacket> DialogMessageList { get; init; }
 
         [ObservableProperty]
         private TaskCompletionSource<bool> taskCompletionSource;
@@ -44,7 +45,7 @@ namespace vNekoChatUI.MVVM.ViewModels
             {
                 var contentVM = m.Value;
                 {
-                    titleBar.Title = $"{contentVM?.Title ?? "null"}"; // + " -> " + token;
+                    titleBar.Title = $"{contentVM?.Title ?? "null"}" + " -> " + token;
                 }
                 client.SetContent(contentVM);
             });
@@ -60,8 +61,12 @@ namespace vNekoChatUI.MVVM.ViewModels
             {
                 m.Reply(((Func<Task<bool>>)(() =>
                 {
-                    m.Callback?.Invoke(this.DialogMessageList.Clear);
-                    this.DialogMessageList.Add(m.Message);
+                    var tk = tokenProvider.GetRandomToken();
+                    var msg = m.Message;
+                    var dp = new DialogPacket(tk, msg);
+                    m.Callback?.Invoke(() => { this.DialogMessageList.Remove(dp); tokenProvider.RemoveToken(tk); });
+                    this.DialogMessageList.Add(dp);
+
                     TaskCompletionSource = new TaskCompletionSource<bool>();
                     return TaskCompletionSource.Task;
                 }))());

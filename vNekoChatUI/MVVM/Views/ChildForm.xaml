@@ -7,6 +7,7 @@
         xmlns:designtimeviewmodel="clr-namespace:vNekoChatUI.MVVM.DesignTimeViewModels"
         xmlns:vm="clr-namespace:vNekoChatUI.MVVM.ViewModels"
         xmlns:v="clr-namespace:vNekoChatUI.MVVM.Views"
+        xmlns:dtos="clr-namespace:TrarsUI.Shared.DTOs;assembly=TrarsUI.Shared"
         xmlns:windowborderex="clr-namespace:TrarsUI.Shared.Controls.WindowBorderEx;assembly=TrarsUI.Shared"
         xmlns:converter="clr-namespace:TrarsUI.Shared.Converters;assembly=TrarsUI.Shared" 
         xmlns:dialogoverlayex="clr-namespace:TrarsUI.Shared.Controls.DialogOverlayEx;assembly=TrarsUI.Shared"
@@ -43,6 +44,8 @@
 
     <Window.Resources>
         <ResourceDictionary>
+            <dtos:BindingProxy x:Key="PART_Border_proxy" Data="{Binding ElementName=PART_Border}"/>
+            
             <converter:RectConverter x:Key="RectConverter"/>
             <converter:RectRadiusConverter x:Key="RectRadiusConverter"/>
             <converter:BorderBrushConverter x:Key="BorderBrushConverter"/>
@@ -81,16 +84,16 @@
             <Grid.Clip>
                 <RectangleGeometry RadiusY="{Binding RadiusX, RelativeSource={RelativeSource Self}}">
                     <RectangleGeometry.RadiusX>
-                        <MultiBinding Converter="{StaticResource RectRadiusConverter}">
+                        <MultiBinding Converter="{StaticResource RectRadiusConverter}" Mode="OneWay">
                             <Binding Path="WindowState" RelativeSource="{RelativeSource AncestorType={x:Type Window}}"/>
-                            <Binding Path="CornerRadius" ElementName="PART_Border"/>
+                            <Binding Path="Data.CornerRadius" Source="{StaticResource PART_Border_proxy}"/>
                         </MultiBinding>
                     </RectangleGeometry.RadiusX>
                     <RectangleGeometry.Rect>
-                        <MultiBinding Converter="{StaticResource RectConverter}">
-                            <Binding Path="ActualWidth" ElementName="PART_Border"/>
-                            <Binding Path="ActualHeight" ElementName="PART_Border"/>
-                            <Binding Path="BorderThickness" ElementName="PART_Border"/>
+                        <MultiBinding Converter="{StaticResource RectConverter}" Mode="OneWay">
+                            <Binding Path="Data.ActualWidth" Source="{StaticResource PART_Border_proxy}"/>
+                            <Binding Path="Data.ActualHeight" Source="{StaticResource PART_Border_proxy}"/>
+                            <Binding Path="Data.BorderThickness" Source="{StaticResource PART_Border_proxy}"/>
                         </MultiBinding>
                     </RectangleGeometry.Rect>
                 </RectangleGeometry>

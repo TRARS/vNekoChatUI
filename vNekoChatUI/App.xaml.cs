@@ -70,42 +70,50 @@ namespace vNekoChatUI
                        {
                            // Service
                            sc.AddSingleton<IMessageBoxService, MessageBoxService>();
-                           sc.AddSingleton<ITokenProviderService, TokenProviderService>();
+                           sc.AddScoped<ITokenProviderService, TokenProviderService>();
                            sc.AddSingleton<IContentProviderService, AContentProviderService>();
                            sc.AddTransient<IDebouncerService, DebouncerService>();
                            // UI组件VM
                            sc.AddFormFactory<IuTitleBarVM, uTitleBarVM>();
                            sc.AddFormFactory<IuRainbowLineVM, uRainbowLineVM>();
                            sc.AddFormFactory<IuClientVM, uClientVM>();
+
                            // MainWindow MainWindowVM
                            sc.AddFormFactory<IMainWindow, IMainWindowEmpty, MainWindow>(sp =>
                            {
-                               var mainwindow = (MainWindow)(sp.GetRequiredService<IMainWindowEmpty>());
+                               using (var scope = sp.CreateScope())
                                {
-                                   mainwindow.DataContext = sp.GetRequiredService<IAbstractFactory<IMainWindowVM>>().Create();
-                                   //mainwindow.SizeToContent = SizeToContent.WidthAndHeight;
-                                   mainwindow.ResizeMode = ResizeMode.CanResize;
-                                   mainwindow.Width = 660;
-                                   mainwindow.Height = 480;
-                                   mainwindow.MinWidth = 660;
-                                   mainwindow.MinHeight = 480;
-                                   mainwindow.MaxWidth = 960;
-                                   mainwindow.MaxHeight = 720;
+                                   var mainwindow = (MainWindow)(scope.ServiceProvider.GetRequiredService<IMainWindowEmpty>());
+                                   {
+                                       mainwindow.DataContext = scope.ServiceProvider.GetRequiredService<IMainWindowVM>();
+                                       //mainwindow.SizeToContent = SizeToContent.WidthAndHeight;
+                                       mainwindow.ResizeMode = ResizeMode.CanResize;
+                                       mainwindow.Width = 660;
+                                       mainwindow.Height = 480;
+                                       mainwindow.MinWidth = 660;
+                                       mainwindow.MinHeight = 480;
+                                       mainwindow.MaxWidth = 960;
+                                       mainwindow.MaxHeight = 720;
+                                   }
+                                   return mainwindow;
                                }
-                               return mainwindow;
                            });
-                           sc.AddFormFactory<IMainWindowVM, MainWindowVM>();
+                           sc.AddScoped<IMainWindowVM, MainWindowVM>();
+
                            // ChildForm ChildFormVM
                            sc.AddFormFactory<IChildForm, IChildFormEmpty, ChildForm>(sp =>
                            {
-                               var childForm = (ChildForm)sp.GetRequiredService<IChildFormEmpty>();
+                               using (var scope = sp.CreateScope())
                                {
-                                   childForm.DataContext = sp.GetRequiredService<IAbstractFactory<IChildFormVM>>().Create();
-                                   childForm.SizeToContent = SizeToContent.WidthAndHeight;
+                                   var childForm = (ChildForm)scope.ServiceProvider.GetRequiredService<IChildFormEmpty>();
+                                   {
+                                       childForm.DataContext = scope.ServiceProvider.GetRequiredService<IChildFormVM>();
+                                       childForm.SizeToContent = SizeToContent.WidthAndHeight;
+                                   }
+                                   return childForm;
                                }
-                               return childForm;
                            });
-                           sc.AddFormFactory<IChildFormVM, ChildFormVM>();
+                           sc.AddScoped<IChildFormVM, ChildFormVM>();
                        });
         }
 

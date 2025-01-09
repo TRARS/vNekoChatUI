@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Common.WPF.Services
@@ -24,6 +25,9 @@ namespace Common.WPF.Services
         public dynamic GetCurrentGeminiApiKeys();
         public void Clear();
         public void SaveToDesktop();
+
+        public string? LoadProfileFromDefaultPath();
+        public string? LoadContinuePromptFromDefaultPath();
     }
 
     //内部类
@@ -48,6 +52,8 @@ namespace Common.WPF.Services
             [ObservableProperty]
             private string _tag = string.Empty;
 
+
+
             [property: JsonIgnore]
             [ObservableProperty]
             private int _num = 0;
@@ -67,6 +73,9 @@ namespace Common.WPF.Services
 
             [JsonPropertyName("LastUsedGeminiApiKey")]
             public string LastUsedGeminiApiKey { get; set; } = string.Empty;
+
+            [JsonPropertyName("DefProfilePath")]
+            public string DefProfilePath { get; set; } = string.Empty;
         }
     }
 
@@ -88,6 +97,8 @@ namespace Common.WPF.Services
         private int currentBingGptCookieIndex = 0;
         private int currentGeminiApiKeyIndex = 0;
 
+        private string defaultProfilePath = string.Empty;
+
         public JsonConfigManagerService()
         {
             try
@@ -98,6 +109,8 @@ namespace Common.WPF.Services
                     _configModel = JsonSerializer.Deserialize<JsonConfigStruct>(jsonString, _options) ?? new();
                     this.RemoveEmpty();
                     this.SetLastUsedGeminiApiKeyIndex(_configModel.LastUsedGeminiApiKey);
+
+                    defaultProfilePath = _configModel.DefProfilePath;
                 }
                 else
                 {
@@ -337,5 +350,63 @@ namespace Common.WPF.Services
             _configModel.GeminiApiKeys.Clear();
         }
         public void SaveToDesktop() => this.SaveConfigToDesktop();
+
+        public string? LoadProfileFromDefaultPath()
+        {
+            if (!Directory.Exists(defaultProfilePath)) { return null; }
+
+            // 储存结果
+            var result = string.Empty;
+
+            // 获取文件夹中的所有 .txt 文件
+            var files = Directory.GetFiles(defaultProfilePath, "*.txt");
+
+            // 使用正则表达式筛选出文件名是纯数字的txt文件
+            var regex = new Regex(@"^\d+\.txt$");
+
+            // 遍历文件并读取内容
+            foreach (var file in files)
+            {
+                var fileName = Path.GetFileName(file); // 获取文件名
+                if (regex.IsMatch(fileName))  // 判断文件名是否为纯数字
+                {
+                    try
+                    {
+                        string content = File.ReadAllText(file);  // 读取文件内容
+                        result += (content + "\n");
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"无法读取文件 {fileName}: {ex.Message}");
+                    }
+                }
+            }
+
+            // 返回
+            return result.Replace("\\r\\n", "\n").TrimStart().TrimEnd();
+        }
+
+        public string? LoadContinuePromptFromDefaultPath()
+        {
+            if (!Directory.Exists(defaultProfilePath)) { return null; }
+
+            var filePath = Path.Combine(defaultProfilePath, "ContinuePrompt.txt");
+
+            // 检查文件是否存在
+            if (File.Exists(filePath))
+            {
+                try
+                {
+                    // 读取文件内容
+                    return File.ReadAllText(filePath);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"无法读取文件 ContinuePrompt.txt: {ex.Message}");
+                }
+            }
+
+            return null;
+        }
     }
 }
