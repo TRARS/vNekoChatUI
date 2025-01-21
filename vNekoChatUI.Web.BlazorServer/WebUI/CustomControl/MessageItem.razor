@@ -13,24 +13,24 @@
         _ => "left"
     }) @(IsHidden?"hidden":"") @(IsDarkMode?"dark":"")">
 
-    
+
     @*正文*@
     <div class="filled"/>
     <div style="display: flex;">
         <div contenteditable="plaintext-only" class="div-editable-base"
-             @ref="_originDiv" 
-             @onfocus="HandleFocus" 
-             style="outline-color: transparent;">
-             @processedContent1
+        @ref="_originDiv" 
+        @onfocus="HandleFocus" 
+        style="outline-color: transparent;display: @(isCollapsed ? "none" : "flex");">
+            @processedContent1
         </div>
 
         @if (isEditingText)
         {
             @*true -> plaintext-only 有效缓解获取innerText时换行次数对不上的问题*@
             <div contenteditable="plaintext-only" 
-                 @ref="_destinationDiv"
-                 @onblur="HandleBlur"
-                 style="color: white;
+            @ref="_destinationDiv"
+            @onblur="HandleBlur"
+            style="color: white;
                         background-color: rgba(64, 64, 128, 0.85);
                         border-radius: 9px;
                         position: absolute; 
@@ -43,7 +43,6 @@
             </div>
         }
     </div>
-
 
     @*注释*@
     @if (IsUser is false && commentIsEmpty is false)
@@ -62,17 +61,17 @@
         <div class="button first" @onclick="HideButtonClick">
             <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
                 <path fill="@(IsUser?"#EC004B":"#EC004B")"
-                      d="M597.795527 511.488347 813.564755 295.718095c23.833825-23.833825 23.833825-62.47489 0.001023-86.307691-23.832801-23.832801-62.47489-23.833825-86.307691 0L511.487835 425.180656 295.717583 209.410404c-23.833825-23.833825-62.475913-23.833825-86.307691 0-23.832801 23.832801-23.833825 62.47489 0 86.308715l215.769228 215.769228L209.410915 727.258599c-23.833825 23.833825-23.833825 62.47489 0 86.307691 23.832801 23.833825 62.473867 23.833825 86.307691 0l215.768205-215.768205 215.769228 215.769228c23.834848 23.833825 62.475913 23.832801 86.308715 0 23.833825-23.833825 23.833825-62.47489 0-86.307691L597.795527 511.488347z" />
+                d="M597.795527 511.488347 813.564755 295.718095c23.833825-23.833825 23.833825-62.47489 0.001023-86.307691-23.832801-23.832801-62.47489-23.833825-86.307691 0L511.487835 425.180656 295.717583 209.410404c-23.833825-23.833825-62.475913-23.833825-86.307691 0-23.832801 23.832801-23.833825 62.47489 0 86.308715l215.769228 215.769228L209.410915 727.258599c-23.833825 23.833825-23.833825 62.47489 0 86.307691 23.832801 23.833825 62.473867 23.833825 86.307691 0l215.768205-215.768205 215.769228 215.769228c23.834848 23.833825 62.475913 23.832801 86.308715 0 23.833825-23.833825 23.833825-62.47489 0-86.307691L597.795527 511.488347z" />
             </svg>
         </div>
-   
+
         @if (IsHidden is false && IsUser)
         {
             @*重新发送_过越狱监测*@
             <div class="button second" @onclick="ReSendExButtonClick" disabled="@(IsHidden)">
                 <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
                     <path fill="#47B87D"
-                          d="M884.412509 181.527273L285.837964 0l100.538181 223.418182C-89.3184 606.021818 269.0816 1024 269.0816 1024a417.978182 417.978182 0 0 1 259.723636-482.210909l100.538182 223.418182z" />
+                    d="M884.412509 181.527273L285.837964 0l100.538181 223.418182C-89.3184 606.021818 269.0816 1024 269.0816 1024a417.978182 417.978182 0 0 1 259.723636-482.210909l100.538182 223.418182z" />
                 </svg>
             </div>
 
@@ -80,15 +79,37 @@
             <div class="button third" @onclick="ReSendButtonClick" disabled="@(IsHidden)">
                 <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
                     <path fill="#D44848"
-                          d="M884.412509 181.527273L285.837964 0l100.538181 223.418182C-89.3184 606.021818 269.0816 1024 269.0816 1024a417.978182 417.978182 0 0 1 259.723636-482.210909l100.538182 223.418182z" />
+                    d="M884.412509 181.527273L285.837964 0l100.538181 223.418182C-89.3184 606.021818 269.0816 1024 269.0816 1024a417.978182 417.978182 0 0 1 259.723636-482.210909l100.538182 223.418182z" />
                 </svg>
             </div>
         }
     }
 
+    @*右上角按钮2*@
+    @if (IsInstructions || IsContinuePrompt || IsMonologue)
+    {
+        @*删除*@
+        <div class="button collapse" @onclick="HideButtonClick">
+            <SquareButton OnClick="ToggleCollapse"
+            PathData="M130.901333 529.493333l149.205334 130.517334a8.533333 8.533333 0 0 0 14.122666-6.4V392.533333a8.533333 8.533333 0 0 0-14.122666-6.4L130.901333 516.608a8.533333 8.533333 0 0 0 0 12.8z
+                                     M128 213.333333m42.666667 0l682.666666 0q42.666667 0 42.666667 42.666667l0 0q0 42.666667-42.666667 42.666667l-682.666666 0q-42.666667 0-42.666667-42.666667l0 0q0-42.666667 42.666667-42.666667Z
+                                     M128 725.333333m42.666667 0l682.666666 0q42.666667 0 42.666667 42.666667l0 0q0 42.666667-42.666667 42.666667l-682.666666 0q-42.666667 0-42.666667-42.666667l0 0q0-42.666667 42.666667-42.666667Z
+                                     M384 469.333333m42.666667 0l426.666666 0q42.666667 0 42.666667 42.666667l0 0q0 42.666667-42.666667 42.666667l-426.666666 0q-42.666667 0-42.666667-42.666667l0 0q0-42.666667 42.666667-42.666667Z"
+            Width="25" Height="25" ExColor="Red" />
+        </div>
+    }
+
 </div>
 
 @code {
+    private bool isCollapsed = false; // 控制折叠状态
+
+    [Parameter]
+    public bool DefCollapse { get; set; } = false;
+
+    [Parameter]
+    public bool CanCollapse { get; set; } = true;
+
     [Parameter]
     public bool IsDarkMode { get; set; } = true;
 
@@ -144,6 +165,21 @@
 
     private string content_text;
     private string comment_text;
+
+    // 
+    protected override void OnInitialized()
+    {
+        if (DefCollapse)
+        {
+            isCollapsed = true;
+        }
+    }
+
+    //折叠展开
+    private void ToggleCollapse()
+    {
+        isCollapsed = !isCollapsed; // 切换状态
+    }
 
     //ContentSet
     private void ContentSet(string newValue)

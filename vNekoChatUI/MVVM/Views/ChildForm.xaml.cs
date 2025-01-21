@@ -22,7 +22,7 @@ namespace vNekoChatUI.MVVM.Views
 
         public Action? OnTaskbarMinimize { get; set; }
 
-        public ChildForm(ITokenProviderService tokenProvider, IDebouncerService debouncer)
+        public ChildForm(ITokenProviderService tokenProvider, IDebouncerService debouncer, IStringEncryptorService stringEncryptor)
         {
             InitializeComponent();
             InitWindowBorderlessBehavior(); // 无边框
@@ -35,6 +35,16 @@ namespace vNekoChatUI.MVVM.Views
 
             // 设置Token
             this.Token = tokenProvider.GetRecurrentTokenForChildForm();
+
+            // Aes
+            WeakReferenceMessenger.Default.Register<StringEncryptMessage, string>(this, this.Token, (r, m) =>
+            {
+                m.Reply(stringEncryptor.AesEncrypt(m.AesKey, m.TextSrc));
+            });
+            WeakReferenceMessenger.Default.Register<StringDecryptMessage, string>(this, this.Token, (r, m) =>
+            {
+                m.Reply(stringEncryptor.AesDecrypt(m.AesKey, m.TextSrc));
+            });
 
             // 设置WindowInfo
             WeakReferenceMessenger.Default.Register<SetWindowInfoMessage, string>(this, this.Token, (r, m) =>

@@ -21,10 +21,23 @@ namespace vNekoChatUI.Base.Helper.OpenCvProxy
     public partial class OpenCV
     {
         /// <summary>
-        /// <para>bmpList: 等宽位图List</para>
-        /// <para>bkcolor: 背景色 "#AARRGGBB"</para>
+        /// <para>bmp: 位图</para>
+        /// <para>savePath: 绝对路径 @"X:\img\output.png"</para>
         /// </summary>
-        public BitmapSource? MergeImages(List<FormatConvertedBitmap> bmpList, string bkcolor)
+        public void SaveBitmapSource(BitmapSource bmp, string savePath)
+        {
+            try
+            {
+                Cv2.ImWrite(savePath, OpenCvSharp.WpfExtensions.BitmapSourceConverter.ToMat(bmp));
+            }
+            catch (Exception ex) { LogProxy.Instance.Print($"{ex.Message}"); }
+        }
+
+        /// <summary>
+        /// <para>bmpList: 等宽位图List</para>
+        /// <para>bkColor: 背景色 "#AARRGGBB"</para>
+        /// </summary>
+        public BitmapSource? MergeImages(List<FormatConvertedBitmap> bmpList, string bkColor)
         {
             try
             {
@@ -33,10 +46,30 @@ namespace vNekoChatUI.Base.Helper.OpenCvProxy
                 {
                     matList.Add(OpenCvSharp.WpfExtensions.BitmapSourceConverter.ToMat(item));
                 });
-                return MergeImagesBase(matList, bkcolor);
+                return MergeImagesBase(matList, bkColor);
             }
             catch (Exception ex) { LogProxy.Instance.Print($"{ex.Message}"); }
             return null;
+        }
+
+        /// <summary>
+        /// <para>bmpList: 等宽位图List</para>
+        /// <para>bkColor: 背景色 "#AARRGGBB"</para>
+        /// <para>savePath: 绝对路径 @"X:\img\output.png"</para>
+        /// </summary>
+        public void MergeImagesAnsSaveToImg(List<FormatConvertedBitmap> bmpList, string bkColor, string savePath)
+        {
+            try
+            {
+                List<Mat> matList = new();
+                bmpList.ForEach((item) =>
+                {
+                    matList.Add(OpenCvSharp.WpfExtensions.BitmapSourceConverter.ToMat(item));
+                });
+
+                Cv2.ImWrite(savePath, OpenCvSharp.WpfExtensions.BitmapSourceConverter.ToMat(MergeImagesBase(matList, bkColor)));
+            }
+            catch (Exception ex) { LogProxy.Instance.Print($"{ex.Message}"); }
         }
 
         /// <summary>

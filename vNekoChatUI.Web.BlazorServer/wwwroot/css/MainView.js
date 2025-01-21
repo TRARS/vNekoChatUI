@@ -68,6 +68,12 @@ resizeTextarea = (Input) => {
     textarea.style.height = `${textarea.scrollHeight}px`;
 };
 
+// 页面滚动到最顶部
+scrollToTop = async () => {
+    window.scrollTo(0, 0)
+    return await waitForScrollComplete();
+}
+
 // 页面滚动到最底部
 scrollToBottom = async () => {
     window.scrollTo(0, document.body.scrollHeight)

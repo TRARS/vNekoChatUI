@@ -69,10 +69,15 @@ namespace vNekoChatUI
                        .ConfigureServices(sc =>
                        {
                            // Service
+                           sc.AddSingleton<ICreateChildFormService, CreateChildFormService>();
+                           sc.AddTransient<IDebouncerService, DebouncerService>();
+                           sc.AddTransient<IDialogYesNoService, DialogYesNoService>();
+                           sc.AddTransient<IDispatcherService, DispatcherService>();
                            sc.AddSingleton<IMessageBoxService, MessageBoxService>();
+                           sc.AddTransient<IStringEncryptorService, StringEncryptorService>();
                            sc.AddScoped<ITokenProviderService, TokenProviderService>();
                            sc.AddSingleton<IContentProviderService, AContentProviderService>();
-                           sc.AddTransient<IDebouncerService, DebouncerService>();
+                           ;
                            // UI组件VM
                            sc.AddFormFactory<IuTitleBarVM, uTitleBarVM>();
                            sc.AddFormFactory<IuRainbowLineVM, uRainbowLineVM>();
@@ -87,7 +92,7 @@ namespace vNekoChatUI
                                    {
                                        mainwindow.DataContext = scope.ServiceProvider.GetRequiredService<IMainWindowVM>();
                                        //mainwindow.SizeToContent = SizeToContent.WidthAndHeight;
-                                       mainwindow.ResizeMode = ResizeMode.CanResize;
+                                       mainwindow.ResizeMode = ResizeMode.CanResizeWithGrip;
                                        mainwindow.Width = 660;
                                        mainwindow.Height = 480;
                                        mainwindow.MinWidth = 660;
@@ -98,7 +103,7 @@ namespace vNekoChatUI
                                    return mainwindow;
                                }
                            });
-                           sc.AddScoped<IMainWindowVM, MainWindowVM>();
+                           sc.AddTransient<IMainWindowVM, MainWindowVM>();
 
                            // ChildForm ChildFormVM
                            sc.AddFormFactory<IChildForm, IChildFormEmpty, ChildForm>(sp =>
@@ -113,7 +118,7 @@ namespace vNekoChatUI
                                    return childForm;
                                }
                            });
-                           sc.AddScoped<IChildFormVM, ChildFormVM>();
+                           sc.AddTransient<IChildFormVM, ChildFormVM>();
                        });
         }
 

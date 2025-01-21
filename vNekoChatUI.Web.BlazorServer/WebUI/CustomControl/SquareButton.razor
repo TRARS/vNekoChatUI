@@ -8,7 +8,7 @@
     ("blue") => "blue",
     ("purple") => "purple",
     _ => ""
-})" @onclick="OnClick">
+})" @onclick="OnClick" style="width: @(Width > 0 ? $"{Width}px" : "auto"); Height: @(Height > 0 ? $"{Height}px" : "auto");">
 
     <div class="button-content">
         <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
@@ -26,6 +26,12 @@
 </button>
 
 @code {
+    [Parameter]
+    public int Width { get; set; }
+
+    [Parameter]
+    public int Height { get; set; }
+
     [Parameter]
     public EventCallback OnClick { get; set; }
 

@@ -420,7 +420,7 @@ namespace vNekoChatUI.A.CustomControlEx.ListViewChatHistoryEx
             }
             catch (Exception ex)
             {
-                LogProxy.Instance.Print($"BitmapSourceToPngFile Error: {ex.Message}");
+                LogProxy.Instance.Print($"BitmapSourceToPngFile Error: （{bitmapSource.Width},{bitmapSource.Height}）{ex.Message}");
             }
         }
         public void CaptureScreenshot()
@@ -499,8 +499,8 @@ namespace vNekoChatUI.A.CustomControlEx.ListViewChatHistoryEx
                                 {
                                     string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                                     string filePath = Path.Combine(desktopPath, "_messages.png");
-                                    var result = Base.Helper.OpenCvProxy.OpenCV.Instance.MergeImages(list, "#FF444654");
-                                    BitmapSourceToPngFile(result, filePath);
+                                    Base.Helper.OpenCvProxy.OpenCV.Instance.MergeImagesAnsSaveToImg(list, "#FF444654", filePath);
+                                    //BitmapSourceToPngFile(result, filePath);
 
                                     LogProxy.Instance.Print($"已截图");
                                     IsCapturingScreenshot = false;

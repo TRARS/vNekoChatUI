@@ -14,7 +14,8 @@
         <div class="wrap">
             <ul class="ul-none">
                 <!--人设-->
-                <MessageItem IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
+                <MessageItem DefCollapse="true"
+                              IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
                               IsHidden=false
                               IsInstructions=true
                               Content="@ChatRoomModelInstance.AiProfile"
@@ -39,7 +40,8 @@
                 {
                     var timerKey = $"VtK#SvIPvEL3o#DZ_{index}";
                     <li>
-                        <MessageItem IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
+                        <MessageItem CanCollapse="false"
+                                      IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
                                       IsHidden="@item.Remove"
                                       IsUser='item.Roles == "User"'
                                       Content="@item.Content"
@@ -65,7 +67,8 @@
         <div class="wrap">
             <ul class="ul-none">
                 <!--ContinuePrompt-->
-                <MessageItem IsDarkMode="@ChatRoomModelInstance.IsDarkMode" 
+                <MessageItem DefCollapse="true" 
+                              IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
                               IsHidden=false
                               IsContinuePrompt=true
                               Content="@ChatRoomModelInstance.AiContinuePrompt"
@@ -86,7 +89,9 @@
         <div class="wrap">
             <ul class="ul-none">
                 <!--Bing内心独白-->
-                <MessageItem IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
+                <MessageItem DefCollapse="true"
+                              CanCollapse="false"
+                              IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
                               IsHidden=false
                               IsMonologue=true
                               Content="@ChatRoomModelInstance.AiInnerMonologue"
@@ -108,12 +113,12 @@
 </div>*@
 <div class="div-root button-box">
     <SquareButton OnClick="TakeScreenshot_Windows" ExColor="blue"
-    PathData="M883.657136 89.152483 139.917168 89.152483c-41.195238 0-74.529437 33.358759-74.529437 74.529437l0 523.257391c0 41.169655 33.334199 74.529437 74.529437 74.529437l272.498254 0 0 92.385107C296.690748 865.596294 213.669916 897.111055 213.669916 934.267303l0 0.048095 596.234473 0 0-0.048095c0-37.156248-83.020832-68.669986-198.745507-80.412424l0-92.385107 272.498254 0c41.146119 0 74.529437-33.359782 74.529437-74.529437l0-523.257391C958.186574 122.511241 924.803255 89.152483 883.657136 89.152483zM883.657136 635.772978c0 13.731746-11.111059 24.842805-24.842805 24.842805L164.759973 660.615782c-13.731746 0-24.842805-11.111059-24.842805-24.842805L139.917168 187.045023c0-13.731746 11.111059-24.842805 24.842805-24.842805l694.054359 0c13.731746 0 24.842805 11.111059 24.842805 24.842805L883.657136 635.772978z
+                   PathData="M883.657136 89.152483 139.917168 89.152483c-41.195238 0-74.529437 33.358759-74.529437 74.529437l0 523.257391c0 41.169655 33.334199 74.529437 74.529437 74.529437l272.498254 0 0 92.385107C296.690748 865.596294 213.669916 897.111055 213.669916 934.267303l0 0.048095 596.234473 0 0-0.048095c0-37.156248-83.020832-68.669986-198.745507-80.412424l0-92.385107 272.498254 0c41.146119 0 74.529437-33.359782 74.529437-74.529437l0-523.257391C958.186574 122.511241 924.803255 89.152483 883.657136 89.152483zM883.657136 635.772978c0 13.731746-11.111059 24.842805-24.842805 24.842805L164.759973 660.615782c-13.731746 0-24.842805-11.111059-24.842805-24.842805L139.917168 187.045023c0-13.731746 11.111059-24.842805 24.842805-24.842805l694.054359 0c13.731746 0 24.842805 11.111059 24.842805 24.842805L883.657136 635.772978z
                             M212.966904 237.72631l173.901679 0 0 49.685609-173.901679 0 0-49.685609Z
                             M212.966904 337.631694l273.27392 0 0 49.686632-273.27392 0 0-49.686632Z
                             M212.966904 436.931281l223.588311 0 0 49.686632-223.588311 0 0-49.686632Z
                             M212.966904 536.837688l322.960553 0 0 49.686632-322.960553 0 0-49.686632Z"
-    ToolTip="TakeScreenshot_Windows" />
+                   ToolTip="TakeScreenshot_Windows" />
     <SquareButton OnClick="TakeScreenshot_SmartPhone" ExColor="blue"
                    PathData="M724.992 20.48H299.008C225.28 20.48 159.744 81.92 159.744 159.744v704.512c0 77.824 61.44 139.264 139.264 139.264h421.888c73.728 0 139.264-61.44 139.264-139.264V159.744C864.256 81.92 798.72 20.48 724.992 20.48z m-163.84 892.928h-98.304c-20.48 0-40.96-20.48-40.96-40.96s20.48-40.96 40.96-40.96h98.304c20.48 0 40.96 20.48 40.96 40.96s-20.48 40.96-40.96 40.96z m221.184-176.128H241.664V159.744c0-32.768 24.576-57.344 57.344-57.344h40.96l24.576 69.632c4.096 12.288 16.384 24.576 32.768 24.576h233.472c16.384 0 28.672-8.192 32.768-24.576l24.576-69.632h40.96c32.768 0 57.344 24.576 57.344 57.344V737.28z"
                    ToolTip="TakeScreenshot_SmartPhone" />
@@ -247,9 +252,12 @@
     {
         ChatRoomModelInstance.Screenshot_SmartPhone?.Invoke(NavigationOff, InputBoxOff);
     }
-    private void RefreshProfile()
+    private async Task RefreshProfile()
     {
-        ChatRoomModelInstance.RefreshProfile?.Invoke("");
+        if (await JS.InvokeAsync<bool>("confirm", "RefreshProfile"))
+        {
+            ChatRoomModelInstance.RefreshProfile?.Invoke("");
+        }
     }
     private void HideNavMenu()
     {

@@ -154,7 +154,7 @@ namespace vNekoChatUI.Character.GeminiUtils
                 catch (Exception ex)
                 {
                     var errorJsonText = GetErrorJsonText(ex.Message);
-                    var errorJsonObj = GetErrorJsonObj(errorJsonText);
+                    var errorJsonObj = GetErrorJsonObj<GeminiErrorJson>(errorJsonText);
 
                     // 如果达到限额，计数器+1
                     if (errorJsonObj is not null)
@@ -163,10 +163,7 @@ namespace vNekoChatUI.Character.GeminiUtils
                         if (errorJsonObj.error.code == 429)
                         {
                             tryGetNextKey = true;  //复位
-                            _ = Task.Run(() =>
-                            {
-                                WeakReferenceMessenger.Default.Send(new AlertMessage("尝试切换到下一个ApiKey"));
-                            });
+                            WeakReferenceMessenger.Default.Send(new AlertMessage("尝试切换到下一个ApiKey"));
 
                             if (retryLimit-- > 0)
                             {
@@ -176,7 +173,7 @@ namespace vNekoChatUI.Character.GeminiUtils
                         }
                         else
                         {
-                            WeakReferenceMessenger.Default.Send(new AlertMessage($"Error: {errorJsonObj.error.code}"));
+                            WeakReferenceMessenger.Default.Send(new AlertMessage($"GeminiError: {errorJsonObj.error.code}"));
                         }
                     }
 
@@ -196,29 +193,6 @@ namespace vNekoChatUI.Character.GeminiUtils
 
     public sealed partial class GeminiApiClient
     {
-        private class Error
-        {
-            /// <summary>
-            /// 
-            /// </summary>
-            public int code { get; set; }
-            /// <summary>
-            /// 
-            /// </summary>
-            public string message { get; set; }
-            /// <summary>
-            /// 
-            /// </summary>
-            public string status { get; set; }
-        }
-        private class ErrorJson
-        {
-            /// <summary>
-            /// 
-            /// </summary>
-            public Error error { get; set; }
-        }
-
         private string GetErrorJsonText(string input)
         {
             string result = string.Empty;
@@ -238,11 +212,11 @@ namespace vNekoChatUI.Character.GeminiUtils
 
             return result;
         }
-        private ErrorJson? GetErrorJsonObj(string input)
+        private T? GetErrorJsonObj<T>(string input) where T : class
         {
             if (string.IsNullOrWhiteSpace(input)) { return null; }
 
-            var jsonObject = JsonSerializer.Deserialize<ErrorJson>(input, new JsonSerializerOptions()
+            var jsonObject = JsonSerializer.Deserialize<T>(input, new JsonSerializerOptions()
             {
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                 Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },

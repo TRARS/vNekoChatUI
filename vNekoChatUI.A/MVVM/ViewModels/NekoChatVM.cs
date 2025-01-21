@@ -28,10 +28,24 @@ namespace vNekoChatUI.A.MVVM.ViewModels
     partial class NekoChatVM : ObservableObject, IContentVM
     {
         public string Title { get; set; }
+
+        private string Token { get; set; }
+
+        Action? profileRefresh;
+        Action? profileReload;
     }
 
     partial class NekoChatVM
     {
+        //
+        [RelayCommand]
+        private void OnLoaded(object para)
+        {
+            this.Token = ((IToken)para).Token;
+
+            //载入角色
+            LoadCharacter();
+        }
         // 发送消息
         [RelayCommand]
         private async Task OnSendAsync(object para)
@@ -248,34 +262,34 @@ namespace vNekoChatUI.A.MVVM.ViewModels
 
         // 刷新设定
         [RelayCommand]
-        private async Task OnProfileRefresh(object para)
+        private async Task OnProfileRefreshAsync()
         {
-            if (para is not null)
+            try
             {
-                if (para is string) { profileRefresh?.Invoke(); return; }
+                Action? yesnoCallback = null;
+                var msg = $"ProfileRefresh ?";
+                var yesno = await WeakReferenceMessenger.Default.Send(new DialogYesNoMessage(msg, (x) => { yesnoCallback = x; }), this.Token);
 
-                try
+                if (yesno is true)
                 {
-                    Action? yesnoCallback = null;
-                    var msg = $"ProfileRefresh ?";
-                    var token = ((IToken)para).Token;
-                    var yesno = await WeakReferenceMessenger.Default.Send(new DialogYesNoMessage(msg, (x) => { yesnoCallback = x; }), token);
-
-                    if (yesno is true)
-                    {
-                        profileRefresh?.Invoke();
-
-                        Debug.WriteLine($"ProfileRefresh");
-                    }
-                    yesnoCallback?.Invoke();
+                    profileRefresh?.Invoke();
+                    Debug.WriteLine($"ProfileRefresh");
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"OnProfileRefresh error: {ex.Message}");
-                }
+                yesnoCallback?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"OnProfileRefresh error: {ex.Message}");
             }
         }
-        Action? profileRefresh;
+
+        // 载入默认人设
+        [RelayCommand]
+        private void OnGetDefaultProfile()
+        {
+            profileReload?.Invoke();
+            WeakReferenceMessenger.Default.Send(new AlertMessage("载入默认人设"));
+        }
 
         // 切换模式
         [RelayCommand]
@@ -418,8 +432,8 @@ namespace vNekoChatUI.A.MVVM.ViewModels
             //载入命令
             LoadCommand();
 
-            //载入角色
-            LoadCharacter();
+            ////载入角色
+            //LoadCharacter();
 
             //载入命令
             LoadBlazorCommand();
@@ -722,10 +736,18 @@ namespace vNekoChatUI.A.MVVM.ViewModels
                     //user.Signature = "";
                     bot.DisplayName = "assistant";
 
-                    bot.Profile = _jsonConfigManagerService.LoadProfileFromDefaultPath() ?? "";
+                    bot.Profile = _jsonConfigManagerService.LoadProfileFromDefaultPath(this.Token) ?? "";
 
-                    bot.InnerMonologue = "gemini-1.5-pro-latest";
-                    bot.ContinuePrompt = _jsonConfigManagerService.LoadContinuePromptFromDefaultPath() ?? "";
+                    bot.InnerMonologue = "gemini-1.5-pro-latest"; //   gemini-1.5-pro-latest   gemini-2.0-flash-exp
+                    bot.ContinuePrompt = _jsonConfigManagerService.LoadContinuePromptFromDefaultPath(this.Token) ?? "";
+
+                    // 载入备份，需要AesKey
+                    this.profileReload = () =>
+                    {
+                        bot.Profile = new DefaultProfile(_jsonConfigManagerService.GetAesKey(), this.Token).GetDefaultProfile();
+                        bot.InnerMonologue = "gemini-1.5-pro-latest";
+                        bot.ContinuePrompt = new DefaultProfile(_jsonConfigManagerService.GetAesKey(), this.Token).GetDefaultContinuePrompt();
+                    };
                 }
             }
 

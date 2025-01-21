@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -9,6 +10,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TrarsUI.Shared.Messages;
 
 namespace Common.WPF.Services
 {
@@ -26,8 +28,9 @@ namespace Common.WPF.Services
         public void Clear();
         public void SaveToDesktop();
 
-        public string? LoadProfileFromDefaultPath();
-        public string? LoadContinuePromptFromDefaultPath();
+        public string? LoadProfileFromDefaultPath(string? token);
+        public string? LoadContinuePromptFromDefaultPath(string? token);
+        public string GetAesKey();
     }
 
     //内部类
@@ -76,6 +79,9 @@ namespace Common.WPF.Services
 
             [JsonPropertyName("DefProfilePath")]
             public string DefProfilePath { get; set; } = string.Empty;
+
+            [JsonPropertyName("AesKey")]
+            public string AesKey { get; set; } = string.Empty;
         }
     }
 
@@ -98,6 +104,7 @@ namespace Common.WPF.Services
         private int currentGeminiApiKeyIndex = 0;
 
         private string defaultProfilePath = string.Empty;
+        private string defaultAesKey = string.Empty;
 
         public JsonConfigManagerService()
         {
@@ -111,6 +118,7 @@ namespace Common.WPF.Services
                     this.SetLastUsedGeminiApiKeyIndex(_configModel.LastUsedGeminiApiKey);
 
                     defaultProfilePath = _configModel.DefProfilePath;
+                    defaultAesKey = _configModel.AesKey;
                 }
                 else
                 {
@@ -351,7 +359,7 @@ namespace Common.WPF.Services
         }
         public void SaveToDesktop() => this.SaveConfigToDesktop();
 
-        public string? LoadProfileFromDefaultPath()
+        public string? LoadProfileFromDefaultPath(string? token)
         {
             if (!Directory.Exists(defaultProfilePath)) { return null; }
 
@@ -372,8 +380,24 @@ namespace Common.WPF.Services
                 {
                     try
                     {
-                        string content = File.ReadAllText(file);  // 读取文件内容
-                        result += (content + "\n");
+                        var text = File.ReadAllText(file).Trim();
+                        if (token is not null && System.Buffers.Text.Base64.IsValid(text))
+                        {
+                            Task.Run(async () =>
+                            {
+                                var response = await WeakReferenceMessenger.Default.Send(new StringDecryptMessage()
+                                {
+                                    AesKey = defaultAesKey,
+                                    TextSrc = text
+                                }, token);
+                                result += (response + "\n\n");
+                            }).Wait();
+                        }
+                        else
+                        {
+                            string content = File.ReadAllText(file);  // 读取文件内容
+                            result += (content + "\n");
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -383,10 +407,9 @@ namespace Common.WPF.Services
             }
 
             // 返回
-            return result.Replace("\\r\\n", "\n").TrimStart().TrimEnd();
+            return result.Replace("\\r\\n", "\n").Trim();
         }
-
-        public string? LoadContinuePromptFromDefaultPath()
+        public string? LoadContinuePromptFromDefaultPath(string? token)
         {
             if (!Directory.Exists(defaultProfilePath)) { return null; }
 
@@ -397,8 +420,31 @@ namespace Common.WPF.Services
             {
                 try
                 {
-                    // 读取文件内容
-                    return File.ReadAllText(filePath);
+                    var text = File.ReadAllText(filePath).Trim();
+                    if (token is not null && System.Buffers.Text.Base64.IsValid(text))
+                    {
+                        return Task.Run(async () =>
+                        {
+                            var response = string.Empty;
+                            try
+                            {
+                                response = await WeakReferenceMessenger.Default.Send(new StringDecryptMessage()
+                                {
+                                    AesKey = defaultAesKey,
+                                    TextSrc = text
+                                }, token);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"无法读取文件 ContinuePrompt.txt: {ex.Message}");
+                            }
+                            return $"{response}";
+                        }).Result;
+                    }
+                    else
+                    {
+                        return File.ReadAllText(filePath); // 读取文件内容
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -407,6 +453,11 @@ namespace Common.WPF.Services
             }
 
             return null;
+        }
+
+        public string GetAesKey()
+        {
+            return _configModel.AesKey;
         }
     }
 }

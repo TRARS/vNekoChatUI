@@ -14,7 +14,7 @@ namespace vNekoChatUI.Character.GeminiUtils
             }
             catch (Exception ex)
             {
-                throw new Exception($"GeminiWrapper Error {ex.Message}");
+                throw new Exception($"GeminiWrapper GeminiError {ex.Message}");
             }
         }
     }

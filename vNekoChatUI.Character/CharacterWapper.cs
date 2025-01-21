@@ -80,9 +80,9 @@ namespace vNekoChatUI.Character
             {
                 this.SenderName = "error";
                 this.SenderMessage = "error";
-                this.ReceiverMessage = "JsonSerializer.Deserialize Error";
+                this.ReceiverMessage = "JsonSerializer.Deserialize GeminiError";
                 this.TotalTokens = -998;
-                System.Windows.MessageBox.Show("CharacterWapper Error");
+                System.Windows.MessageBox.Show("CharacterWapper GeminiError");
                 return this;
             }
         }
@@ -219,7 +219,7 @@ namespace vNekoChatUI.Character
                             }
                             catch (Exception ex)
                             {
-                                throw new Exception($"ClientCallBack Error {ex.Message}");
+                                throw new Exception($"ClientCallBack GeminiError {ex.Message}");
                             }
                         });
                     }
@@ -250,7 +250,7 @@ namespace vNekoChatUI.Character
                             }
                             catch (Exception ex)
                             {
-                                throw new Exception($"ClientCallBack Error {ex.Message}");
+                                throw new Exception($"ClientCallBack GeminiError {ex.Message}");
                             }
                         });
 
@@ -279,7 +279,7 @@ namespace vNekoChatUI.Character
                             }
                             catch (Exception ex)
                             {
-                                throw new Exception($"ClientCallBack Error {ex.Message}");
+                                throw new Exception($"ClientCallBack GeminiError {ex.Message}");
                             }
                         });
                     }

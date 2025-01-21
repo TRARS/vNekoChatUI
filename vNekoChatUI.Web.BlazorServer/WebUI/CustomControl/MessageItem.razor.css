@@ -135,6 +135,13 @@ div[contenteditable="plaintext-only"]:focus {
         transform: translateX(-200%);
     }
 
+    /*右上角按钮-折叠*/
+    .message-item .button.collapse {
+        padding: 1px;
+        transform: translateX(-22%);
+        opacity: 1.0;
+    }
+
     /*靠左气泡样式*/
     .message-item.left {
         min-width: 160px; /*文本宽度+10*/
@@ -275,7 +282,7 @@ div[contenteditable="plaintext-only"]:focus {
     }
         .message-item.monologue::before {
             display: inline-block;
-            content: "[assistant](#inner_monologue)"; /* 添加要显示的文本 */
+            content: "[assistant](#gemini_model)"; /* 添加要显示的文本 */
             /*transform: translateX(-50%);*/ /* 将文本水平居中 */
             color: #AAAAAA;
             /*background-color: #256B75;*/ /* 背景颜色 */

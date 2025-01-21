@@ -268,6 +268,18 @@
         await Task.Delay(100);//给点反应时间，再调高度
         await JS.InvokeVoidAsync("resizeTextarea", "textarea.textbox");
     }
+    private async Task scrollToTop(int delay = 0)
+    {
+        try
+        {
+            await Task.Delay(delay);
+            await JS.InvokeVoidAsync("scrollToBottom");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"scrollToTop error: {ex.Message}");
+        }
+    }
     private async Task scrollToBottom(int count = 0, int delay = 0)
     {
         try

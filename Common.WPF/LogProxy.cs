@@ -1,6 +1,5 @@
 #if DEBUG
 #else
-global using Console = System.Diagnostics.Trace;
 #endif
 
 using System;

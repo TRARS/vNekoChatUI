@@ -3,6 +3,29 @@ using System.Text.Json.Serialization;
 
 namespace vNekoChatUI.Character.GeminiUtils
 {
+    public class GeminiError
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public int code { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string message { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string status { get; set; }
+    }
+    public class GeminiErrorJson
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public GeminiError error { get; set; }
+    }
+
     public class Gemini_Response
     {
         [JsonPropertyName("totaltokens")]

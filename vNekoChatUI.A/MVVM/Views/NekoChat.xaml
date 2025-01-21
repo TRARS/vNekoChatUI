@@ -22,7 +22,6 @@
              UseLayoutRounding="true"
              d:DesignHeight="480" d:DesignWidth="660">
     
-    
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -36,6 +35,13 @@
     <d:UserControl.DataContext>
         <vm:NekoChatVM/>
     </d:UserControl.DataContext>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}"
+                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -77,8 +83,18 @@
                                                     Margin="1">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
-                                    <i:InvokeCommandAction Command="{Binding ProfileRefreshCommand}"
-                                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
+                                    <i:InvokeCommandAction Command="{Binding ProfileRefreshCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </emptybuttonex:cEmptyButton>
+                        <!--载入默认人设-->
+                        <emptybuttonex:cEmptyButton Width="28" Height="28"
+                                                    BorderMouseOverColor="DimGray"
+                                                    BorderPathData="M0.350994 394.703527C13.419637 552.061414 137.435139 690.573071 490.226091 942.296163c6.387477 4.556783 13.916964 6.961552 21.76163 6.961552 7.816013 0 15.32401-2.406816 21.688975-6.949272 352.87077-251.770164 476.905714-390.347313 489.976404-547.938514l-0.013303-60.136635C1009.728972 170.201403 906.133545 85.971024 815.453267 77.127611c-15.761985-1.586125-31.210839-2.385327-46.047756-2.385327-110.648053 0-158.939919 47.679929-219.981157 120.42472l-37.426401 44.647873-37.437657-44.658106C413.561014 122.422214 365.28245 74.742285 254.521834 74.742285c-14.848173 0-30.274514 0.801249-45.870724 2.376117C117.816313 85.975117 14.231119 170.291454 0.346901 334.568938l0.00921 60.133565L0.350994 394.703527 0.350994 394.703527z"
+                                                    Margin="1">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding GetDefaultProfileCommand}"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </emptybuttonex:cEmptyButton>
@@ -99,8 +115,8 @@
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <i:ChangePropertyAction TargetObject="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type configbuttonex:cConfigButton}}}"
-                                                                    PropertyName="ContextMenuIsOpen"
-                                                                    Value="True"/>
+                                                            PropertyName="ContextMenuIsOpen"
+                                                            Value="True"/>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </configbuttonex:cConfigButton>
