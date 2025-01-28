@@ -23,7 +23,7 @@ namespace vNekoChatUI.Web.BlazorServer.WebUI.MainViewModel
         Action<string>? ReSend { get; set; }
         Action<bool, bool>? Screenshot_Windows { get; set; }
         Action<bool, bool>? Screenshot_SmartPhone { get; set; }
-        Action<string>? RefreshProfile { get; set; }
+        Action<string>? GetDefaultProfile { get; set; }
         Action<Action<bool>?>? HideNavMenu { get; set; }
         Action<Action<bool>?>? HideInputBox { get; set; }
         Action? ColorChange { get; set; }
@@ -50,7 +50,7 @@ namespace vNekoChatUI.Web.BlazorServer.WebUI.MainViewModel
         public Action<string>? ReSend { get; set; } = null;
         public Action<bool, bool>? Screenshot_Windows { get; set; } = null;
         public Action<bool, bool>? Screenshot_SmartPhone { get; set; } = null;
-        public Action<string>? RefreshProfile { get; set; } = null;
+        public Action<string>? GetDefaultProfile { get; set; } = null;
         public Action<Action<bool>?>? HideNavMenu { get; set; } = null;
         public Action<Action<bool>?>? HideInputBox { get; set; } = null;
         public Action? ColorChange { get; set; } = null;

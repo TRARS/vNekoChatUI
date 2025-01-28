@@ -199,7 +199,10 @@ namespace vNekoChatUI.A.CustomControlEx.PromptBoxEx
                 if (e.NewValue is string text)
                 {
                     var tb = (cPromptBox)s;
-                    if (tb.IsManuallyEnabled) { tb.TextBuffer = text; }
+                    if (tb.IsManuallyEnabled && tb.TextBuffer != text)
+                    {
+                        tb.TextBuffer = text;
+                    }
                 }
             })
         );
@@ -218,7 +221,10 @@ namespace vNekoChatUI.A.CustomControlEx.PromptBoxEx
                 if (e.NewValue is string buffer)
                 {
                     var tb = (cPromptBox)s;
-                    if (tb.IsManuallyEnabled) { tb.Text = buffer; }
+                    if (tb.IsManuallyEnabled && tb.Text != buffer)
+                    {
+                        tb.Text = buffer;
+                    }
                 }
             })
         );
@@ -237,7 +243,7 @@ namespace vNekoChatUI.A.CustomControlEx.PromptBoxEx
                 if (e.NewValue is bool flag)
                 {
                     var tb = (cPromptBox)s;
-                    if (flag) { tb.Text = tb.TextBuffer; }
+                    if (flag && tb.Text != tb.TextBuffer) { tb.Text = tb.TextBuffer; }
                     if (flag is false)
                     {
                         tb.Text = string.Empty;

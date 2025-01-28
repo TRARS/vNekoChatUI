@@ -93,7 +93,8 @@
                                                               VerticalAlignment="Stretch" 
                                                               Margin="{Binding BorderContentMargin, RelativeSource={RelativeSource TemplatedParent}}" 
                                                               >
-                                    <textboxatypeex:cTextBoxAtype Text="{Binding TextBuffer, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}"                               
+                                    <textboxatypeex:cTextBoxAtype Text="{Binding TextBuffer, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged,
+                                                                                 Delay=256}"                               
                                                                   
                                                                   HorizontalScrollBarVisibility="Disabled"
                                                                   VerticalScrollBarVisibility="Disabled"

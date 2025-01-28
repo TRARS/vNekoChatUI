@@ -268,7 +268,7 @@ namespace vNekoChatUI.Character
                                 //获取历史记录
                                 var history = _getChatHistoryCallBack.Invoke();
                                 //拿到Gemini回复
-                                var jsonString = await _geminiClient.Entry(history, _getCancellationToken);
+                                var jsonString = await _geminiClient.Entry(history, _getCancellationToken, _stepUpCallBack);
 
                                 //解析json，TotalTokens: 本次消耗, Message: 本次回复
                                 var jsonObject = JsonSerializer.Deserialize<Gemini_Response>(jsonString);

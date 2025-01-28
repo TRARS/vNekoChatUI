@@ -198,7 +198,7 @@
 
             //往ChatRoomModelInstance注册几个方法给ChatRoom用
             ChatRoomModelInstance.ReSend = async (x) => { await ChatRoomReSend(x); };
-            ChatRoomModelInstance.RefreshProfile = async (x) => { await ChatRoomRefreshProfile(x); };
+            ChatRoomModelInstance.GetDefaultProfile = async (x) => { await ChatRoomGetDefaultProfile(x); };
             ChatRoomModelInstance.Screenshot_Windows = async (x,y) => { await TakeScreenshot(x,y, PlatformOption.Windows); };
             ChatRoomModelInstance.Screenshot_SmartPhone = async (x,y) => { await TakeScreenshot(x,y, PlatformOption.SmartPhone); };
         }
@@ -542,11 +542,11 @@
         await SendToClient();
     }
 
-    private async Task ChatRoomRefreshProfile(string text)
+    private async Task ChatRoomGetDefaultProfile(string text)
     {
         if (hubConnection is null) { return; }
 
-        await ExecuteClientCommandWithName("ServerRefreshProfile");
+        await ExecuteClientCommandWithName("ServerGetDefaultProfile");
     }
 
     private async Task TakeScreenshot(bool navigation_off, bool inputbox_off, PlatformOption platformOpt)

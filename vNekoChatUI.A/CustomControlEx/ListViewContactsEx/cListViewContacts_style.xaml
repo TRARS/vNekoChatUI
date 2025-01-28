@@ -9,6 +9,7 @@
 
     <local:cListViewContacts_converter_borderbrush x:Key="cListViewContacts_converter_borderbrush"/>
     <local:cListViewContacts_converter_imagesource x:Key="cListViewContacts_converter_imagesource"/>
+    <local:cListViewContacts_converter_limitedlines x:Key="cListViewContacts_converter_limitedlines"/>
     
     <!--联系人-->
     <Style TargetType="ListViewItem" x:Key="ContactCard">
@@ -145,7 +146,7 @@
                             </TextBlock>
 
                             <TextBlock x:Name="textblock_profile"                                           
-                                       Text="{Binding Profile}"                                           
+                                       Text="{Binding Profile, Converter={StaticResource cListViewContacts_converter_limitedlines}, Mode=OneWay}"                                           
                                        FontWeight="Normal"                                           
                                        FontFamily="Calibri"                                           
                                        FontSize="11"                                           

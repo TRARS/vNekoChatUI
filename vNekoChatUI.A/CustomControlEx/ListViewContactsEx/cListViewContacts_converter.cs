@@ -92,4 +92,27 @@ namespace vNekoChatUI.A.CustomControlEx.ListViewContactsEx
             throw new NotImplementedException();
         }
     }
+
+    public class cListViewContacts_converter_limitedlines : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var result = $"{value}";
+
+            var lines = $"{value}".Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            var limitedLines = new string[Math.Min(lines.Length, 3)];
+
+            for (int i = 0; i < limitedLines.Length; i++)
+            {
+                limitedLines[i] = lines[i].Length > 20 ? lines[i][..20] : lines[i];
+            }
+
+            return string.Join(Environment.NewLine, limitedLines);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

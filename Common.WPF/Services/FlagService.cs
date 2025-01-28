@@ -7,6 +7,8 @@
         public bool[] TryUseBingAutoSave { get; set; }
         public bool[] TryUseBingNoSearchAll { get; set; }
         public bool TryUseBingVisualSearch { get; set; }
+
+        public bool[] GeminiTrimWhiteSpaceAndNewLine { get; set; }
     }
 
     public partial class FlagService : IFlagService
@@ -37,5 +39,10 @@
         /// 控制bing上传图片后拿到的地址是否通过user请求传递
         /// </summary>
         public bool TryUseBingVisualSearch { get; set; } = false;
+
+        /// <summary>
+        /// 控制gemini是否裁剪空格和换行符
+        /// </summary>
+        public bool[] GeminiTrimWhiteSpaceAndNewLine { get; set; } = new bool[1] { false };
     }
 }

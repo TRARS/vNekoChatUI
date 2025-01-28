@@ -376,6 +376,9 @@ namespace vNekoChatUI.A.MVVM.ViewModels
         public ToggleLightCommand BingAutoSaveCommand { get; set; }
         public ToggleLightCommand BingNoSearchAllCommand { get; set; }
 
+        //
+        public ToggleLightCommand GeminiTrimWhiteSpaceAndNewLineCommand { get; set; }
+
         //cTextBox用
         public MenuItemCommand GetRemainderTextWithSelectedTextCommand { get; set; }
         public MenuItemCommand ContinueWithSelectedTextCommand { get; set; }   //左边气泡进入编辑状态并选中文本时右键使用
@@ -483,6 +486,8 @@ namespace vNekoChatUI.A.MVVM.ViewModels
             //Bing禁用搜索
             this.BingNoSearchAllCommand = new("NoSearchAll", _flagService.TryUseBingNoSearchAll);
 
+            //Gemini裁剪
+            this.GeminiTrimWhiteSpaceAndNewLineCommand = new("GeminiTrim", _flagService.GeminiTrimWhiteSpaceAndNewLine);
 
             //从聊天气泡文本框右键菜单重新发送
             this.ContinueWithSelectedTextCommand = new()
@@ -1006,7 +1011,7 @@ namespace vNekoChatUI.A.MVVM.ViewModels
             _signalRClientService.SendProxy ??= this.SendCommand.Execute;
             _signalRClientService.StopProxy ??= this.StopReceivingMessagesCommand.Execute;
             _signalRClientService.ClearProxy ??= this.ClearCommand.Execute;
-            _signalRClientService.RefreshProfile ??= this.ProfileRefreshCommand.Execute;
+            _signalRClientService.GetDefaultProfile ??= this.GetDefaultProfileCommand.Execute;
             _signalRClientService.Close ??= () =>
             {
                 BlazorServerCheckCommand.IsLightOn = false;

@@ -1,4 +1,6 @@
 ﻿using Common.WebWpfCommon;
+using Common.WPF;
+using Common.WPF.Services;
 using GenerativeAI.Helpers;
 using GenerativeAI.Types;
 using System.Diagnostics;
@@ -14,8 +16,12 @@ namespace vNekoChatUI.Character.GeminiUtils
 
     public partial class GeminiApiWrapper
     {
-        public async Task<string> UserSay(string inputs, CancellationToken cancellationToken)
+        IFlagService _flagService = ServiceHost.Instance.GetService<IFlagService>();
+
+        public async Task<string> UserSay(string inputs, CancellationToken cancellationToken, Action<int> stepUp)
         {
+            stepUp.Invoke(1);
+
             var generateContentRequest = new GenerateContentRequest();
             var chatHistory = new List<Content>();
 
@@ -35,6 +41,16 @@ namespace vNekoChatUI.Character.GeminiUtils
             var ai_continuePrompt = jsonObject.Ai_ContinuePrompt;// 读取【一次性提示词】用来引导AI角色做事倾向
 
             //2. 载入AI设定
+            if (_flagService.GeminiTrimWhiteSpaceAndNewLine[0])
+            {
+                ai_profile = jsonObject.TrimWhiteSpaceAndNewLine(ai_profile);
+                ai_content.ForEach(x =>
+                {
+                    x.Content = jsonObject.TrimWhiteSpaceAndNewLine(x.Content);
+                });
+                //ai_continuePrompt = jsonObject.TrimNewLine(ai_continuePrompt);
+                Debug.WriteLine("已裁剪Gemini Content");
+            }
 
             //3. 载入聊天记录
             if (ai_content is not null)
@@ -61,7 +77,7 @@ namespace vNekoChatUI.Character.GeminiUtils
                 }
             }
 
-            return await _client.WaitReplyAsync(ai_name, ai_profile, content, ai_innermonologue, cancellationToken);
+            return await _client.WaitReplyAsync(ai_name, ai_profile, content, ai_innermonologue, cancellationToken, stepUp);
         }
 
         private GenerateContentRequest CreateContentRequest(string systemInstruction, List<Content> history)

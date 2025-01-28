@@ -24,7 +24,7 @@ namespace Common.WPF.Services
         Action<string>? SendProxy { get; set; }
         Action<string>? StopProxy { get; set; }
         Action<string>? ClearProxy { get; set; }
-        Action<string>? RefreshProfile { get; set; }
+        Action<string>? GetDefaultProfile { get; set; }
         Action? Close { get; set; }
         Func<string>? GetChatHistoryProxy { get; set; }
         Action<string>? SetProfileProxy { get; set; }
@@ -125,9 +125,9 @@ namespace Common.WPF.Services
                             }
 
                         //服务端点了一下刷新人设
-                        case "ServerRefreshProfile":
+                        case "ServerGetDefaultProfile":
                             {
-                                DispatcherInvoke(() => { RefreshProfile?.Invoke(jsonObj.MethodPara); });
+                                DispatcherInvoke(() => { GetDefaultProfile?.Invoke(jsonObj.MethodPara); });
                                 await PushChatHistory(GetChatHistoryProxy?.Invoke());//刷新人设后直接全部推过去
                                 break;
                             }
@@ -309,7 +309,7 @@ namespace Common.WPF.Services
         public Action<string>? SendProxy { get; set; }
         public Action<string>? StopProxy { get; set; }
         public Action<string>? ClearProxy { get; set; }
-        public Action<string>? RefreshProfile { get; set; }
+        public Action<string>? GetDefaultProfile { get; set; }
         public Action? Close { get; set; }
         public Func<string>? GetChatHistoryProxy { get; set; }
         public Action<string>? SetProfileProxy { get; set; }

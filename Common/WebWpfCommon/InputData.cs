@@ -28,6 +28,20 @@ namespace Common.WebWpfCommon
 
         [JsonPropertyName("bypass_detection")]
         public bool Bypass_Detection { get; set; } = false;
+
+        //Gemini用
+        public string TrimWhiteSpaceAndNewLine(string input)
+        {
+            return input.Trim().Replace(" ", "").Replace("\\r", "").Replace("\\n", "");
+        }
+        public string TrimNewLine(string input)
+        {
+            return input.Trim().Replace("\\r", "").Replace("\\n", "");
+        }
+        public string TrimSpace(string input)
+        {
+            return input.Trim().Replace(" ", "");
+        }
     };
 
     //构造完整上下文用

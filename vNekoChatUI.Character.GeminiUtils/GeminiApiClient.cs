@@ -88,7 +88,7 @@ namespace vNekoChatUI.Character.GeminiUtils
 
             // Http クライアントを得る
             _client = factory.CreateClient();
-            _client.Timeout = TimeSpan.FromSeconds(30);//超时
+            _client.Timeout = TimeSpan.FromSeconds(45);//超时
         }
     }
 
@@ -100,8 +100,10 @@ namespace vNekoChatUI.Character.GeminiUtils
         string currentGeminiModel = "";
         bool tryGetNextKey = true;
 
-        internal async Task<string> WaitReplyAsync(string ai_name, string? systemInstruction, GenerateContentRequest request, string geminiModel, CancellationToken cancellationToken)
+        internal async Task<string> WaitReplyAsync(string ai_name, string? systemInstruction, GenerateContentRequest request, string geminiModel, CancellationToken cancellationToken, Action<int> stepUp)
         {
+            stepUp.Invoke(2);
+
             var retryLimit = 1;
             var result = "";
             var totalTokenCount = -1;
@@ -112,11 +114,14 @@ namespace vNekoChatUI.Character.GeminiUtils
             {
                 fullstr += s;
                 _streamService.StartStreamingText(ai_name, fullstr);
-                WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Streaming"));
+                WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Streaming..."));
+
+                stepUp.Invoke(4);
             });
 
             do
             {
+                stepUp.Invoke(3);
                 flag = false;
 
                 // 获得key并储存
@@ -132,7 +137,7 @@ namespace vNekoChatUI.Character.GeminiUtils
                     tryGetNextKey = false;
 
                     // gemini-1.5-pro-latest  好
-                    // gemini-exp-1121        不好使，违规内容会被夹
+                    // gemini-2.0-flash-exp   不太行
                     model = new GenerativeModel(currentApiKey, currentGeminiModel, _client, systemInstruction: currentSystemInstruction);
                     model.SafetySettings = safetySetting;
 
@@ -177,11 +182,13 @@ namespace vNekoChatUI.Character.GeminiUtils
                         }
                     }
 
-
                     result = $"リクエストエラー: {ex.Message}";
                 }
             }
             while (flag);
+
+            stepUp.Invoke(5);
+            stepUp.Invoke(6);
 
             return (new Gemini_Response()
             {

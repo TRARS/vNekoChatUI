@@ -246,6 +246,15 @@
                                                         ToolTip="临时绕过越狱检测"
                                                         Margin="1">
                             </emptybuttonex:cEmptyButton>
+                            <!--裁剪空格&换行符-->
+                            <emptybuttonex:cEmptyButton Width="28" Height="28"
+                                                        BorderMouseOverColor="{Binding SelectedContact.UserborderColor}"
+                                                        BorderPathData="M421.504 511.872L322.645333 413.013333A170.666667 170.666667 0 1 1 413.141333 322.56L512 421.333333l271.957333-271.957333a85.333333 85.333333 0 0 1 120.704 0l30.165334 30.165333L413.141333 701.226667a170.666667 170.666667 0 1 1-90.496-90.496l98.858667-98.858667zM256 341.205333a85.333333 85.333333 0 1 0 0-170.666666 85.333333 85.333333 0 0 0 0 170.666666z m0 512a85.333333 85.333333 0 1 0 0-170.666666 85.333333 85.333333 0 0 0 0 170.666666z m406.826667-281.045333l272 272-30.165334 30.165333a85.333333 85.333333 0 0 1-120.704 0l-211.626666-211.626666 90.453333-90.538667zM682.666667 469.205333h85.333333v85.333334h-85.333333v-85.333334z m170.666666 0h85.333334v85.333334h-85.333334v-85.333334z m-597.333333 0h85.333333v85.333334H256v-85.333334z m-170.666667 0h85.333334v85.333334H85.333333v-85.333334z"
+                                                        Command="{Binding GeminiTrimWhiteSpaceAndNewLineCommand.ClickCommand}"
+                                                        LightOnOff="{Binding GeminiTrimWhiteSpaceAndNewLineCommand.IsLightOn}"
+                                                        ToolTip="裁剪空格&amp;换行符"
+                                                        Margin="1">
+                            </emptybuttonex:cEmptyButton>
                             <!--占位置-->
                             <emptybuttonex:cEmptyButton Width="28" Height="28"
                                                         BorderMouseOverColor="{Binding SelectedContact.UserborderColor}"

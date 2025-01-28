@@ -5,12 +5,12 @@ namespace vNekoChatUI.Character.GeminiUtils
     {
         GeminiApiWrapper _geminiApiWrapper = new();
 
-        public async Task<string> Entry(string input, Func<CancellationToken> getCancellationToken)
+        public async Task<string> Entry(string input, Func<CancellationToken> getCancellationToken, Action<int> stepUp)
         {
             try
             {
                 var cancellationToken = getCancellationToken.Invoke();
-                return await _geminiApiWrapper.UserSay(input, cancellationToken);
+                return await _geminiApiWrapper.UserSay(input, cancellationToken, stepUp);
             }
             catch (Exception ex)
             {

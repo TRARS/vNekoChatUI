@@ -7,7 +7,6 @@ using TrarsUI.Shared.Helper.Extensions;
 using TrarsUI.Shared.Interfaces;
 using TrarsUI.Shared.Interfaces.UIComponents;
 using TrarsUI.Shared.Services;
-using vNekoChatUI.A.Factories;
 using vNekoChatUI.MVVM.ViewModels;
 using vNekoChatUI.MVVM.Views;
 
@@ -76,7 +75,7 @@ namespace vNekoChatUI
                            sc.AddSingleton<IMessageBoxService, MessageBoxService>();
                            sc.AddTransient<IStringEncryptorService, StringEncryptorService>();
                            sc.AddScoped<ITokenProviderService, TokenProviderService>();
-                           sc.AddSingleton<IContentProviderService, AContentProviderService>();
+                           sc.AddSingleton<IContentProviderService, vNekoChatUI.A.EntryService>();
                            ;
                            // UI组件VM
                            sc.AddFormFactory<IuTitleBarVM, uTitleBarVM>();
