@@ -1,10 +1,11 @@
 ﻿using Common.WPF;
 using Common.WPF.Services;
 using CommunityToolkit.Mvvm.Messaging;
-using GenerativeAI.Models;
+using GenerativeAI;
 using GenerativeAI.Types;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -25,7 +26,7 @@ namespace vNekoChatUI.Character.GeminiUtils
         IStreamService _streamService = ServiceHost.Instance.GetService<IStreamService>();
 
         private GenerativeModel model;
-        private SafetySetting[] safetySetting =
+        private List<SafetySetting> safetySetting =
             [
                 //new SafetySetting()
                 //{
@@ -35,22 +36,22 @@ namespace vNekoChatUI.Character.GeminiUtils
                 new SafetySetting()
                 {
                     Category = HarmCategory.HARM_CATEGORY_HARASSMENT,
-                    Threshold = HarmBlockThreshold.BLOCK_NONE
+                    Threshold = HarmBlockThreshold.OFF
                 },
                 new SafetySetting()
                 {
                     Category = HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                    Threshold = HarmBlockThreshold.BLOCK_NONE
+                    Threshold = HarmBlockThreshold.OFF
                 },
                 new SafetySetting()
                 {
                     Category = HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                    Threshold = HarmBlockThreshold.BLOCK_NONE
+                    Threshold = HarmBlockThreshold.OFF
                 },
                 new SafetySetting()
                 {
                     Category = HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                    Threshold = HarmBlockThreshold.BLOCK_NONE
+                    Threshold = HarmBlockThreshold.OFF
                 }
             ];
 
@@ -88,7 +89,7 @@ namespace vNekoChatUI.Character.GeminiUtils
 
             // Http クライアントを得る
             _client = factory.CreateClient();
-            _client.Timeout = TimeSpan.FromSeconds(45);//超时
+            _client.Timeout = TimeSpan.FromSeconds(60);//超时
         }
     }
 
@@ -109,12 +110,23 @@ namespace vNekoChatUI.Character.GeminiUtils
             var totalTokenCount = -1;
             var flag = false;
 
-            var fullstr = "";
-            var action = new Action<string>(s =>
+            var strLen = systemInstruction?.Length ?? 0; // 至少统计一下字符数量
+            //if (request.Contents is not null)
+            //{
+            //    foreach (var content in request.Contents)
+            //    {
+            //        if (content is not null && content.Parts is not null && content.Parts.Count() > 0)
+            //        {
+            //            strLen += $"{content.Parts[0].Text}".Length;
+            //        }
+            //    }
+            //    totalTokenCount = -strLen; //
+            //}
+
+            var streamingAction = new Action<string>(str =>
             {
-                fullstr += s;
-                _streamService.StartStreamingText(ai_name, fullstr);
-                WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Streaming..."));
+                _streamService.StartStreamingText(ai_name, str);
+                WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Streaming...(len:{strLen}, tk:{totalTokenCount})"));
 
                 stepUp.Invoke(4);
             });
@@ -138,11 +150,15 @@ namespace vNekoChatUI.Character.GeminiUtils
 
                     // gemini-1.5-pro-latest  好
                     // gemini-2.0-flash-exp   不太行
-                    model = new GenerativeModel(currentApiKey, currentGeminiModel, _client, systemInstruction: currentSystemInstruction);
+                    var googleAI = new GoogleAi(currentApiKey, client: _client);
+                    model = googleAI.CreateGenerativeModel($"models/{currentGeminiModel}", systemInstruction: currentSystemInstruction);
                     model.SafetySettings = safetySetting;
-
-                    var line = "------------------------";
-                    //Debug.WriteLine($"{line}\n({currentGeminiModel}) ({currentApiKey})\nSystemInstruction:\n{currentSystemInstruction}\n{line}");
+                    //model.Config = new GenerationConfig()
+                    //{
+                    //    TopP = 0.95,       // 0.0~1.0
+                    //    TopK = 40.0,       // ??~??
+                    //    Temperature = 1.0, // 0.0~2.0
+                    //};
                 }
 
                 try
@@ -152,9 +168,34 @@ namespace vNekoChatUI.Character.GeminiUtils
                     //totalTokenCount = response?.UsageMetadata?.TotalTokenCount ?? 0;
                     //WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Response"));
 
-                    var response = await model.StreamContentAsync(request, action, cancellationToken);
-                    result = $"{response?.Trim()}";
-                    WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Response"));
+                    var responseBuilder = new StringBuilder();
+                    await foreach (var chunk in model.StreamContentAsync(request, cancellationToken))
+                    {
+                        var text = Regex.Replace(chunk.Text() ?? string.Empty, @"\r?\n$", string.Empty);
+                        responseBuilder.Append(text); // 累积
+                        streamingAction.Invoke(responseBuilder.ToString()); // 流
+                        totalTokenCount = chunk.UsageMetadata?.TotalTokenCount ?? 0; //令牌
+                    }
+                    result = responseBuilder.ToString().Trim();
+                    WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Response (len:{strLen}, tk:{totalTokenCount})"));
+                }
+                catch (HttpRequestException ex)
+                {
+                    if (ex.StatusCode == System.Net.HttpStatusCode.TooManyRequests)
+                    {
+                        tryGetNextKey = true;  //复位
+                        WeakReferenceMessenger.Default.Send(new AlertMessage("尝试切换到下一个ApiKey"));
+
+                        if (retryLimit-- > 0)
+                        {
+                            flag = true;
+                            await Task.Delay(1000, cancellationToken); // 1秒后自动重试，最多重试 retryLimit 次
+                        }
+                    }
+                    else
+                    {
+                        WeakReferenceMessenger.Default.Send(new AlertMessage($"GeminiError: {ex.StatusCode}"));
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -165,6 +206,7 @@ namespace vNekoChatUI.Character.GeminiUtils
                     if (errorJsonObj is not null)
                     {
                         // RESOURCE_EXHAUSTED
+                        //if (errorJsonObj.error.code == 429)
                         if (errorJsonObj.error.code == 429)
                         {
                             tryGetNextKey = true;  //复位

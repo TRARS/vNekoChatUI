@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Windows;
 using System.Windows.Media.Animation;
-using TrarsUI.Shared.Helper.Extensions;
+using TrarsUI.Shared.Helpers.Extensions;
 using TrarsUI.Shared.Interfaces;
 using TrarsUI.Shared.Interfaces.UIComponents;
 using TrarsUI.Shared.Services;
@@ -67,6 +67,9 @@ namespace vNekoChatUI
             return Host.CreateDefaultBuilder()
                        .ConfigureServices(sc =>
                        {
+                           //
+                           vNekoChatUI.A.EntryService.Register(sc);
+
                            // Service
                            sc.AddSingleton<ICreateChildFormService, CreateChildFormService>();
                            sc.AddTransient<IDebouncerService, DebouncerService>();
@@ -76,7 +79,7 @@ namespace vNekoChatUI
                            sc.AddTransient<IStringEncryptorService, StringEncryptorService>();
                            sc.AddScoped<ITokenProviderService, TokenProviderService>();
                            sc.AddSingleton<IContentProviderService, vNekoChatUI.A.EntryService>();
-                           ;
+
                            // UI组件VM
                            sc.AddFormFactory<IuTitleBarVM, uTitleBarVM>();
                            sc.AddFormFactory<IuRainbowLineVM, uRainbowLineVM>();

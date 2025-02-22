@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using TrarsUI.Shared.Helper.Extensions;
+using TrarsUI.Shared.Helpers.Extensions;
 
 namespace vNekoChatUI.A.CustomControlEx.ToggleButtonEx
 {

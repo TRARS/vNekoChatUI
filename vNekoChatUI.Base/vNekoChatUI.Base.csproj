@@ -24,7 +24,7 @@
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.10.0.20241108" />
-    <PackageReference Include="System.Text.Json" Version="9.0.1" />
+    <PackageReference Include="System.Text.Json" Version="9.0.2" />
   </ItemGroup>
   
   <ItemGroup>

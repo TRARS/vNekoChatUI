@@ -44,23 +44,26 @@ namespace Common.WPF.Services
             //将就用，不考虑超时。
             connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:14285/chathub")
-                .WithAutomaticReconnect()
+                .WithAutomaticReconnect(new InfiniteRetryPolicy())
                 .Build();
 
             connection.Reconnecting += (sender) =>
             {
+                ServerStart[0] = false;
                 LogProxy.Instance.Print("Attempting to reconnect");
                 return Task.CompletedTask;
             };
 
             connection.Reconnected += (sender) =>
             {
+                ServerStart[0] = true;
                 LogProxy.Instance.Print("Reconnected to the server");
                 return Task.CompletedTask;
             };
 
             connection.Closed += (sender) =>
             {
+                ServerStart[0] = false;
                 this.Close?.Invoke();
                 LogProxy.Instance.Print("Connection Closed");
                 return Task.CompletedTask;
@@ -81,7 +84,7 @@ namespace Common.WPF.Services
             if (methodRegistered is false)
             {
                 //服务端调用客户端方法
-                connection.On<byte[]?>("ExecuteClientCommandWithName", async method_content =>
+                connection.On<string, byte[]?>(ChatHub.ReceiveMessage, async (sender, method_content) =>
                 {
                     var jsonStr = TextCompressor.Instance.DecompressData(method_content);
                     var jsonObj = JsonSerializer.Deserialize<MethodContent>(jsonStr, new JsonSerializerOptions
@@ -98,41 +101,41 @@ namespace Common.WPF.Services
                     switch (jsonObj.MethodName)
                     {
                         //服务端主动清除历史记录
-                        case "ServerClearChatHistory":
+                        case ChatCenterMethods.ClearChatHistory:
                             {
                                 DispatcherInvoke(() => { ClearProxy?.Invoke(""); });
                                 break;
                             }
 
                         //服务端主动拿历史记录
-                        case "ServerGetChatHistory":
+                        case ChatCenterMethods.GetChatHistory:
                             {
                                 await PushChatHistory(GetChatHistoryProxy?.Invoke());
                                 break;
                             }
 
                         //服务端点了一下Send按钮
-                        case "ServerSendMessage":
+                        case ChatCenterMethods.SendMessage:
                             {
                                 DispatcherInvoke(() => { SendProxy?.Invoke(jsonObj.MethodPara); });
                                 break;
                             }
                         //服务端点了一下Stop按钮
-                        case "ServerSendStop":
+                        case ChatCenterMethods.SendStop:
                             {
                                 DispatcherInvoke(() => { StopProxy?.Invoke(jsonObj.MethodPara); });
                                 break;
                             }
 
                         //服务端点了一下刷新人设
-                        case "ServerGetDefaultProfile":
+                        case ChatCenterMethods.GetDefaultProfile:
                             {
                                 DispatcherInvoke(() => { GetDefaultProfile?.Invoke(jsonObj.MethodPara); });
                                 await PushChatHistory(GetChatHistoryProxy?.Invoke());//刷新人设后直接全部推过去
                                 break;
                             }
                         //服务端修改WebPageContext
-                        case "ServerSetWebPageContext":
+                        case ChatCenterMethods.SetWebPageContext:
                             {
                                 DispatcherInvoke(() =>
                                 {
@@ -204,7 +207,6 @@ namespace Common.WPF.Services
             if (connection.State is not HubConnectionState.Disconnected)
             {
                 connection?.StopAsync();
-                ServerStart[0] = false;
                 //LogProxy.Instance.Print($"Connection Closed");
             }
             await Task.Yield();
@@ -221,7 +223,7 @@ namespace Common.WPF.Services
                 }
 
                 //执行服务端的ClientPushChatHistory方法
-                await ExecuteServerCommand(para);
+                await InvokeChatCenterMethod(para);
             }
             catch (Exception ex)
             {
@@ -238,7 +240,7 @@ namespace Common.WPF.Services
                 }
 
                 //执行服务端的ClientStartStreaming方法
-                await ExecuteServerCommand(para ?? "…");
+                await InvokeChatCenterMethod(para ?? "…");
 
             }
             catch (Exception ex)
@@ -256,7 +258,7 @@ namespace Common.WPF.Services
                 }
 
                 //执行服务端的ClientPushStep方法
-                await ExecuteServerCommand(para);
+                await InvokeChatCenterMethod(para);
             }
             catch (Exception ex)
             {
@@ -269,7 +271,7 @@ namespace Common.WPF.Services
     public partial class SignalRClientService
     {
         //通过[CallerMemberName]特性免去写方法名，只需要服务端存在前缀为"Client"的同名方法即可
-        private async Task ExecuteServerCommand(string? methodPara, [CallerMemberName] string? methodName = null)
+        private async Task InvokeChatCenterMethod(string? methodPara, [CallerMemberName] string? methodName = null)
         {
             if (connection is null || connection.State is not HubConnectionState.Connected) { return; }
 
@@ -282,7 +284,7 @@ namespace Common.WPF.Services
             var jsonStr = GetMethodContentJsonStr(method_content);
             var data = TextCompressor.Instance.CompressText(jsonStr);//压缩一下！
 
-            await connection.InvokeAsync("ExecuteServerCommandWithName", data);
+            await connection.InvokeAsync(ChatHubMethods.SendPrivateMessage, data, null);
         }
         //包装一下
         private string GetMethodContentJsonStr(MethodContent content)

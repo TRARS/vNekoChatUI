@@ -1,0 +1,37 @@
+﻿@using System.Text.RegularExpressions;
+@using System.Diagnostics;
+@using Common.Extensions;
+@using Markdig;
+@inject IJSRuntime JS
+
+<div style="font-size: 14px;">
+    <div style="margin: 11px">@((MarkupString)Output)</div>
+</div>
+
+@code {
+    private string _input = string.Empty;
+
+    [Parameter]
+    public string Input
+    {
+        get => _input;
+        set
+        {
+            if (_input != value)
+            {
+                _input = value;
+                OnInputChanged();
+            }
+        }
+    }
+
+    [Parameter]
+    public string Output { get; set; } = string.Empty;
+
+    private void OnInputChanged()
+    {
+        // white-space: pre-line 换行太多了
+        // white-space: normal   块底部无空白
+        this.Output = Markdown.ToHtml(this.Input);
+    }
+}

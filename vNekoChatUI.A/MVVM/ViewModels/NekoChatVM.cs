@@ -427,8 +427,12 @@ namespace vNekoChatUI.A.MVVM.ViewModels
         string def_server_address = "127.0.0.1";
         int def_server_port = 0;
 
-        public NekoChatVM()
+        Manager _manager;
+
+        public NekoChatVM(Manager manager)
         {
+            _manager = manager; ;
+
             //
             this.Title = $"{Application.ResourceAssembly.GetName().Name} ({System.IO.File.GetLastWriteTime(this.GetType().Assembly.Location):yyyy-MM-dd HH:mm:ss})";
 
@@ -617,7 +621,7 @@ namespace vNekoChatUI.A.MVVM.ViewModels
         [RelayCommand]
         private void OnOpenPEditor()
         {
-            Manager.OpenPEditor(SelectedContact ?? BotContacts[0]);
+            _ = _manager.OpenPEditor(SelectedContact ?? BotContacts[0]);
         }
     }
 
@@ -743,14 +747,14 @@ namespace vNekoChatUI.A.MVVM.ViewModels
 
                     bot.Profile = _jsonConfigManagerService.LoadProfileFromDefaultPath(this.Token) ?? "";
 
-                    bot.InnerMonologue = "gemini-1.5-pro-latest"; //   gemini-1.5-pro-latest   gemini-2.0-flash-exp
+                    bot.InnerMonologue = "gemini-2.0-pro-exp-02-05"; // gemini-exo-1206 // gemini-1.5-pro-latest
                     bot.ContinuePrompt = _jsonConfigManagerService.LoadContinuePromptFromDefaultPath(this.Token) ?? "";
 
                     // 载入备份，需要AesKey
                     this.profileReload = () =>
                     {
                         bot.Profile = new DefaultProfile(_jsonConfigManagerService.GetAesKey(), this.Token).GetDefaultProfile();
-                        bot.InnerMonologue = "gemini-1.5-pro-latest";
+                        bot.InnerMonologue = "gemini-2.0-pro-exp-02-05";
                         bot.ContinuePrompt = new DefaultProfile(_jsonConfigManagerService.GetAesKey(), this.Token).GetDefaultContinuePrompt();
                     };
                 }

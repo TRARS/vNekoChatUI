@@ -78,14 +78,24 @@
 
 /* 居中内容的样式 */
 .centered-content {
+    display: inline-flex;
+    pointer-events: none; /* 让整个 div 不接受鼠标/触摸事件 */
+    flex-direction: column; /* 保持整个块的垂直排列 */
+    align-items: center;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    /*    background-image: linear-gradient(to right, transparent, black, transparent);*/
-    padding: 0px 66px 0px 66px;
+    padding: 0px 66px;
     user-select: none;
+}
+
+.info-container {
+    display: flex;
+    flex-direction: row; /* 让 <span> 们水平排列 */
+    gap: 10px; /* 让 <span> 之间有间距 */
+    white-space: nowrap; /* 防止换行 */
 }
     .centered-content::before {
         content: '';

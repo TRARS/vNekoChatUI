@@ -13,36 +13,42 @@
         _ => "left"
     }) @(IsHidden?"hidden":"") @(IsDarkMode?"dark":"")">
 
-
-    @*正文*@
-    <div class="filled"/>
-    <div style="display: flex;">
-        <div contenteditable="plaintext-only" class="div-editable-base"
-        @ref="_originDiv" 
-        @onfocus="HandleFocus" 
-        style="outline-color: transparent;display: @(isCollapsed ? "none" : "flex");">
-            @processedContent1
+    @if (isMarkDownMode){
+        <div class="markdown-box">
+            <MarkdownBox Input="@Content" />
         </div>
-
-        @if (isEditingText)
-        {
-            @*true -> plaintext-only 有效缓解获取innerText时换行次数对不上的问题*@
-            <div contenteditable="plaintext-only" 
-            @ref="_destinationDiv"
-            @onblur="HandleBlur"
-            style="color: white;
-                        background-color: rgba(64, 64, 128, 0.85);
-                        border-radius: 9px;
-                        position: absolute; 
-                        width:100%;
-                        top: 0; left: 0;
-                        margin-top:24px;
-                        opacity:0;
-                        transition: opacity 0.25s ease-in-out;
-                        z-index:1;">
+    }
+    else{
+        @*正文*@
+        <div class="filled"/>
+        <div style="display: flex;">
+            <div contenteditable="plaintext-only" class="div-editable-base"
+            @ref="_originDiv" 
+            @onfocus="HandleFocus" 
+            style="outline-color: transparent;display: @(isCollapsed ? "none" : "flex");">
+                @processedContent1
             </div>
-        }
-    </div>
+
+            @if (isEditingText)
+            {
+                @*true -> plaintext-only 有效缓解获取innerText时换行次数对不上的问题*@
+                <div contenteditable="plaintext-only" 
+                @ref="_destinationDiv"
+                @onblur="HandleBlur"
+                style="color: white;
+                            background-color: rgba(64, 64, 128, 0.85);
+                            border-radius: 9px;
+                            position: absolute; 
+                            width:100%;
+                            top: 0; left: 0;
+                            margin-top:24px;
+                            opacity:0;
+                            transition: opacity 0.25s ease-in-out;
+                            z-index:1;">
+                </div>
+            }
+        </div>
+    }
 
     @*注释*@
     @if (IsUser is false && commentIsEmpty is false)
@@ -83,6 +89,13 @@
                 </svg>
             </div>
         }
+
+        <div class="button fourth" @onclick="MarkDownButtonClick">
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
+                <path fill="#D4A148"
+                d="M895.318 192H128.682C93.008 192 64 220.968 64 256.616v510.698C64 802.986 93.008 832 128.682 832h766.636C930.992 832 960 802.986 960 767.312V256.616C960 220.968 930.992 192 895.318 192zM568.046 704h-112.096v-192l-84.08 107.756L287.826 512v192H175.738V320h112.088l84.044 135.96 84.08-135.96h112.096v384z m167.314 0l-139.27-192h84v-192h112.086v192h84.054l-140.906 192h0.036z" />
+            </svg>
+        </div>
     }
 
     @*右上角按钮2*@
@@ -102,6 +115,9 @@
 </div>
 
 @code {
+
+    private bool isMarkDownMode = false; // 控制MarkDown
+
     private bool isCollapsed = false; // 控制折叠状态
 
     [Parameter]
@@ -154,6 +170,8 @@
     public Action? OnReSendButtonClick { get; set; }
     [Parameter]
     public Action? OnReSendExButtonClick { get; set; }
+    [Parameter]
+    public Action? OnMarkDownButtonClick { get; set; }
 
     private ElementReference _originDiv;
     private ElementReference _destinationDiv;
@@ -186,7 +204,7 @@
     {
         var content = RemoveComments(newValue).InsertSpaceBetweenConsecutiveNewlines();
         var comment = GetComments(newValue).Replace("→(\n", "").Replace("\n)←", "");
-        
+
         processedContent1 = builder =>
         {
             builder.OpenElement(0, "span");
@@ -252,6 +270,13 @@
     private void ReSendExButtonClick()
     {
         OnReSendExButtonClick?.Invoke();
+    }
+    // MarkDown
+    private void MarkDownButtonClick()
+    {
+        OnMarkDownButtonClick?.Invoke();
+
+        isMarkDownMode = !isMarkDownMode;
     }
 }
 

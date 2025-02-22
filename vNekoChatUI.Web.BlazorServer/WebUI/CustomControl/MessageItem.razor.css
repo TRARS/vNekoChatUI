@@ -42,6 +42,12 @@ div[contenteditable="plaintext-only"]:focus {
         color: #7F7F7F;
     }
 
+/*markdown 换行*/
+.markdown-box {
+    white-space: pre-line !important;
+}
+
+
 /*聊天气泡基础*/
 .message-item {
     display: inline-block;
@@ -133,6 +139,11 @@ div[contenteditable="plaintext-only"]:focus {
     .message-item .button.third {
         padding: 2px;
         transform: translateX(-200%);
+    }
+    /*右上角按钮4*/
+    .message-item .button.fourth {
+        padding: 2px;
+        transform: translateX(-300%);
     }
 
     /*右上角按钮-折叠*/

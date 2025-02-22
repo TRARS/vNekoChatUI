@@ -42,8 +42,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
-    <PackageReference Include="PuppeteerSharp" Version="20.0.5" />
+    <PackageReference Include="Markdig" Version="0.40.0" />
+    <PackageReference Include="PuppeteerSharp" Version="20.1.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -20,8 +20,9 @@
              TextOptions.TextFormattingMode="Display"
              TextOptions.TextRenderingMode="ClearType"
              UseLayoutRounding="true"
-             d:DesignHeight="480" d:DesignWidth="660">
-    
+             d:DesignHeight="320" d:DesignWidth="660"
+             d:DataContext="{d:DesignInstance vm:NekoChatVM, IsDesignTimeCreatable=False}">
+
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -32,9 +33,6 @@
             <converters:NekoChat_converter_chatmode_isenabled x:Key="NekoChat_converter_chatmode_isenabled"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <d:UserControl.DataContext>
-        <vm:NekoChatVM/>
-    </d:UserControl.DataContext>
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">

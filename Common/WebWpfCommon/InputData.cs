@@ -29,6 +29,9 @@ namespace Common.WebWpfCommon
         [JsonPropertyName("bypass_detection")]
         public bool Bypass_Detection { get; set; } = false;
 
+        [JsonPropertyName("ai_token_price")]
+        public int Ai_TokenPrice { get; set; } = -1;
+
         //Gemini用
         public string TrimWhiteSpaceAndNewLine(string input)
         {

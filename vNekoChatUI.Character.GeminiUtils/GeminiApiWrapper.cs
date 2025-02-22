@@ -1,7 +1,7 @@
 ﻿using Common.WebWpfCommon;
 using Common.WPF;
 using Common.WPF.Services;
-using GenerativeAI.Helpers;
+using GenerativeAI;
 using GenerativeAI.Types;
 using System.Diagnostics;
 using System.Text.Json;
@@ -85,7 +85,7 @@ namespace vNekoChatUI.Character.GeminiUtils
             return new GenerateContentRequest()
             {
                 SystemInstruction = RequestExtensions.FormatSystemInstruction(systemInstruction),
-                Contents = history.ToArray(),
+                Contents = history,
             };
         }
     }

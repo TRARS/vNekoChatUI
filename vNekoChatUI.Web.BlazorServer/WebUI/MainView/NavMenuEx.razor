@@ -10,10 +10,20 @@
         <div class="animation start-home"></div>
     </nav>
 
+    @if (ChatRoomModelInstance.ChatHistory.Count() > 0)
+    {
+        <div class="centered-content">
+            <div class="info-container">
+                <span>[@ChatRoomModelInstance.ChatHistory.Count()][cd:@ChatRoomModelInstance.AiCountdown]</span>
+                <span>[tk:@ChatRoomModelInstance.AiTokenPrice]</span>
+            </div>
+        </div>
+    }
+
     <div style="display: flex; margin: 5px 5px 5px 5px;">
         <SquareButton OnClick="scrollToTop" ExColor="blue"
                       PathData="M256 74.666667a53.333333 53.333333 0 1 0 0 106.666666h512a53.333333 53.333333 0 1 0 0-106.666666H256zM549.717333 260.949333a53.333333 53.333333 0 0 0-75.434666 0l-256 256a53.333333 53.333333 0 0 0 75.434666 75.434667l165.12-165.12V896a53.333333 53.333333 0 1 0 106.666667 0V427.605333l164.778667 164.778667a53.333333 53.333333 0 0 0 75.434666-75.434667l-256-256z"
-                      Width="40" Height="40"/>
+                      Width="40" Height="40" />
 
     </div>
     <div style="display: flex; margin: 5px 5px 5px 0px;">
@@ -22,13 +32,6 @@
                       Width="40" Height="40" />
 
     </div>
-
-    @if (ChatRoomModelInstance.ChatHistory.Count() > 0)
-    {
-        <div class="centered-content" contenteditable="false">
-            <span>(@ChatRoomModelInstance.ChatHistory.Count())</span>
-        </div>
-    }
 </div>
 
 @code {

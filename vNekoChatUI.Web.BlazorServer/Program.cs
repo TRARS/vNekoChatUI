@@ -1,5 +1,5 @@
+using Common.WebWpfCommon;
 using Microsoft.AspNetCore.ResponseCompression;
-using vNekoChatUI.Web.BlazorServer.Hubs;
 using vNekoChatUI.Web.BlazorServer.WebUI.MainViewModel;
 using vNekoChatUI.Web.BlazorServer.WebUI.Service;
 
@@ -15,6 +15,7 @@ namespace vNekoChatUI.Web.BlazorServer
             {
                 //ChatRoom×¨ÓÃ
                 builder.Services.AddSingleton<IChatRoomModel, ChatRoomModel>();
+                builder.Services.AddSingleton<CountdownTimerService>();
                 builder.Services.AddSingleton<JsonService>();
                 builder.Services.AddSingleton<MessageService>();
                 builder.Services.AddSingleton<TimerService>();

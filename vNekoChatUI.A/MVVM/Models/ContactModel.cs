@@ -334,7 +334,6 @@ namespace vNekoChatUI.A.MVVM.Models
                     this.currentMessageModel.TokenPrice = token;
                     this.currentMessageModel.Time = DateTime.Now;
 
-
                     DispatcherBeginInvoke(async () =>
                     {
                         //保险起见，好像是Debug模式才会走这里
@@ -371,7 +370,8 @@ namespace vNekoChatUI.A.MVVM.Models
             var message_history = this.Messages.Select(m => new
             {
                 roles = (m.IsBot ? "Assistant" : "User"),
-                content = m.Message
+                content = m.Message,
+                token_price = m.TokenPrice
             });
             var data_content = new
             {
@@ -382,6 +382,7 @@ namespace vNekoChatUI.A.MVVM.Models
                 ai_continueprompt = this.ContinuePrompt,
                 history_changed = this.IsHistoryChanged,
                 bypass_detection = _flagService.TryUseBingBypassDetection[0],//本次请求是否启用过越狱检测
+                ai_token_price = this.currentMessageModel?.TokenPrice ?? -1,
             };
 
             var json = JsonSerializer.Serialize(data_content, new JsonSerializerOptions
@@ -482,6 +483,8 @@ namespace vNekoChatUI.A.MVVM.Models
                             if (this.Signature != temp) { this.Signature = temp; }
 
                             await BlazorStartStreaming(text, flag);
+
+                            //Debug.WriteLine(currentMessageModel.TokenPrice);
                         });
                     });
                     //Bing推荐回复
