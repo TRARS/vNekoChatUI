@@ -11,14 +11,14 @@
         (_, _, true, _) => "right",
         (_, _, _, true) => "continueprompt", // right
         _ => "left"
-    }) @(IsHidden?"hidden":"") @(IsDarkMode?"dark":"")">
+    }) @(IsHidden?"hidden":"") @(IsDarkMode?"dark":"") @(IsMobile ? "mobile" : "desktop")">
 
     @if (isMarkDownMode){
         <div class="markdown-box">
             <MarkdownBox Input="@Content" />
         </div>
     }
-    else{
+    else {
         @*正文*@
         <div class="filled"/>
         <div style="display: flex;">
@@ -36,15 +36,15 @@
                 @ref="_destinationDiv"
                 @onblur="HandleBlur"
                 style="color: white;
-                            background-color: rgba(64, 64, 128, 0.85);
-                            border-radius: 9px;
-                            position: absolute; 
-                            width:100%;
-                            top: 0; left: 0;
-                            margin-top:24px;
-                            opacity:0;
-                            transition: opacity 0.25s ease-in-out;
-                            z-index:1;">
+                                background-color: rgba(64, 64, 128, 0.85);
+                                border-radius: 9px;
+                                position: absolute; 
+                                width:100%;
+                                top: 0; left: 0;
+                                margin-top:24px;
+                                opacity:0;
+                                transition: opacity 0.25s ease-in-out;
+                                z-index:1;">
                 </div>
             }
         </div>
@@ -63,7 +63,7 @@
     @*右上角按钮*@
     @if (IsInstructions is false && IsMonologue is false && IsContinuePrompt is false)
     {
-        @*删除*@
+        @*①删除*@
         <div class="button first" @onclick="HideButtonClick">
             <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
                 <path fill="@(IsUser?"#EC004B":"#EC004B")"
@@ -71,13 +71,14 @@
             </svg>
         </div>
 
+        @*②③重发*@
         @if (IsHidden is false && IsUser)
         {
             @*重新发送_过越狱监测*@
             <div class="button second" @onclick="ReSendExButtonClick" disabled="@(IsHidden)">
                 <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
                     <path fill="#47B87D"
-                    d="M884.412509 181.527273L285.837964 0l100.538181 223.418182C-89.3184 606.021818 269.0816 1024 269.0816 1024a417.978182 417.978182 0 0 1 259.723636-482.210909l100.538182 223.418182z" />
+                          d="M884.412509 181.527273L285.837964 0l100.538181 223.418182C-89.3184 606.021818 269.0816 1024 269.0816 1024a417.978182 417.978182 0 0 1 259.723636-482.210909l100.538182 223.418182z" />
                 </svg>
             </div>
 
@@ -85,15 +86,24 @@
             <div class="button third" @onclick="ReSendButtonClick" disabled="@(IsHidden)">
                 <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
                     <path fill="#D44848"
-                    d="M884.412509 181.527273L285.837964 0l100.538181 223.418182C-89.3184 606.021818 269.0816 1024 269.0816 1024a417.978182 417.978182 0 0 1 259.723636-482.210909l100.538182 223.418182z" />
+                          d="M884.412509 181.527273L285.837964 0l100.538181 223.418182C-89.3184 606.021818 269.0816 1024 269.0816 1024a417.978182 417.978182 0 0 1 259.723636-482.210909l100.538182 223.418182z" />
                 </svg>
             </div>
         }
 
+        @*④MK*@
         <div class="button fourth" @onclick="MarkDownButtonClick">
             <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
                 <path fill="#D4A148"
-                d="M895.318 192H128.682C93.008 192 64 220.968 64 256.616v510.698C64 802.986 93.008 832 128.682 832h766.636C930.992 832 960 802.986 960 767.312V256.616C960 220.968 930.992 192 895.318 192zM568.046 704h-112.096v-192l-84.08 107.756L287.826 512v192H175.738V320h112.088l84.044 135.96 84.08-135.96h112.096v384z m167.314 0l-139.27-192h84v-192h112.086v192h84.054l-140.906 192h0.036z" />
+                      d="M895.318 192H128.682C93.008 192 64 220.968 64 256.616v510.698C64 802.986 93.008 832 128.682 832h766.636C930.992 832 960 802.986 960 767.312V256.616C960 220.968 930.992 192 895.318 192zM568.046 704h-112.096v-192l-84.08 107.756L287.826 512v192H175.738V320h112.088l84.044 135.96 84.08-135.96h112.096v384z m167.314 0l-139.27-192h84v-192h112.086v192h84.054l-140.906 192h0.036z" />
+            </svg>
+        </div>
+
+        @*⑤SK*@
+        <div class="button fifth" @onclick="SetSkipPrompt">
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" style="width: 24px; height: 24px;">
+                <path fill="#EC4B00"
+                      d="M209.024 801.696a32.128 32.128 0 0 0 32.96-1.82400001L448 659.712 448 773.408a32.032 32.032 0 0 0 49.984 26.464l384-261.248a32 32 0 0 0 0-52.928l-384-261.376A31.968 31.968 0 0 0 448 250.75199999l0 113.79200001-206.016-140.224A31.968 31.968 0 0 0 192 250.752L192 773.40800001c0 11.87200001 6.56 22.71999999 17.024 28.28799999z" />
             </svg>
         </div>
     }
@@ -115,10 +125,11 @@
 </div>
 
 @code {
-
     private bool isMarkDownMode = false; // 控制MarkDown
-
     private bool isCollapsed = false; // 控制折叠状态
+
+    [Parameter]
+    public bool IsMobile { get; set; } = false;
 
     [Parameter]
     public bool DefCollapse { get; set; } = false;
@@ -170,8 +181,9 @@
     public Action? OnReSendButtonClick { get; set; }
     [Parameter]
     public Action? OnReSendExButtonClick { get; set; }
+
     [Parameter]
-    public Action? OnMarkDownButtonClick { get; set; }
+    public Action<string>? TextChangedAndReRender { get; set; }
 
     private ElementReference _originDiv;
     private ElementReference _destinationDiv;
@@ -183,6 +195,9 @@
 
     private string content_text;
     private string comment_text;
+
+    private string content_bk = "";//备份
+    private string content_skip = "（skip）";//skip
 
     // 
     protected override void OnInitialized()
@@ -202,6 +217,8 @@
     //ContentSet
     private void ContentSet(string newValue)
     {
+        Debug.WriteLine($"11this.Content: {this.Content}");
+
         var content = RemoveComments(newValue).InsertSpaceBetweenConsecutiveNewlines();
         var comment = GetComments(newValue).Replace("→(\n", "").Replace("\n)←", "");
 
@@ -211,7 +228,7 @@
             builder.AddContent(1, content);
             builder.CloseElement();
         };
-
+        Debug.WriteLine($"processedContent1: {content}");
         processedContent2 = builder =>
         {
             builder.OpenElement(0, "span");
@@ -224,6 +241,8 @@
         content_text = content;
         comment_text = comment;
         commentIsEmpty = string.IsNullOrWhiteSpace(comment);
+
+        Debug.WriteLine($"processedContent2: {comment}");
     }
 
     //删除注释
@@ -274,9 +293,21 @@
     // MarkDown
     private void MarkDownButtonClick()
     {
-        OnMarkDownButtonClick?.Invoke();
-
         isMarkDownMode = !isMarkDownMode;
+    }
+
+    // Skip
+    private void SetSkipPrompt()
+    {
+        if (this.Content != content_skip)
+        {
+            content_bk = this.Content;
+            TextChangedAndReRender?.Invoke(content_skip);
+        }
+        else
+        {
+            TextChangedAndReRender?.Invoke(content_bk);
+        }
     }
 }
 

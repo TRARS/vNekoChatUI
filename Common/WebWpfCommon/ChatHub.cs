@@ -41,7 +41,7 @@ namespace Common.WebWpfCommon
             }
 
             _currentCenterId = clientId;
-            Debug.WriteLine($"server[{_currentCenterId}] is online\n");
+            //Debug.WriteLine($"ChatCenter [{_currentCenterId}] is online\n");
         }
 
         /// <summary>
@@ -78,6 +78,23 @@ namespace Common.WebWpfCommon
             {
                 Debug.WriteLine($"Error sending message to other clients: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// OnConnectedAsync
+        /// </summary>
+        public override async Task OnConnectedAsync()
+        {
+            var isChatCenter = _currentCenterId == Context.ConnectionId;
+            Debug.WriteLine($"ChatHub -> Client{(isChatCenter ? "(ChatCenter)" : "")} connected: {Context.ConnectionId}");
+        }
+        /// <summary>
+        /// OnDisconnectedAsync
+        /// </summary>
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            Debug.WriteLine($"ChatHub -> Client disconnected: {Context.ConnectionId}");
+            //await base.OnDisconnectedAsync(exception);
         }
     }
 }

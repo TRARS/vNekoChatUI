@@ -49,5 +49,23 @@ namespace Common.Extensions
             string replacement = "";
             return Regex.Replace(input, pattern, replacement);
         }
+
+        /// <summary>
+        /// 删除 →( 至 )← 之间的 注释
+        /// </summary>
+        public static string RemoveComments(this string input)
+        {
+            string pattern = @"→(.+)←";
+            string result = input;
+            Match match = Regex.Match(input, pattern, RegexOptions.Singleline);
+
+            while (match.Success)
+            {
+                result = result.Replace(match.Value, ""); // 删除匹配的子串
+                match = match.NextMatch();
+            }
+
+            return result;
+        }
     }
 }

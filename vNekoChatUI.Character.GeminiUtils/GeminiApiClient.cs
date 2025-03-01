@@ -169,14 +169,30 @@ namespace vNekoChatUI.Character.GeminiUtils
                     //WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Response"));
 
                     var responseBuilder = new StringBuilder();
+                    var finishReason_blockReason = string.Empty;
                     await foreach (var chunk in model.StreamContentAsync(request, cancellationToken))
                     {
                         var text = Regex.Replace(chunk.Text() ?? string.Empty, @"\r?\n$", string.Empty);
                         responseBuilder.Append(text); // 累积
                         streamingAction.Invoke(responseBuilder.ToString()); // 流
                         totalTokenCount = chunk.UsageMetadata?.TotalTokenCount ?? 0; //令牌
+
+                        var br = chunk?.PromptFeedback?.BlockReason;
+                        var fr = chunk?.Candidates?.FirstOrDefault()?.FinishReason;
+
+                        //if (fr is FinishReason)
+                        //{
+                        //    if (fr == FinishReason.STOP)
+                        //    {
+                        //        finishReason_blockReason = $"NaturalStop = {fr}";
+                        //    }
+                        //    else
+                        //    {
+                        //        finishReason_blockReason = $"FinishReason_BlockReason = {fr}{(br is BlockReason ? $": {br}" : string.Empty)}";
+                        //    }
+                        //}
                     }
-                    result = responseBuilder.ToString().Trim();
+                    result = responseBuilder.ToString().Trim() + (string.IsNullOrWhiteSpace($"{finishReason_blockReason}") ? "" : $"\n\n→(\n{finishReason_blockReason}\n)←");
                     WeakReferenceMessenger.Default.Send(new AlertMessage($"Gemini AI Response (len:{strLen}, tk:{totalTokenCount})"));
                 }
                 catch (HttpRequestException ex)
@@ -206,7 +222,6 @@ namespace vNekoChatUI.Character.GeminiUtils
                     if (errorJsonObj is not null)
                     {
                         // RESOURCE_EXHAUSTED
-                        //if (errorJsonObj.error.code == 429)
                         if (errorJsonObj.error.code == 429)
                         {
                             tryGetNextKey = true;  //复位

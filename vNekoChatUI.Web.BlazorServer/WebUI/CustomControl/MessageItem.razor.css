@@ -109,7 +109,7 @@ div[contenteditable="plaintext-only"]:focus {
         position: absolute;
         top: 1px;
         right: 1px;
-        opacity: 0;
+        opacity: 1;
         transition: opacity 0.2s ease-in-out;
         border: none;
         border-radius: 21px;
@@ -120,11 +120,11 @@ div[contenteditable="plaintext-only"]:focus {
         justify-content: center;
         padding: 1px;
     }
-    .message-item:hover .button {
+/*    .message-item:hover .button {
         opacity: 1; 
-    }
+    }*/
     .message-item:focus-within .button {
-        opacity: 1; /* 将透明度设置为较低的值 */
+        opacity: 1;
     }
     /*右上角按钮1*/
     .message-item .button.first {
@@ -144,6 +144,13 @@ div[contenteditable="plaintext-only"]:focus {
     .message-item .button.fourth {
         padding: 2px;
         transform: translateX(-300%);
+        opacity: 1 !important; /* 强制确保透明度为1 */
+    }
+    /*右上角按钮5*/
+    .message-item .button.fifth {
+        padding: 2px;
+        transform: translateX(-400%);
+        opacity: 1 !important; /* 强制确保透明度为1 */
     }
 
     /*右上角按钮-折叠*/
@@ -151,11 +158,26 @@ div[contenteditable="plaintext-only"]:focus {
         padding: 1px;
         transform: translateX(-22%);
         opacity: 1.0;
+        opacity: 1 !important; /* 强制确保透明度为1 */
     }
+
+    /* 针对PC端的透明度设置 */
+    .message-item.desktop .button {
+        opacity: 0;
+    }
+    .message-item.desktop:hover .button {
+        opacity: 1;
+    }
+    /* 针对移动端的透明度设置 */
+    .message-item.mobile .button {
+        opacity: 1;
+    }
+
+
 
     /*靠左气泡样式*/
     .message-item.left {
-        min-width: 160px; /*文本宽度+10*/
+        min-width: 210px; /*文本宽度+10*/
         margin-right: 48px;
         text-align: left;
         color: black;
@@ -166,7 +188,7 @@ div[contenteditable="plaintext-only"]:focus {
     }
         .message-item.left::before {
             display: inline-block;
-            content: "[assistant](#message)"; /* 添加要显示的文本 */
+            content: "[assistant](#msg)"; /* 添加要显示的文本 */
             color: #F4F4F4;
             /*background-color: #9A9A9A;*/ /* 背景颜色 */
             background-image: linear-gradient(to right, #9A9A9A 65%, rgba(0, 0, 0, 0));
@@ -218,7 +240,7 @@ div[contenteditable="plaintext-only"]:focus {
 
     /*靠右气泡样式*/
     .message-item.right {
-        min-width: 166px; /*文本宽度+10+30*/
+        min-width: 180px; /*文本宽度+10+30*/
         margin-left: 48px;
         text-align: left;
         color: white;
@@ -229,7 +251,7 @@ div[contenteditable="plaintext-only"]:focus {
     }
         .message-item.right::before {
             display: inline-block;
-            content: "[user](#message)"; /* 添加要显示的文本 */
+            content: "[user](#msg)"; /* 添加要显示的文本 */
             /*transform: translateX(-50%);*/ /* 将文本水平居中 */
             color: #AAAAAA;
             /*background-color: #6D1262;*/ /* 背景颜色 */

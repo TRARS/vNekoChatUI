@@ -13,6 +13,13 @@
 
   <ItemGroup>
     <None Remove="MVVM\Resources\AppIcon.ico" />
+    <None Remove="MVVM\Resources\Icon\Player\00.png" />
+    <None Remove="MVVM\Resources\Icon\Player\01.png" />
+    <None Remove="MVVM\Resources\Icon\Player\02.png" />
+    <None Remove="MVVM\Resources\Icon\Player\03.png" />
+    <None Remove="MVVM\Resources\Icon\Player\Hero.png" />
+    <None Remove="MVVM\Resources\Icon\Player\Hero00.png" />
+    <None Remove="MVVM\Resources\Icon\Player\Hero01.png" />
     <None Remove="vNekoChatUI.ico" />
   </ItemGroup>
 
@@ -21,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google_GenerativeAI" Version="2.0.14" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2" />
   </ItemGroup>
   
@@ -73,11 +79,10 @@
     <Resource Include="MVVM\Resources\Icon\Bot\38.png" />
     <Resource Include="MVVM\Resources\Icon\Bot\39.png" />
     <Resource Include="MVVM\Resources\Icon\Bot\40.png" />
-    <Resource Include="MVVM\Resources\Icon\Player\00a.png" />
-    <Resource Include="MVVM\Resources\Icon\Player\00b.png" />
-    <Resource Include="MVVM\Resources\Icon\Player\00c.png" />
-    <Resource Include="MVVM\Resources\Icon\Player\00d.png" />
-    <Resource Include="MVVM\Resources\Icon\Player\00e.png" />
+    <Resource Include="MVVM\Resources\Icon\Player\00.png" />
+    <Resource Include="MVVM\Resources\Icon\Player\01.png" />
+    <Resource Include="MVVM\Resources\Icon\Player\02.png" />
+    <Resource Include="MVVM\Resources\Icon\Player\03.png" />
     <Resource Include="MVVM\Resources\Icon\vNekoBorder_42_-1,3,0,0.png" />
     <Resource Include="MVVM\Resources\Icon\vNekoBorder_44_-1,0,0,0.png" />
   </ItemGroup>

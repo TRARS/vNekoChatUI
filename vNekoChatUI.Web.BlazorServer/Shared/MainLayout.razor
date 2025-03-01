@@ -1,4 +1,5 @@
 ﻿@using vNekoChatUI.Web.BlazorServer.WebUI.MainView
+@using System.Diagnostics;
 
 @inherits LayoutComponentBase
 
@@ -32,14 +33,17 @@
 
 
 @code{
+
     private bool HideNavMenu;
     private bool HideInputBox;
 
     private async Task ReRender() => await InvokeAsync(StateHasChanged);//重绘
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //手动显示/隐藏导航栏
+        if (firstRender is false){ return; }
+
+            //手动显示/隐藏导航栏
         ChatRoomModelInstance.HideNavMenu = async (act) =>
         {
             HideNavMenu = !HideNavMenu;

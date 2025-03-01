@@ -37,7 +37,13 @@
         <div class="div-btnbox">
             <!--清除客户端历史记录按钮.窄屏时显示-->
             <div class="clearbutton-hide landscape">
-                <CircleButton OnClick="ClearClient"  />
+                <CircleButton OnClick="ClearClient"/>
+                <span>&nbsp;</span>
+                <SquareButton OnClick="LoadLastInput" 
+                ExColor="red"
+                PathData="M810.666667 170.666667h-179.2c-17.066667-51.2-64-85.333333-119.466667-85.333334s-102.4 34.133333-119.466667 85.333334H213.333333c-46.933333 0-85.333333 38.4-85.333333 85.333333v597.333333c0 46.933333 38.4 85.333333 85.333333 85.333334h597.333334c46.933333 0 85.333333-38.4 85.333333-85.333334V256c0-46.933333-38.4-85.333333-85.333333-85.333333z m-298.666667 0c25.6 0 42.666667 17.066667 42.666667 42.666666s-17.066667 42.666667-42.666667 42.666667-42.666667-17.066667-42.666667-42.666667 17.066667-42.666667 42.666667-42.666666z m42.666667 597.333333H341.333333c-25.6 0-42.666667-21.333333-42.666666-42.666667s17.066667-42.666667 42.666666-42.666666h213.333334c25.6 0 42.666667 21.333333 42.666666 42.666666s-17.066667 42.666667-42.666666 42.666667z m128-170.666667H341.333333c-25.6 0-42.666667-17.066667-42.666666-42.666666s17.066667-42.666667 42.666666-42.666667h341.333334c21.333333 0 42.666667 17.066667 42.666666 42.666667s-21.333333 42.666667-42.666666 42.666666z m0-170.666666H341.333333c-25.6 0-42.666667-17.066667-42.666666-42.666667s17.066667-42.666667 42.666666-42.666667h341.333334c21.333333 0 42.666667 17.066667 42.666666 42.666667s-21.333333 42.666667-42.666666 42.666667z"
+                Width="50"
+                Height="36"/>
             </div>
 
             @*Text="Send(Normal)"*@
@@ -59,7 +65,7 @@
             <SquareButton OnClick="GetChatHistory"
             ExColor="cyan"
             PathData="M768 74.666667c40.533333 0 72.533333 32 74.666667 70.4v294.4c-40.533333-21.333333-89.6-34.133333-138.666667-34.133334-164.266667 0-298.666667 134.4-298.666667 298.666667 0 102.4 51.2 192 128 245.333333H192c-40.533333 0-72.533333-32-74.666667-70.4V149.333333c0-40.533333 32-72.533333 70.4-74.666666H768z m-405.333333 362.666666h-108.8c-17.066667 2.133333-29.866667 14.933333-29.866667 32s12.8 29.866667 29.866667 32H364.8c17.066667-2.133333 29.866667-14.933333 29.866667-32s-14.933333-32-32-32z m320-170.666666H253.866667c-17.066667 2.133333-29.866667 14.933333-29.866667 32s12.8 29.866667 29.866667 32H684.8c17.066667-2.133333 29.866667-14.933333 29.866667-32s-14.933333-32-32-32z
-                                     M714.666667 469.333333C851.2 469.333333 960 578.133333 960 714.666667S851.2 960 714.666667 960 469.333333 851.2 469.333333 714.666667 578.133333 469.333333 714.666667 469.333333z m0 106.666667c-17.066667 0-32 14.933333-32 32v113.066667c2.133333 10.666667 8.533333 21.333333 19.2 25.6l85.333333 38.4 2.133333 2.133333c14.933333 4.266667 32-2.133333 38.4-17.066667l2.133334-2.133333c4.266667-14.933333-2.133333-32-17.066667-38.4L746.666667 699.733333V605.866667c-2.133333-17.066667-14.933333-29.866667-32-29.866667z"
+                                                     M714.666667 469.333333C851.2 469.333333 960 578.133333 960 714.666667S851.2 960 714.666667 960 469.333333 851.2 469.333333 714.666667 578.133333 469.333333 714.666667 469.333333z m0 106.666667c-17.066667 0-32 14.933333-32 32v113.066667c2.133333 10.666667 8.533333 21.333333 19.2 25.6l85.333333 38.4 2.133333 2.133333c14.933333 4.266667 32-2.133333 38.4-17.066667l2.133334-2.133333c4.266667-14.933333-2.133333-32-17.066667-38.4L746.666667 699.733333V605.866667c-2.133333-17.066667-14.933333-29.866667-32-29.866667z"
             ToolTip="GetChatHistory" />
         </div>
     </div>
@@ -69,13 +75,6 @@
 <!--初始化-->
 @code
 {
-
-
-
-
-
-
-
     [Parameter]
     public bool IsDarkMode { get; set; } = false;
 
@@ -99,129 +98,131 @@
 
     private int currentStep = 0;
 
-    private async Task ReRender() => await InvokeAsync(StateHasChanged);//重绘
-
-    //初始化，注册一些方法供客户端间接调用
-    protected override async Task OnInitializedAsync()
+    //重绘
+    private async Task ReRender() 
     {
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavManager.ToAbsoluteUri("/chathub"))//★
-            .WithAutomaticReconnect(new InfiniteRetryPolicy())
-            .Build();
-
-        //每个方法末端都需要 await MessageServiceInstance.NotifyChatRoomUpdated(); 
-        //来通知ChatRoom刷新
-        _hubConnection.On<string, byte[]?>(ChatHub.ReceiveMessage, async (sender, method_content) =>
-        {
-            var jsonStr = TextCompressor.Instance.DecompressData(method_content!);//解压一下
-            var jsonObj = JsonServiceInstance.Deserialize<MethodContent>(jsonStr);
-
-            if (jsonObj is null) { return; }
-
-            switch (jsonObj.MethodName)
-            {
-                //获取聊天记录
-                case ChatClientMethods.PushChatHistory:
-                    {
-                        var para = jsonObj.MethodPara;
-                        if (string.IsNullOrWhiteSpace(para)) { return; }
-                        //Debug.WriteLine(para);
-                        var data = JsonServiceInstance.Deserialize<InputData>(para);
-                        {
-                            ChatRoomModelInstance.AiName = data?.Ai_Name ?? "";
-                            ChatRoomModelInstance.AiProfile = data?.Ai_Profile ?? "";
-                            ChatRoomModelInstance.ChatHistory = data?.Ai_Content ?? new();
-                            ChatRoomModelInstance.AiInnerMonologue = data?.Ai_InnerMonologue ?? "";
-                            ChatRoomModelInstance.AiContinuePrompt = data?.Ai_ContinuePrompt ?? "";
-                            ChatRoomModelInstance.AiTokenPrice = data?.Ai_TokenPrice ?? -1;
-                        }
-                        //Debug.WriteLine(ChatRoomModelInstance.AiContinuePrompt);
-                        TryRefreshPageNow();
-
-                        CountdownTimerServiceInstance.ReStart(60, async (x) => 
-                        {
-                            ChatRoomModelInstance.AiCountdown = x;
-                            await MessageServiceInstance.NotifyChatRoomUpdated();
-                        });
-
-                        await MessageServiceInstance.NotifyChatRoomUpdated();
-                        await scrollToBottom();
-
-                        break;
-                    }
-
-                //获取流式传输文本
-                case ChatClientMethods.StartStreaming:
-                    {
-                        var para = jsonObj.MethodPara;
-                        if (string.IsNullOrWhiteSpace(para)) { return; }
-
-                        if ((ChatRoomModelInstance.ChatHistory?.LastOrDefault()) is not null)
-                        {
-                            var lastItem = ChatRoomModelInstance.ChatHistory[^1]; // 获取最后一项
-                            if (lastItem.Content != para)
-                            {
-                                lastItem.Content = para;
-
-                                await MessageServiceInstance.NotifyChatRoomUpdated();
-                            }
-                        }
-                        break;
-                    }
-
-                //获取当前进度
-                case ChatClientMethods.PushStep:
-                    {
-                        var para = jsonObj.MethodPara;
-                        if (string.IsNullOrWhiteSpace(para)) { return; }
-
-                        Debug.WriteLine($"step = {para}");
-                        if (int.TryParse(para, out int cs))
-                        {
-                            currentStep = (cs * 100 / 6);
-                        } else
-                        {
-                            currentStep = 0;
-                        }
-                        await ReRender();
-                        break;             
-                    }
-                //
-                default:
-                    {
-                        Debug.WriteLine($"（接收者id）{_hubConnection.ConnectionId}\n——InputArea unknown method: {jsonObj.MethodName}");
-                        break;
-                    }
-            }
-        });
-
-        // 手动断开
-        _hubConnection.On<string>(ChatHub.ForceDisconnect, async sender =>
-        {
-            await DisposeAsync();
-        });
-
-        //启动
-        await _hubConnection.StartAsync();
+        await InvokeAsync(StateHasChanged);
     }
+
+    //初始化
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     //Debug.WriteLine("InputArea OnInitializedAsync()");
+    // }
 
     //（与JS交互的方法在MainView.js中）
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender is false) { return; }
+
+        // hub初始化
         {
-            await Task.Delay(200);
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(NavManager.ToAbsoluteUri("/chathub"))//★
+                .WithAutomaticReconnect(new InfiniteRetryPolicy())
+                .Build();
 
-            //注册当前页面持有的hubConnection为服务端
-            try
+            //每个方法末端都需要 await MessageServiceInstance.NotifyChatRoomUpdated(); 
+            //来通知ChatRoom刷新
+            _hubConnection.On<string, byte[]?>(ChatHub.ReceiveMessage, async (sender, method_content) =>
             {
-                await _hubConnection!.SendAsync(ChatHubMethods.RegistersServerId, _hubConnection?.ConnectionId);
-            }
-            catch (Exception ex) 
-            {
-                Debug.WriteLine($"OnAfterRenderAsync: {ex.Message}");
-            }
+                var jsonStr = TextCompressor.Instance.DecompressData(method_content!);//解压一下
+                var jsonObj = JsonServiceInstance.Deserialize<MethodContent>(jsonStr);
 
+                if (jsonObj is null) { return; }
+
+                switch (jsonObj.MethodName)
+                {
+                    //获取聊天记录
+                    case ChatClientMethods.PushChatHistory:
+                        {
+                            var para = jsonObj.MethodPara;
+                            if (string.IsNullOrWhiteSpace(para)) { return; }
+                            //Debug.WriteLine(para);
+                            var data = JsonServiceInstance.Deserialize<InputData>(para);
+                            {
+                                ChatRoomModelInstance.AiName = data?.Ai_Name ?? "";
+                                ChatRoomModelInstance.AiProfile = data?.Ai_Profile ?? "";
+                                ChatRoomModelInstance.ChatHistory = data?.Ai_Content ?? new();
+                                ChatRoomModelInstance.AiInnerMonologue = data?.Ai_InnerMonologue ?? "";
+                                ChatRoomModelInstance.AiContinuePrompt = data?.Ai_ContinuePrompt ?? "";
+                                ChatRoomModelInstance.AiTokenPrice = data?.Ai_TokenPrice ?? -1;
+                            }
+                            //Debug.WriteLine(ChatRoomModelInstance.AiContinuePrompt);
+                            TryRefreshPageNow();
+
+                            CountdownTimerServiceInstance.ReStart(60, async (x) => 
+                            {
+                                ChatRoomModelInstance.AiCountdown = x;
+                                await MessageServiceInstance.NotifyChatRoomUpdated();
+                            });
+
+                            await MessageServiceInstance.NotifyChatRoomUpdated();
+                            await scrollToBottom();
+
+                            break;
+                        }
+
+                    //获取流式传输文本
+                    case ChatClientMethods.StartStreaming:
+                        {
+                            var para = jsonObj.MethodPara;
+                            if (string.IsNullOrWhiteSpace(para)) { return; }
+
+                            if ((ChatRoomModelInstance.ChatHistory?.LastOrDefault()) is not null)
+                            {
+                                var lastItem = ChatRoomModelInstance.ChatHistory[^1]; // 获取最后一项
+                                if (lastItem.Content != para)
+                                {
+                                    lastItem.Content = para;
+
+                                    await MessageServiceInstance.NotifyChatRoomUpdated();
+                                }
+                            }
+                            break;
+                        }
+
+                    //获取当前进度
+                    case ChatClientMethods.PushStep:
+                        {
+                            var para = jsonObj.MethodPara;
+                            if (string.IsNullOrWhiteSpace(para)) { return; }
+
+                            Debug.WriteLine($"step = {para}");
+                            if (int.TryParse(para, out int cs))
+                            {
+                                currentStep = (cs * 100 / 6);
+                            } else
+                            {
+                                currentStep = 0;
+                            }
+                            await ReRender();
+                            break;             
+                        }
+                    //
+                    default:
+                        {
+                            Debug.WriteLine($"（接收者id）{_hubConnection.ConnectionId}\n——InputArea unknown method: {jsonObj.MethodName}");
+                            break;
+                        }
+                }
+            });
+
+            // 手动断开
+            _hubConnection.On<string>(ChatHub.ForceDisconnect, async sender =>
+            {
+                await DisposeAsync();
+            });
+
+            // 启动
+            await _hubConnection.StartAsync();
+
+            // 注册当前页面持有的hubConnection为服务端
+            await _hubConnection.SendAsync(ChatHubMethods.RegistersServerId, _hubConnection?.ConnectionId);
+        }
+
+        // 
+        {    
             //修改textarea的回车行为
             await registerKeyPressHandler();
 
@@ -242,7 +243,7 @@
             await _hubConnection.StopAsync();
             await _hubConnection.DisposeAsync();
 
-            Debug.WriteLine($"{id}: {_hubConnection.State}");
+            //Debug.WriteLine($"DisposeAsync {id}: {_hubConnection.State}");
 
             _hubConnection = null;
         }
@@ -342,7 +343,7 @@
         }
         catch (Exception ex)
         {
-            Debug.WriteLine($"scrollToBottom error: {ex.Message}");
+            Debug.WriteLine($"InputArea scrollToBottom error: {ex.Message}");
         }
     }
     private async Task takeScreenshot(bool navigation_off, bool inputbox_off, PlatformOption platformOpt)
@@ -432,14 +433,24 @@
 <!--当前页面上的控件调用的方法-->
  @code     
  {
+    private bool senderLock = false;
+    private string lastInput = string.Empty;
+
     //发普通消息给客户端
     private async Task SendToClient(SendToClientOption? bypass = null)
     {
+        if (senderLock) { return; }
+
+        senderLock = true;
+
         //更新设定
         await SetWebPageContext(bypass);
 
         //正常发消息
         await SendPublicMessage(ChatCenterMethods.SendMessage, $"{messageInput}");
+
+        lastInput = messageInput ?? "";
+        senderLock = false;
 
         await this.UpdateMessageInput(string.Empty);// 清空输入框
 
@@ -457,7 +468,16 @@
 
         await ReRender();
     }
+    //读取上一条消息
+    private async Task LoadLastInput()
+    {
+        if (!(await JS.InvokeAsync<bool>("confirm", "Load Last Input？"))) { return; }
 
+        if (string.IsNullOrEmpty(lastInput) is false){     
+            await this.UpdateMessageInput(lastInput ?? "");
+            await ReRender();
+        }
+    }
 
     //清空客户端聊天记录
     private async Task ClearClient()

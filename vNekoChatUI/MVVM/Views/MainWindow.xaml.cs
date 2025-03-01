@@ -14,6 +14,8 @@ namespace vNekoChatUI.MVVM.Views
 
         public MainWindow(ITokenProviderService tokenProvider, IDebouncerService debouncer, IStringEncryptorService stringEncryptor)
         {
+            enableShadowLayer = false;
+
             _tokenProvider = tokenProvider;
             _debouncer = debouncer;
             _stringEncryptor = stringEncryptor;

@@ -1,4 +1,5 @@
-﻿using Common.WebWpfCommon;
+﻿using Common.Extensions;
+using Common.WebWpfCommon;
 using Common.WPF;
 using Common.WPF.Services;
 using GenerativeAI;
@@ -49,7 +50,7 @@ namespace vNekoChatUI.Character.GeminiUtils
                     x.Content = jsonObject.TrimWhiteSpaceAndNewLine(x.Content);
                 });
                 //ai_continuePrompt = jsonObject.TrimNewLine(ai_continuePrompt);
-                Debug.WriteLine("已裁剪Gemini Content");
+                //Debug.WriteLine("已裁剪Gemini Content");
             }
 
             //3. 载入聊天记录
@@ -57,12 +58,13 @@ namespace vNekoChatUI.Character.GeminiUtils
             {
                 foreach (var x in ai_content)
                 {
+                    var input = x.Content.RemoveComments().Trim();
                     switch (x.Roles)
                     {
                         case "User":
-                            chatHistory.Add(RequestExtensions.FormatGenerateContentInput(x.Content, "USER")); break;
+                            chatHistory.Add(RequestExtensions.FormatGenerateContentInput(input, "USER")); break;
                         case "Assistant":
-                            chatHistory.Add(RequestExtensions.FormatGenerateContentInput(x.Content, "MODEL")); break;
+                            chatHistory.Add(RequestExtensions.FormatGenerateContentInput(input, "MODEL")); break;
                     }
                 }
             }
@@ -80,6 +82,9 @@ namespace vNekoChatUI.Character.GeminiUtils
             return await _client.WaitReplyAsync(ai_name, ai_profile, content, ai_innermonologue, cancellationToken, stepUp);
         }
 
+        /// <summary>
+        /// 生成 Request
+        /// </summary>
         private GenerateContentRequest CreateContentRequest(string systemInstruction, List<Content> history)
         {
             return new GenerateContentRequest()

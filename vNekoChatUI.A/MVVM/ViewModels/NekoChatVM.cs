@@ -1,4 +1,5 @@
 ﻿using ColorHelper;
+using Common.Extensions;
 using Common.WPF;
 using Common.WPF.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -243,7 +244,7 @@ namespace vNekoChatUI.A.MVVM.ViewModels
                     var jsonObject = new BingChatHistoryModel(item.DisplayName, //Username
                                                               item.UserborderColor,
                                                               item.ImageSource,
-                                                              item.Message,
+                                                              item.Message.RemoveComments().Trim(), //删注释
                                                               item.Time,
                                                               item.IsBot);
                     var json = JsonSerializer.Serialize(jsonObject, new JsonSerializerOptions
@@ -677,7 +678,7 @@ namespace vNekoChatUI.A.MVVM.ViewModels
                         Username = $"Player",
                         UserborderColor = obj.colors[new Random().Next(0, obj.colors.Length)],
                         Signature = obj.sign[new Random().Next(0, obj.colors.Length)],
-                        ImageSource = $"./MVVM/Resources/Icon/Player/00{((char)(new Random().Next(97, 101 + 1)))}.png",//a,b,c,d,e -> [97,102)
+                        ImageSource = $"./MVVM/Resources/Icon/Player/{new Random().Next(0, 4).ToString("00")}.png",
                         ImageBorder = $"./MVVM/Resources/Icon/vNekoBorder_44_-1,0,0,0.png",
                         ImageBorderSize = 44,
                         ImageBorderMargin = new Thickness(-1, 0, 0, 0),
@@ -743,17 +744,20 @@ namespace vNekoChatUI.A.MVVM.ViewModels
 
                     user.DisplayName = "user";
                     //user.Signature = "";
+
                     bot.DisplayName = "assistant";
 
                     bot.Profile = _jsonConfigManagerService.LoadProfileFromDefaultPath(this.Token) ?? "";
+                    bot.ImageSource = $"./MVVM/Resources/Icon/Bot/01.png";
 
-                    bot.InnerMonologue = "gemini-2.0-pro-exp-02-05"; // gemini-exo-1206 // gemini-1.5-pro-latest
+                    bot.InnerMonologue = "gemini-2.0-pro-exp-02-05";
                     bot.ContinuePrompt = _jsonConfigManagerService.LoadContinuePromptFromDefaultPath(this.Token) ?? "";
 
                     // 载入备份，需要AesKey
                     this.profileReload = () =>
                     {
                         bot.Profile = new DefaultProfile(_jsonConfigManagerService.GetAesKey(), this.Token).GetDefaultProfile();
+                        bot.ImageSource = $"./MVVM/Resources/Icon/Bot/01.png";
                         bot.InnerMonologue = "gemini-2.0-pro-exp-02-05";
                         bot.ContinuePrompt = new DefaultProfile(_jsonConfigManagerService.GetAesKey(), this.Token).GetDefaultContinuePrompt();
                     };

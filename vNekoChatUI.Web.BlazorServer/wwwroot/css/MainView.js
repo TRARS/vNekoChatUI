@@ -322,7 +322,9 @@ downloadbase64img = async (fileName, content) => {
 }
 
 
+
 //其他
+
 getClientWidth = () => {
     return document.body.clientWidth;
 }
@@ -332,12 +334,3 @@ getScrollHeight = () => {
 getSystemScaleFactor = () => {
     return window.devicePixelRatio;
 }
-
-
-
-
-
-
-
-
-

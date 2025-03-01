@@ -15,12 +15,12 @@
             <ul class="ul-none">
                 <!--人设-->
                 <MessageItem DefCollapse="true"
-                              IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
-                              IsHidden=false
-                              IsInstructions=true
-                              Content="@ChatRoomModelInstance.AiProfile"
-                              TextChanged="UpdateAiProfile"
-                              TimerKey="qhZld_1c%w7Pt_g5" />
+                IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
+                IsHidden=false
+                IsInstructions=true
+                Content="@ChatRoomModelInstance.AiProfile"
+                TextChanged="UpdateAiProfile"
+                TimerKey="qhZld_1c%w7Pt_g5" />
             </ul>
         </div>
     </div>
@@ -36,7 +36,7 @@
         <div class="wrap">
             <ul class="ul-none">
                 @foreach (var (item, index) in ChatRoomModelInstance.ChatHistory.Select((value, i) => (value, i)))
-               @* @foreach (var (item, index) in GetMessageItems())*@
+                @* @foreach (var (item, index) in GetMessageItems())*@
                 {
                     var timerKey = $"VtK#SvIPvEL3o#DZ_{index}";
                     <li>
@@ -46,10 +46,12 @@
                                       IsUser='item.Roles == "User"'
                                       Content="@item.Content"
                                       TextChanged="(newText) => UpdateChatHistoryItem(item, newText, index)"
+                                      TextChangedAndReRender="async (newText) => await UpdateChatHistoryItemAndReRender(item, newText, index)"
                                       TimerKey="@timerKey"
                                       OnHiddenButtonClick="() => DeleteMessageItem(index)"
                                       OnReSendButtonClick="async () => await ReSendMessage(index, false)"
-                                      OnReSendExButtonClick="async () => await ReSendMessage(index, true)"/>
+                                      OnReSendExButtonClick="async () => await ReSendMessage(index, true)"
+                                      IsMobile="@IsMobile"/>
                     </li>
                 }
             </ul>
@@ -68,12 +70,12 @@
             <ul class="ul-none">
                 <!--ContinuePrompt-->
                 <MessageItem DefCollapse="true" 
-                              IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
-                              IsHidden=false
-                              IsContinuePrompt=true
-                              Content="@ChatRoomModelInstance.AiContinuePrompt"
-                              TextChanged="UpdateAiContinuePrompt"
-                              TimerKey="suxDHvsyzgwJdwrs" />
+                IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
+                IsHidden=false
+                IsContinuePrompt=true
+                Content="@ChatRoomModelInstance.AiContinuePrompt"
+                TextChanged="UpdateAiContinuePrompt"
+                TimerKey="suxDHvsyzgwJdwrs" />
             </ul>
         </div>
     </div>
@@ -90,13 +92,13 @@
             <ul class="ul-none">
                 <!--Bing内心独白-->
                 <MessageItem DefCollapse="true"
-                              CanCollapse="false"
-                              IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
-                              IsHidden=false
-                              IsMonologue=true
-                              Content="@ChatRoomModelInstance.AiInnerMonologue"
-                              TextChanged="UpdateAiInnerMonologue"
-                              TimerKey="y98hy9vz$s7EXjfw" />
+                CanCollapse="false"
+                IsDarkMode="@ChatRoomModelInstance.IsDarkMode"
+                IsHidden=false
+                IsMonologue=true
+                Content="@ChatRoomModelInstance.AiInnerMonologue"
+                TextChanged="UpdateAiInnerMonologue"
+                TimerKey="y98hy9vz$s7EXjfw" />
             </ul>
         </div>
     </div>
@@ -113,27 +115,27 @@
 </div>*@
 <div class="div-root button-box">
     <SquareButton OnClick="TakeScreenshot_Windows" ExColor="blue"
-                   PathData="M883.657136 89.152483 139.917168 89.152483c-41.195238 0-74.529437 33.358759-74.529437 74.529437l0 523.257391c0 41.169655 33.334199 74.529437 74.529437 74.529437l272.498254 0 0 92.385107C296.690748 865.596294 213.669916 897.111055 213.669916 934.267303l0 0.048095 596.234473 0 0-0.048095c0-37.156248-83.020832-68.669986-198.745507-80.412424l0-92.385107 272.498254 0c41.146119 0 74.529437-33.359782 74.529437-74.529437l0-523.257391C958.186574 122.511241 924.803255 89.152483 883.657136 89.152483zM883.657136 635.772978c0 13.731746-11.111059 24.842805-24.842805 24.842805L164.759973 660.615782c-13.731746 0-24.842805-11.111059-24.842805-24.842805L139.917168 187.045023c0-13.731746 11.111059-24.842805 24.842805-24.842805l694.054359 0c13.731746 0 24.842805 11.111059 24.842805 24.842805L883.657136 635.772978z
+    PathData="M883.657136 89.152483 139.917168 89.152483c-41.195238 0-74.529437 33.358759-74.529437 74.529437l0 523.257391c0 41.169655 33.334199 74.529437 74.529437 74.529437l272.498254 0 0 92.385107C296.690748 865.596294 213.669916 897.111055 213.669916 934.267303l0 0.048095 596.234473 0 0-0.048095c0-37.156248-83.020832-68.669986-198.745507-80.412424l0-92.385107 272.498254 0c41.146119 0 74.529437-33.359782 74.529437-74.529437l0-523.257391C958.186574 122.511241 924.803255 89.152483 883.657136 89.152483zM883.657136 635.772978c0 13.731746-11.111059 24.842805-24.842805 24.842805L164.759973 660.615782c-13.731746 0-24.842805-11.111059-24.842805-24.842805L139.917168 187.045023c0-13.731746 11.111059-24.842805 24.842805-24.842805l694.054359 0c13.731746 0 24.842805 11.111059 24.842805 24.842805L883.657136 635.772978z
                             M212.966904 237.72631l173.901679 0 0 49.685609-173.901679 0 0-49.685609Z
                             M212.966904 337.631694l273.27392 0 0 49.686632-273.27392 0 0-49.686632Z
                             M212.966904 436.931281l223.588311 0 0 49.686632-223.588311 0 0-49.686632Z
                             M212.966904 536.837688l322.960553 0 0 49.686632-322.960553 0 0-49.686632Z"
-                   ToolTip="TakeScreenshot_Windows" />
+    ToolTip="TakeScreenshot_Windows" />
     <SquareButton OnClick="TakeScreenshot_SmartPhone" ExColor="blue"
-                   PathData="M724.992 20.48H299.008C225.28 20.48 159.744 81.92 159.744 159.744v704.512c0 77.824 61.44 139.264 139.264 139.264h421.888c73.728 0 139.264-61.44 139.264-139.264V159.744C864.256 81.92 798.72 20.48 724.992 20.48z m-163.84 892.928h-98.304c-20.48 0-40.96-20.48-40.96-40.96s20.48-40.96 40.96-40.96h98.304c20.48 0 40.96 20.48 40.96 40.96s-20.48 40.96-40.96 40.96z m221.184-176.128H241.664V159.744c0-32.768 24.576-57.344 57.344-57.344h40.96l24.576 69.632c4.096 12.288 16.384 24.576 32.768 24.576h233.472c16.384 0 28.672-8.192 32.768-24.576l24.576-69.632h40.96c32.768 0 57.344 24.576 57.344 57.344V737.28z"
-                   ToolTip="TakeScreenshot_SmartPhone" />
+    PathData="M724.992 20.48H299.008C225.28 20.48 159.744 81.92 159.744 159.744v704.512c0 77.824 61.44 139.264 139.264 139.264h421.888c73.728 0 139.264-61.44 139.264-139.264V159.744C864.256 81.92 798.72 20.48 724.992 20.48z m-163.84 892.928h-98.304c-20.48 0-40.96-20.48-40.96-40.96s20.48-40.96 40.96-40.96h98.304c20.48 0 40.96 20.48 40.96 40.96s-20.48 40.96-40.96 40.96z m221.184-176.128H241.664V159.744c0-32.768 24.576-57.344 57.344-57.344h40.96l24.576 69.632c4.096 12.288 16.384 24.576 32.768 24.576h233.472c16.384 0 28.672-8.192 32.768-24.576l24.576-69.632h40.96c32.768 0 57.344 24.576 57.344 57.344V737.28z"
+    ToolTip="TakeScreenshot_SmartPhone" />
     <SquareButton OnClick="GetDefaultProfile" ExColor="blue"
-                  PathData="M0.350994 394.703527C13.419637 552.061414 137.435139 690.573071 490.226091 942.296163c6.387477 4.556783 13.916964 6.961552 21.76163 6.961552 7.816013 0 15.32401-2.406816 21.688975-6.949272 352.87077-251.770164 476.905714-390.347313 489.976404-547.938514l-0.013303-60.136635C1009.728972 170.201403 906.133545 85.971024 815.453267 77.127611c-15.761985-1.586125-31.210839-2.385327-46.047756-2.385327-110.648053 0-158.939919 47.679929-219.981157 120.42472l-37.426401 44.647873-37.437657-44.658106C413.561014 122.422214 365.28245 74.742285 254.521834 74.742285c-14.848173 0-30.274514 0.801249-45.870724 2.376117C117.816313 85.975117 14.231119 170.291454 0.346901 334.568938l0.00921 60.133565L0.350994 394.703527 0.350994 394.703527z"
-                  ToolTip="GetDefaultProfile" />
+    PathData="M0.350994 394.703527C13.419637 552.061414 137.435139 690.573071 490.226091 942.296163c6.387477 4.556783 13.916964 6.961552 21.76163 6.961552 7.816013 0 15.32401-2.406816 21.688975-6.949272 352.87077-251.770164 476.905714-390.347313 489.976404-547.938514l-0.013303-60.136635C1009.728972 170.201403 906.133545 85.971024 815.453267 77.127611c-15.761985-1.586125-31.210839-2.385327-46.047756-2.385327-110.648053 0-158.939919 47.679929-219.981157 120.42472l-37.426401 44.647873-37.437657-44.658106C413.561014 122.422214 365.28245 74.742285 254.521834 74.742285c-14.848173 0-30.274514 0.801249-45.870724 2.376117C117.816313 85.975117 14.231119 170.291454 0.346901 334.568938l0.00921 60.133565L0.350994 394.703527 0.350994 394.703527z"
+    ToolTip="GetDefaultProfile" />
     <SquareButton OnClick="HideNavMenu" ExColor="cyan"
-                   PathData="M512 96a32 32 0 0 1 31.701333 27.648L544 128v53.333333h299.648c9.514667 0 18.474667 4.266667 24.490667 11.434667l2.773333 3.84 52.352 85.333333a32 32 0 0 1 0 33.450667l-52.352 85.333333a32 32 0 0 1-27.306667 15.274667H544v490.666667H682.666667a32 32 0 0 1 4.352 63.701333L682.666667 970.666667H341.333333a32 32 0 0 1-4.352-63.701334L341.333333 906.666667h138.666667v-192H180.352a32 32 0 0 1-27.264-15.274667l-52.352-85.333333a32 32 0 0 1 0-33.450667l52.352-85.333333a32 32 0 0 1 27.306667-15.274667h299.605333V128a32 32 0 0 1 32-32z m-32 448H198.272L165.589333 597.333333l32.725334 53.333334h281.685333v-106.666667z m345.728-298.666667H544v106.666667h281.685333l32.725334-53.376-32.682667-53.290667z"
-                   ToolTip="HideNavMenu" />
+    PathData="M512 96a32 32 0 0 1 31.701333 27.648L544 128v53.333333h299.648c9.514667 0 18.474667 4.266667 24.490667 11.434667l2.773333 3.84 52.352 85.333333a32 32 0 0 1 0 33.450667l-52.352 85.333333a32 32 0 0 1-27.306667 15.274667H544v490.666667H682.666667a32 32 0 0 1 4.352 63.701333L682.666667 970.666667H341.333333a32 32 0 0 1-4.352-63.701334L341.333333 906.666667h138.666667v-192H180.352a32 32 0 0 1-27.264-15.274667l-52.352-85.333333a32 32 0 0 1 0-33.450667l52.352-85.333333a32 32 0 0 1 27.306667-15.274667h299.605333V128a32 32 0 0 1 32-32z m-32 448H198.272L165.589333 597.333333l32.725334 53.333334h281.685333v-106.666667z m345.728-298.666667H544v106.666667h281.685333l32.725334-53.376-32.682667-53.290667z"
+    ToolTip="HideNavMenu" />
     <SquareButton OnClick="HideInputBox" ExColor="cyan"
-                   PathData="M128 42.66752h768c47.1296 0 85.33248 38.20544 85.33248 85.33248v768c0 47.1296-38.20544 85.33248-85.33248 85.33248H128c-47.1296 0-85.33248-38.20544-85.33248-85.33248V128c0-47.1296 38.20544-85.33248 85.33248-85.33248z m421.88288 203.8528h175.4496v-75.8528H302.96832v75.8528h170.11456v530.96192h-174.41536v75.8528h426.66496v-75.8528h-175.4496V246.51776z"
-                   ToolTip="HideInputBox" />
+    PathData="M128 42.66752h768c47.1296 0 85.33248 38.20544 85.33248 85.33248v768c0 47.1296-38.20544 85.33248-85.33248 85.33248H128c-47.1296 0-85.33248-38.20544-85.33248-85.33248V128c0-47.1296 38.20544-85.33248 85.33248-85.33248z m421.88288 203.8528h175.4496v-75.8528H302.96832v75.8528h170.11456v530.96192h-174.41536v75.8528h426.66496v-75.8528h-175.4496V246.51776z"
+    ToolTip="HideInputBox" />
     <SquareButton OnClick="ColorChange" ExColor="cyan"
-                   PathData="M744.533333 87.082667a42.666667 42.666667 0 0 1 6.058667 22.613333l-2.688 172.117333 129.706667 113.194667a42.666667 42.666667 0 0 1-15.488 72.96l-164.565334 50.602667-67.541333 158.378666a42.666667 42.666667 0 0 1-74.154667 7.808L486.4 585.984l-215.253333 372.906667a42.666667 42.666667 0 1 1-73.898667-42.666667l217.173333-376.192-129.109333-11.477333a42.666667 42.666667 0 0 1-30.336-68.096L358.4 322.773333 320 154.88a42.666667 42.666667 0 0 1 55.381333-49.92l162.901334 55.808 147.754666-88.448a42.666667 42.666667 0 0 1 58.496 14.72z"
-                   ToolTip="ColorChange" />
+    PathData="M744.533333 87.082667a42.666667 42.666667 0 0 1 6.058667 22.613333l-2.688 172.117333 129.706667 113.194667a42.666667 42.666667 0 0 1-15.488 72.96l-164.565334 50.602667-67.541333 158.378666a42.666667 42.666667 0 0 1-74.154667 7.808L486.4 585.984l-215.253333 372.906667a42.666667 42.666667 0 1 1-73.898667-42.666667l217.173333-376.192-129.109333-11.477333a42.666667 42.666667 0 0 1-30.336-68.096L358.4 322.773333 320 154.88a42.666667 42.666667 0 0 1 55.381333-49.92l162.901334 55.808 147.754666-88.448a42.666667 42.666667 0 0 1 58.496 14.72z"
+    ToolTip="ColorChange" />
 </div>
 
 <!--底部撑距离-->
@@ -142,8 +144,12 @@
 
 
 @code{
+
+
+
     private bool NavigationOff { get; set; }
     private bool InputBoxOff { get; set; }
+    private bool IsMobile { get; set; }
 
     private async Task ReRender() => await InvokeAsync(StateHasChanged);//重绘
 
@@ -162,7 +168,11 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-        {
+        {      
+            // 读UserAgent
+            var userAgent = await JS.InvokeAsync<string>("getUserAgent");
+            this.IsMobile = userAgent.Contains("Android") || userAgent.Contains("iPhone");
+
             // 获取查询字符串参数的值并保存到属性中
             var uri = new Uri(NavManager.Uri);
             var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query);
@@ -210,6 +220,13 @@
 
         ChatRoomModelInstance.HistoryChanged = true;
         Debug.WriteLine($"UpdateChatHistoryItem = {ChatRoomModelInstance.HistoryChanged} (from item[{index}])");
+    }
+    private async Task UpdateChatHistoryItemAndReRender(Ai_Content item, string newText, int index)
+    {
+        item.Content = newText;
+
+        ChatRoomModelInstance.HistoryChanged = true;
+        await ReRender();
     }
 
     //气泡右上角按钮事件
